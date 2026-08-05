@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -100,7 +101,10 @@ export function HomeScreen() {
             <HeroCardSkeleton />
           ) : (
             <Reveal delay={staggerStep}>
-              <HeroCard look={look} />
+              <HeroCard
+                look={look}
+                onPress={() => router.push(`/look/${look.id}`)}
+              />
             </Reveal>
           )}
         </View>

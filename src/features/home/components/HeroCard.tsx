@@ -3,12 +3,12 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { Skeleton, Text, usePressMotion } from '@/components';
+import { LookBackdrop, Skeleton, Text, usePressMotion } from '@/components';
 import { colors, screenPadding, spacing } from '@/theme';
 import type { Look } from '@/types/look';
 import { OCCASION_LABELS } from '@/types/wardrobe';
 
-import { LookBackdrop } from './LookBackdrop';
+import { backdropItemsFor } from '@/utils/backdropItems';
 
 type HeroCardProps = {
   look: Look;
@@ -76,7 +76,7 @@ export function HeroCard({ look, onPress }: HeroCardProps) {
           accessibilityIgnoresInvertColors
         />
       ) : (
-        <LookBackdrop garments={look.garments} />
+        <LookBackdrop items={backdropItemsFor(look.garments)} align="upper" />
       )}
 
       <LinearGradient

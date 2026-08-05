@@ -36,6 +36,8 @@ export type { IconButtonVariant } from './IconButton';
 export { Input } from './Input';
 export { Loading } from './Loading';
 export { Logo } from './Logo';
+export { LookBackdrop } from './LookBackdrop';
+export type { BackdropItem } from './LookBackdrop';
 export { LookCard } from './LookCard';
 export type { LookCardLayout } from './LookCard';
 export { Modal } from './Modal';
