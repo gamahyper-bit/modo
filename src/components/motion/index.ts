@@ -9,3 +9,5 @@ export { Reveal } from './Reveal';
 export { Stagger } from './Stagger';
 export { useReveal } from './useReveal';
 export { usePressMotion } from './usePressMotion';
+export { useSpin, usePulse } from './useLoop';
+export { useTransition } from './useTransition';

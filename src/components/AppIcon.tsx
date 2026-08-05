@@ -34,6 +34,9 @@ import {
 
 import { colors, iconSize, iconStroke, type IconSizeToken } from '@/theme';
 
+import { FrameGlyph } from './icons/FrameGlyph';
+import { garmentPaths, type GarmentIconName } from './icons/garmentPaths';
+
 /**
  * Vocabulário de ícones do produto.
  *
@@ -84,7 +87,7 @@ const registry = {
   chuva: CloudRain,
 } as const;
 
-export type AppIconName = keyof typeof registry;
+export type AppIconName = keyof typeof registry | GarmentIconName;
 
 type AppIconProps = {
   name: AppIconName;
@@ -95,14 +98,31 @@ type AppIconProps = {
   strokeWidth?: number;
 };
 
+const isGarment = (name: AppIconName): name is GarmentIconName =>
+  name in garmentPaths;
+
 export function AppIcon({
   name,
   size = 'lg',
   color = colors.textSecondary,
   strokeWidth = iconStroke,
 }: AppIconProps) {
-  const Glyph = registry[name];
   const resolvedSize = typeof size === 'number' ? size : iconSize[size];
+
+  // As duas famílias convivem sob um único nome: a tela não sabe — nem precisa
+  // saber — qual glifo é desenho nosso e qual vem do Lucide.
+  if (isGarment(name)) {
+    return (
+      <FrameGlyph
+        paths={garmentPaths[name]}
+        size={resolvedSize}
+        color={color}
+        strokeWidth={strokeWidth}
+      />
+    );
+  }
+
+  const Glyph = registry[name];
 
   return <Glyph size={resolvedSize} color={color} strokeWidth={strokeWidth} />;
 }

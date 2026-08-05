@@ -10,6 +10,14 @@ import { duration, easing, press } from '@/theme';
 type PressMotionOptions = {
   /** Desabilitado e carregando não respondem ao toque. */
   inactive?: boolean;
+  /**
+   * Opacidade de repouso do elemento — `disabledOpacity` quando desabilitado.
+   *
+   * Precisa entrar por aqui, e não como um `opacity` no array de estilo do
+   * componente: o estilo animado também escreve `opacity`, e como ele vem por
+   * último no array, venceria e apagaria o estado desabilitado.
+   */
+  baseOpacity?: number;
 };
 
 /**
@@ -19,13 +27,16 @@ type PressMotionOptions = {
  * e um botão primário cedam exatamente da mesma forma. Nenhum componente deve
  * escrever `withTiming` para um estado de press.
  */
-export function usePressMotion({ inactive = false }: PressMotionOptions = {}) {
+export function usePressMotion({
+  inactive = false,
+  baseOpacity = 1,
+}: PressMotionOptions = {}) {
   const progress = useSharedValue(0);
   const reduced = useReducedMotion();
 
   const animatedStyle = useAnimatedStyle(() => {
     const scale = 1 - progress.value * (1 - press.scale);
-    const opacity = 1 - progress.value * (1 - press.opacity);
+    const opacity = baseOpacity * (1 - progress.value * (1 - press.opacity));
 
     return {
       opacity,

@@ -20,6 +20,8 @@ export {
   press,
   disabledOpacity,
   staggerStep,
+  loop,
+  MAX_DURATION,
 } from './motion';
 export type { DurationToken, EasingToken } from './motion';
 
