@@ -85,17 +85,25 @@ const garments = {
  * Recomendações de demonstração.
  *
  * A `rationale` é a peça mais importante de cada fixture: é ela que prova que o
- * produto explica a escolha em vez de só exibir roupa. Escrita na voz do
- * stylist — afirma, não sugere; justifica com o que está na peça, não com
- * adjetivos soltos.
+ * produto explica a escolha em vez de só exibir roupa.
+ *
+ * Voz: **um stylist falando do seu dia, não da composição.** Fala na primeira
+ * pessoa, começa pela peça que decidiu o look e justifica pelo que ela resolve
+ * na sua vida — não por vocabulário de moda. "Ancora o look", "abre o
+ * contraste" e "quebra a formalidade" são laudo técnico: o usuário não sabe o
+ * que fazer com isso.
+ *
+ * Regra prática: se a frase caberia numa etiqueta de vitrine, reescreva.
  */
 export const lookFixtures: Look[] = [
   {
     id: 'l1',
     moment: 'Hoje.',
     mood: 'Confiante e contemporâneo.',
+    summary:
+      'Comecei pela camisa preta: ela aguenta o dia inteiro sem marcar nada.',
     rationale:
-      'A camisa preta ancora o look e a alfaiataria em areia abre o contraste sem endurecer. O tênis de couro tira o peso da formalidade — é o que faz a peça de trabalho funcionar depois do expediente.',
+      'Comecei pela camisa preta: ela aguenta o dia inteiro sem marcar nada. A calça em areia clareia o conjunto e faz o preto parecer escolha, não uniforme. O tênis de couro é o que te deixa sair do trabalho e ir jantar sem passar em casa.',
     occasion: 'trabalho',
     weather: { temperature: 18, condition: 'nublado' },
     garments: [
@@ -109,8 +117,10 @@ export const lookFixtures: Look[] = [
     id: 'l2',
     moment: 'Hoje.',
     mood: 'Sóbrio, com folga.',
+    summary:
+      'Deixei camiseta e calça discretas de propósito, para o casaco ser a única coisa que se nota.',
     rationale:
-      'Camiseta e calça na mesma família de neutros deixam o casaco de lã ser a única voz. Com 18 graus e céu fechado, a lã resolve a temperatura sem exigir uma segunda camada.',
+      'Deixei camiseta e calça bem discretas de propósito, para o casaco ser a única coisa que se nota. Com 18 graus e o céu fechado, a lã dá conta sozinha — você não vai precisar carregar mais nada.',
     occasion: 'casual',
     weather: { temperature: 18, condition: 'nublado' },
     garments: [
@@ -124,8 +134,9 @@ export const lookFixtures: Look[] = [
     id: 'l3',
     moment: 'Para hoje à noite.',
     mood: 'Discreto e preciso.',
+    summary: 'Preto inteiro resolve a noite sem exigir nenhum acessório.',
     rationale:
-      'Preto sobre preto encurta a silhueta e dispensa acessório. O casaco de lã fecha a composição e é a única peça com textura — de noite, textura substitui cor.',
+      'Preto inteiro resolve a noite sem exigir nenhum acessório — menos coisa para pensar antes de sair. O casaco é a única peça com textura, e à noite é isso que aparece, não a cor.',
     occasion: 'noite',
     weather: { temperature: 15, condition: 'frio' },
     garments: [garments.camisaPreta, garments.calcaPreta, garments.casacoGrafite],

@@ -11,3 +11,4 @@ export { useReveal } from './useReveal';
 export { usePressMotion } from './usePressMotion';
 export { useSpin, usePulse } from './useLoop';
 export { useTransition } from './useTransition';
+export { pieceLayout, pieceEnter, pieceExit } from './layout';

@@ -72,12 +72,11 @@ export function HomeScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
+        {/* Sem busca: não há o que buscar numa tela de uma recomendação só.
+            A busca pertence ao Armário, onde existe volume. */}
         <View style={styles.header}>
           <Logo variant="mark" size={28} />
-          <View style={styles.headerActions}>
-            <IconButton icon="buscar" accessibilityLabel="Buscar" />
-            <IconButton icon="notificacoes" accessibilityLabel="Novidades" />
-          </View>
+          <IconButton icon="notificacoes" accessibilityLabel="Novidades" />
         </View>
 
         <Reveal>
@@ -108,20 +107,24 @@ export function HomeScreen() {
 
         {look && !error ? (
           <>
+            {/* Três pesos, três papéis. "Gerar outro" é o que o usuário faz
+                quando a resposta não serviu, e é a ação que mantém o produto
+                útil — ela carrega o peso visual. "Ajustar" é o caminho mais
+                fino, para quem quer corrigir em vez de trocar. "Salvar" é
+                consequência, não decisão: só um ícone. */}
             <View style={styles.actions}>
-              <Button
-                label="Gerar outro"
-                variant="ghost"
-                icon="gerarOutro"
-                size="md"
-                fullWidth={false}
-                loading={isRegenerating}
-                onPress={() => regenerate()}
-              />
+              <View style={styles.primaryAction}>
+                <Button
+                  label="Gerar outro"
+                  icon="gerarOutro"
+                  size="md"
+                  loading={isRegenerating}
+                  onPress={() => regenerate()}
+                />
+              </View>
               <Button
                 label="Ajustar"
-                variant="ghost"
-                icon="filtrar"
+                variant="secondary"
                 size="md"
                 fullWidth={false}
                 onPress={() => setAdjusting(true)}
@@ -179,9 +182,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: spacing['2xl'],
-  },
-  headerActions: {
-    flexDirection: 'row',
+    // O alvo de toque tem 44px com o ícone centrado; sem este recuo o ícone
+    // pareceria afastado da margem em relação ao logo.
     marginRight: -spacing.md,
   },
   subtitle: {
@@ -193,9 +195,11 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    gap: spacing.sm,
     marginTop: spacing.lg,
-    marginHorizontal: -spacing.sm,
+  },
+  primaryAction: {
+    flex: 1,
   },
   occasions: {
     marginTop: spacing['3xl'],

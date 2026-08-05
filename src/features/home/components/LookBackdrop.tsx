@@ -1,7 +1,9 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 
 import { AppIcon, type AppIconName } from '@/components';
+import { pieceEnter, pieceExit, pieceLayout } from '@/components/motion';
 import { palette, spacing } from '@/theme';
 import type { Garment } from '@/types/wardrobe';
 
@@ -20,25 +22,37 @@ const glyphFor = (garment: Garment): AppIconName => garment.category;
  * Comunica exatamente o que o look é, sem fingir uma foto que não temos — e
  * some sozinho no dia em que `imageUri` chegar do backend.
  *
- * As peças alternam altura para compor como uma vitrine, não como uma lista.
+ * Ao trocar de recomendação, as peças que permanecem **deslizam** até a nova
+ * posição e só as demais entram e saem. É a leitura de curadoria: alguém
+ * reorganizou a arara, o sistema não recarregou uma lista.
  */
 export function LookBackdrop({ garments }: LookBackdropProps) {
   const composition = garments.slice(0, 4);
 
   return (
     <View style={styles.root}>
+      {/* Duas paradas, sem inversão de sentido.
+          A versão anterior ia areia → off-white → areia: o ponto onde o
+          gradiente para de clarear e volta a escurecer é uma dobra de
+          derivada, e o olho a lê como uma linha nítida cruzando a imagem
+          inteira (banda de Mach). Gradiente de cenário nunca deve mudar de
+          direção. */}
       <LinearGradient
-        colors={[palette.sand, palette.canvas, palette.sand]}
-        locations={[0, 0.55, 1]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+        colors={[palette.canvas, palette.sand]}
+        start={{ x: 0.15, y: 0 }}
+        end={{ x: 0.85, y: 1 }}
         style={StyleSheet.absoluteFill}
       />
 
       <View style={styles.composition}>
         {composition.map((garment, index) => (
-          <View
+          <Animated.View
+            // Chave é a peça, nunca o índice: com índice o Reanimated entende
+            // que o item continua o mesmo e nada desliza.
             key={garment.id}
+            layout={pieceLayout}
+            entering={pieceEnter(index)}
+            exiting={pieceExit}
             style={[styles.piece, index % 2 === 1 && styles.pieceLowered]}
           >
             <AppIcon
@@ -47,7 +61,7 @@ export function LookBackdrop({ garments }: LookBackdropProps) {
               color={palette.ink}
               strokeWidth={1}
             />
-          </View>
+          </Animated.View>
         ))}
       </View>
     </View>
@@ -56,8 +70,22 @@ export function LookBackdrop({ garments }: LookBackdropProps) {
 
 const styles = StyleSheet.create({
   root: {
-    flex: 1,
+    // Absoluto, não `flex: 1`.
+    //
+    // Como filho em fluxo, o cenário dividia a altura com a legenda e cobria
+    // só a parte de cima do frame — a borda inferior dele virava uma linha
+    // nítida atravessando a imagem, com o fundo liso do frame aparecendo
+    // embaixo. O cenário precisa ocupar o frame inteiro, exatamente como a
+    // fotografia ocupa quando existe.
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     justifyContent: 'center',
+    // Centrado apenas no terço superior: mais abaixo as peças entrariam na
+    // área escurecida pelo véu e sumiriam contra ele.
+    paddingBottom: '36%',
   },
   composition: {
     flexDirection: 'row',

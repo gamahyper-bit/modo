@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import { Skeleton, Text, usePressMotion } from '@/components';
-import { colors, radius, spacing } from '@/theme';
+import { colors, screenPadding, spacing } from '@/theme';
 import type { Look } from '@/types/look';
 import { OCCASION_LABELS } from '@/types/wardrobe';
 
@@ -14,6 +14,37 @@ type HeroCardProps = {
   look: Look;
   onPress?: () => void;
 };
+
+/**
+ * O véu que dá contraste ao texto sem tirar luz da roupa.
+ *
+ * As paradas são **calculadas**, não escolhidas a olho. O olho não enxerga
+ * degrau de cor num gradiente, mas enxerga mudança brusca de inclinação — é a
+ * banda de Mach. Com meia dúzia de paradas manuais, o ponto onde a rampa
+ * acelera vira uma linha nítida atravessando a imagem inteira.
+ *
+ * Amostrando uma curva de potência em muitas paradas, a variação de inclinação
+ * entre paradas vizinhas fica pequena demais para ser percebida.
+ */
+const VEIL_STOPS = 14;
+const VEIL_MAX_ALPHA = 0.88;
+/** Expoente > 1 mantém o topo da imagem limpo e concentra o véu no rodapé. */
+const VEIL_CURVE = 2.4;
+
+const veil = Array.from({ length: VEIL_STOPS }, (_, index) => {
+  const t = index / (VEIL_STOPS - 1);
+  return {
+    location: t,
+    color: `rgba(13, 13, 13, ${(VEIL_MAX_ALPHA * t ** VEIL_CURVE).toFixed(4)})`,
+  };
+});
+
+const VEIL_COLORS = veil.map((stop) => stop.color) as [string, string, ...string[]];
+const VEIL_LOCATIONS = veil.map((stop) => stop.location) as [
+  number,
+  number,
+  ...number[],
+];
 
 /**
  * A recomendação do dia — componente exclusivo da Home.
@@ -48,18 +79,9 @@ export function HeroCard({ look, onPress }: HeroCardProps) {
         <LookBackdrop garments={look.garments} />
       )}
 
-      {/* Véu para o texto respirar sem a roupa perder luz.
-          Quatro paradas, e não duas: uma rampa linear de alfa sobre um fundo
-          claro denuncia o ponto onde começa — lê como aresta. As paradas
-          intermediárias curvam a rampa e dissolvem a entrada. */}
       <LinearGradient
-        colors={[
-          'transparent',
-          'rgba(13,13,13,0.06)',
-          'rgba(13,13,13,0.34)',
-          'rgba(13,13,13,0.86)',
-        ]}
-        locations={[0, 0.42, 0.72, 1]}
+        colors={VEIL_COLORS}
+        locations={VEIL_LOCATIONS}
         style={StyleSheet.absoluteFill}
         pointerEvents="none"
       />
@@ -89,17 +111,10 @@ export function HeroCard({ look, onPress }: HeroCardProps) {
       >
         {visual}
 
-        {/* Três linhas, não a explicação inteira: com o texto completo aqui,
-            "Gerar outro" e "Ajustar" caem abaixo da dobra num iPhone — e a
-            Home existe justamente para revelar e deixar agir. O argumento
-            completo abre no detalhe do look. */}
-        <Text
-          variant="body"
-          tone="secondary"
-          numberOfLines={3}
-          style={styles.rationale}
-        >
-          {look.rationale}
+        {/* `summary`, não `rationale`: uma frase inteira em vez da nota
+            completa cortada com reticências. A nota abre no detalhe do look. */}
+        <Text variant="body" tone="secondary" style={styles.rationale}>
+          {look.summary}
         </Text>
       </Pressable>
     </Animated.View>
@@ -111,7 +126,7 @@ export function HeroCardSkeleton() {
   return (
     <View>
       <View style={styles.frame}>
-        <Skeleton width="100%" height="100%" radius="lg" />
+        <Skeleton width="100%" height="100%" radius="none" />
       </View>
       <View style={styles.rationale}>
         <Skeleton width="100%" height={15} />
@@ -126,16 +141,20 @@ export function HeroCardSkeleton() {
 
 const styles = StyleSheet.create({
   frame: {
-    // 5:6 e não 4:5: o card precisa dominar a tela sem empurrar as ações para
-    // fora dela.
-    aspectRatio: 5 / 6,
-    borderRadius: radius.lg,
+    // Sangra até as bordas da tela: é o que separa uma página editorial de um
+    // card. Canto arredondado e margem lateral são exatamente o que faz uma
+    // imagem parecer um objeto dentro da interface em vez de ser a interface.
+    marginHorizontal: -screenPadding,
+    // A largura cresceu com a sangria, então a proporção encurta para o
+    // conjunto continuar cabendo acima da dobra.
+    aspectRatio: 1,
     backgroundColor: colors.surfaceMuted,
     overflow: 'hidden',
     justifyContent: 'flex-end',
   },
   legend: {
-    padding: spacing.xl,
+    padding: screenPadding,
+    paddingBottom: spacing['2xl'],
   },
   mood: {
     marginTop: -2,

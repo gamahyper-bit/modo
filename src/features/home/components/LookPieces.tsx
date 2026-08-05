@@ -1,6 +1,8 @@
 import { StyleSheet, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 
 import { ClothingCard, Text } from '@/components';
+import { pieceEnter, pieceExit, pieceLayout } from '@/components/motion';
 import { spacing } from '@/theme';
 import type { Garment } from '@/types/wardrobe';
 
@@ -28,14 +30,23 @@ export function LookPieces({ garments, loading = false }: LookPiecesProps) {
           ? [0, 1, 2, 3].map((index) => (
               <ClothingCard key={index} variant="compact" loading />
             ))
-          : garments.map((garment) => (
-              <ClothingCard
+          : garments.map((garment, index) => (
+              // A peça que sobrevive à troca desliza até o novo lugar em vez
+              // de sumir e voltar — é o que faz a substituição parecer
+              // curadoria e não recarga.
+              <Animated.View
                 key={garment.id}
-                variant="compact"
-                name={garment.name}
-                imageUri={garment.imageUri}
-                placeholderIcon={garment.category}
-              />
+                layout={pieceLayout}
+                entering={pieceEnter(index)}
+                exiting={pieceExit}
+              >
+                <ClothingCard
+                  variant="compact"
+                  name={garment.name}
+                  imageUri={garment.imageUri}
+                  placeholderIcon={garment.category}
+                />
+              </Animated.View>
             ))}
       </View>
     </View>

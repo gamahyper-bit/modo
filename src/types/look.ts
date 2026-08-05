@@ -33,9 +33,17 @@ export type Look = {
   /** A leitura do stylist — "Confiante e contemporâneo." */
   mood: string;
   /**
-   * Por que estas peças, juntas, funcionam.
+   * A frase que a Home mostra — uma só, inteira, nunca truncada.
    *
-   * Obrigatório: o Modo nunca mostra roupa sem explicar a escolha. É a
+   * Reticências no meio da fala do stylist quebram justamente a ilusão que o
+   * produto vende. Se não cabe, encurte o texto: não corte a frase.
+   */
+  summary: string;
+  /**
+   * A nota completa: por que estas peças, juntas, funcionam. Aparece no
+   * detalhe do look.
+   *
+   * Obrigatória. O Modo nunca mostra roupa sem explicar a escolha — é a
    * diferença entre uma consultoria e um gerador de combinações.
    */
   rationale: string;
