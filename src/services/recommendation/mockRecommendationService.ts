@@ -1,6 +1,8 @@
+import { wardrobeService } from '@/services/wardrobe';
+import { weatherService } from '@/services/weather';
 import type { Look } from '@/types/look';
 
-import { lookFixtures } from './fixtures';
+import { composeLook } from './composer';
 import type { RecommendationRequest, RecommendationService } from './types';
 
 /** Latência fingida — interface que nunca espera esconde defeito de estado. */
@@ -9,37 +11,46 @@ const LATENCY_MS = 700;
 const delay = (ms: number) =>
   new Promise<void>((resolve) => setTimeout(resolve, ms));
 
+/** Quantas variantes tentar antes de desistir de fugir dos looks já vistos. */
+const MAX_VARIANTS = 8;
+
 /**
  * Implementação de demonstração da porta de recomendação.
  *
- * Existe para validar UX, identidade e interação antes do backend. Não tem
- * regra de moda nenhuma: apenas devolve fixtures respeitando ocasião e
- * exclusões, com atraso, para que os estados de carga apareçam de verdade.
- *
- * Quando o motor real entrar, este arquivo sai e nenhuma tela muda.
+ * Já usa o motor determinístico de verdade sobre o armário de verdade — é por
+ * isso que adicionar uma peça muda a Home. O que ainda é mock: a latência, o
+ * texto (templates em vez do Gemini) e a ausência de ranqueamento entre
+ * candidatos.
  */
 export const mockRecommendationService: RecommendationService = {
   async getRecommendation({
-    occasion,
+    occasion = 'trabalho',
     excludeLookIds = [],
   }: RecommendationRequest): Promise<Look> {
     await delay(LATENCY_MS);
 
-    const candidates = lookFixtures.filter((look) => {
-      if (occasion && look.occasion !== occasion) return false;
-      return !excludeLookIds.includes(look.id);
-    });
+    const [wardrobe, weather] = await Promise.all([
+      wardrobeService.list(),
+      weatherService.current(),
+    ]);
 
-    // Esgotadas as opções novas, recomeça o ciclo em vez de falhar: sem rede,
-    // sem repertório ou sem backend, a Home nunca fica sem um look.
-    const pool = candidates.length > 0 ? candidates : lookFixtures;
-    const chosen = pool[Math.floor(Math.random() * pool.length)];
+    let fallback: Look | undefined;
 
-    if (!chosen) {
-      throw new Error('Nenhum look disponível.');
+    for (let variant = 0; variant < MAX_VARIANTS; variant += 1) {
+      const look = composeLook({ wardrobe, occasion, weather, variant });
+      if (!look) continue;
+
+      fallback ??= look;
+      if (!excludeLookIds.includes(look.id)) return look;
     }
 
-    return chosen;
+    // Esgotadas as variantes, repete a primeira em vez de falhar: a Home nunca
+    // pode ficar sem um look.
+    if (fallback) return fallback;
+
+    throw new Error(
+      'Seu armário ainda não tem peças suficientes para montar um look.'
+    );
   },
 
   async saveLook(): Promise<void> {

@@ -1,6 +1,3 @@
-import { EmScaffold } from '@/components/EmScaffold';
+import { WardrobeScreen } from '@/features/wardrobe';
 
-/** Placeholder — a tela do Armário é a próxima etapa. */
-export default function Armario() {
-  return <EmScaffold title="Armário" />;
-}
+export default WardrobeScreen;

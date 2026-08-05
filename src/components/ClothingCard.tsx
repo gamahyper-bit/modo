@@ -123,9 +123,11 @@ export function ClothingCard({
         />
       ) : (
         <View style={styles.placeholder}>
+          {/* Grande no grid: sem foto, um glifo pequeno no meio de um card de
+              retrato deixa o cartão parecendo vazio em vez de aguardando. */}
           <AppIcon
             name={placeholderIcon}
-            size={variant === 'grid' ? 40 : 'lg'}
+            size={variant === 'grid' ? 76 : 'lg'}
             color={colors.border}
           />
         </View>

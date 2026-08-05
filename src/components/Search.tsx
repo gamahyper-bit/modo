@@ -14,6 +14,7 @@ type SearchProps = {
   /** Busca em curso no servidor. */
   loading?: boolean;
   onSubmit?: () => void;
+  autoFocus?: boolean;
 };
 
 /** Busca do armário. Um campo, sem filtros embutidos — filtro é Chip. */
@@ -24,6 +25,7 @@ export function Search({
   disabled = false,
   loading = false,
   onSubmit,
+  autoFocus = false,
 }: SearchProps) {
   const [focused, setFocused] = useState(false);
 
@@ -44,6 +46,7 @@ export function Search({
         placeholder={placeholder}
         placeholderTextColor={colors.textSecondary}
         editable={!disabled}
+        autoFocus={autoFocus}
         returnKeyType="search"
         onSubmitEditing={onSubmit}
         onFocus={() => setFocused(true)}

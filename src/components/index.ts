@@ -45,5 +45,6 @@ export { Search } from './Search';
 export { Skeleton } from './Skeleton';
 export { Text } from './Text';
 export type { TextTone } from './Text';
+export { Toggle } from './Toggle';
 
 export { Reveal, Stagger, usePressMotion } from './motion';
