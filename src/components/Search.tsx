@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   focused: {
-    borderColor: colors.textPrimary,
+    borderColor: colors.signature,
   },
   input: {
     flex: 1,

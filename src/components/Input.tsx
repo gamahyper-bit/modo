@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   fieldFocused: {
-    borderColor: colors.textPrimary,
+    borderColor: colors.signature,
   },
   fieldError: {
     borderColor: colors.textPrimary,

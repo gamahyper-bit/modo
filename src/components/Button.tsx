@@ -30,7 +30,9 @@ type ButtonProps = {
   fullWidth?: boolean;
 };
 
-const heights: Record<ButtonSize, number> = { md: 44, lg: 52 };
+// Alturas próximas das do iOS. Botão alto demais ocupa peso que pertence ao
+// conteúdo — e o conteúdo aqui é a roupa.
+const heights: Record<ButtonSize, number> = { md: 40, lg: 48 };
 const iconSizes: Record<ButtonSize, IconSizeToken> = { md: 'sm', lg: 'md' };
 
 const surfaces: Record<ButtonVariant, object> = {

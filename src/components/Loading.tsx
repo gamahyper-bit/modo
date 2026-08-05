@@ -31,7 +31,7 @@ const TRACK_OPACITY = 0.18;
  * A trilha gira junto com o arco, e isso não tem consequência: um círculo
  * completo é simétrico à rotação.
  */
-export function Loading({ size = 20, color = colors.textPrimary }: LoadingProps) {
+export function Loading({ size = 20, color = colors.signature }: LoadingProps) {
   const spinStyle = useSpin();
 
   return (

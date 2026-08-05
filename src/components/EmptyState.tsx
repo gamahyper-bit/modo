@@ -1,67 +1,71 @@
 import { StyleSheet, View } from 'react-native';
 
-import { colors, spacing } from '@/theme';
+import { spacing } from '@/theme';
 
-import { AppIcon, type AppIconName } from './AppIcon';
 import { Button } from './Button';
 import { Text } from './Text';
 
 type EmptyStateProps = {
-  /** Uma frase afirmativa. Nunca uma constatação de falta. */
+  /**
+   * A afirmação. Escreva com quebras de linha propositais — este texto é
+   * composto, não corrido:
+   *
+   *   'Seu guarda-roupa\ntem mais potencial\ndo que parece.'
+   */
   title: string;
   /** O próximo passo, em uma linha. */
   description?: string;
-  icon?: AppIconName;
   actionLabel?: string;
   onAction?: () => void;
   loading?: boolean;
 };
 
 /**
- * Estado vazio.
+ * Estado vazio — uma página de campanha, não um aviso de sistema.
  *
- * Tom de voz da marca: claro, direto, humano — o stylist entende, sugere e
- * confia. Na prática, três regras para qualquer texto que passe por aqui:
+ * Alinhado à esquerda e em tipografia de display, porque um vazio centralizado
+ * com ícone acima lê como erro. Aqui não há erro nenhum: há um convite. É a
+ * primeira vez que o produto fala sozinho com o usuário, e precisa soar como a
+ * capa de um editorial.
  *
- * 1. O título **convida**, não constata. "Comece pelo essencial", não "Nenhuma
- *    peça encontrada".
- * 2. A descrição diz **o que fazer** e o que vem depois. Uma linha.
- * 3. Nada de desculpas, emoji ou entusiasmo forçado. Sem exageros, sem
+ * Tom de voz — três regras para qualquer texto que passe por aqui:
+ *
+ * 1. O título **afirma um potencial**, não constata uma falta. "Seu
+ *    guarda-roupa tem mais potencial do que parece", nunca "Nenhuma peça
+ *    encontrada".
+ * 2. A descrição diz **o que fazer**, em uma linha, sem explicar o produto.
+ * 3. Sem desculpas, sem emoji, sem entusiasmo forçado. Sem exageros, sem
  *    promessas vazias.
  *
- * O ícone é da família própria, em traço fino e cor de borda: ele situa, não
- * ilustra.
+ * Sem ícone: a tipografia carrega sozinha. Um ícone aqui devolveria o estado ao
+ * vocabulário de sistema do qual queremos sair.
  */
 export function EmptyState({
   title,
   description,
-  icon = 'cabide',
   actionLabel,
   onAction,
   loading = false,
 }: EmptyStateProps) {
   return (
     <View style={styles.container}>
-      <AppIcon name={icon} size={40} color={colors.borderStrong} />
+      <Text variant="display">{title}</Text>
 
-      <View style={styles.copy}>
-        <Text variant="title" style={styles.centered}>
-          {title}
+      {description ? (
+        <Text variant="body" tone="secondary" style={styles.description}>
+          {description}
         </Text>
-        {description ? (
-          <Text variant="body" tone="secondary" style={styles.centered}>
-            {description}
-          </Text>
-        ) : null}
-      </View>
+      ) : null}
 
       {actionLabel && onAction ? (
-        <Button
-          label={actionLabel}
-          onPress={onAction}
-          loading={loading}
-          fullWidth={false}
-        />
+        <View style={styles.action}>
+          <Button
+            label={actionLabel}
+            onPress={onAction}
+            loading={loading}
+            fullWidth={false}
+          />
+        </View>
       ) : null}
     </View>
   );
@@ -69,17 +73,13 @@ export function EmptyState({
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    paddingHorizontal: spacing.xl,
     paddingVertical: spacing['3xl'],
-    gap: spacing.xl,
   },
-  copy: {
-    alignItems: 'center',
-    gap: spacing.sm,
-    maxWidth: 300,
+  description: {
+    marginTop: spacing.lg,
+    maxWidth: 280,
   },
-  centered: {
-    textAlign: 'center',
+  action: {
+    marginTop: spacing['2xl'],
   },
 });

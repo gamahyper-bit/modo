@@ -20,11 +20,15 @@ export type LookCardLayout = 'hero' | 'stacked';
 
 type LookCardProps = {
   /**
-   * A leitura emocional do look — "Confiante e contemporâneo".
-   * Vem antes de tudo: é o que o stylist diz, e é o que convence.
+   * A abertura — "Hoje.", "Para hoje à noite.", "Sexta-feira."
+   *
+   * Uma palavra situa o leitor antes da recomendação chegar, e é ela que abre
+   * espaço emocional para a frase seguinte. Sem isso o card começa julgando.
    */
+  moment: string;
+  /** A leitura do stylist — "Confiante e contemporâneo." */
   mood: string;
-  /** Contexto de apoio: ocasião, clima, data. */
+  /** Rodapé factual: ocasião e clima. */
   context?: string;
   imageUri?: string;
   layout?: LookCardLayout;
@@ -37,11 +41,17 @@ type LookCardProps = {
 /**
  * O look recomendado.
  *
- * A hierarquia é deliberada: **emoção primeiro, ocasião depois**. "Trabalho" é
- * um dado; "Confiante e contemporâneo" é a consultoria. Invertendo isso o card
- * vira etiqueta de categoria e o produto perde a voz de stylist.
+ * A hierarquia é deliberada e tem três tempos:
+ *
+ *   Hoje.                        ← situa
+ *   Confiante e contemporâneo.   ← a consultoria
+ *   Trabalho · 18°C              ← o dado
+ *
+ * "Trabalho" é informação; "Confiante e contemporâneo" é a voz do stylist. Com
+ * o dado no topo o card vira etiqueta de categoria e o produto perde a voz.
  */
 export function LookCard({
+  moment,
   mood,
   context,
   imageUri,
@@ -62,20 +72,26 @@ export function LookCard({
     );
   }
 
+  const hero = layout === 'hero';
+
   const legend = (
-    <View style={layout === 'hero' ? styles.legendHero : styles.legendStacked}>
+    <View style={hero ? styles.legendHero : styles.legendStacked}>
+      <Text variant="title" tone={hero ? 'inverse' : 'primary'}>
+        {moment}
+      </Text>
       <Text
         variant="title"
-        tone={layout === 'hero' ? 'inverse' : 'primary'}
+        tone={hero ? 'inverse' : 'primary'}
         numberOfLines={2}
+        style={styles.mood}
       >
         {mood}
       </Text>
       {context ? (
         <Text
-          variant="label"
-          tone={layout === 'hero' ? 'inverse' : 'secondary'}
-          style={layout === 'hero' ? styles.contextHero : undefined}
+          variant="caption"
+          tone={hero ? 'inverse' : 'secondary'}
+          style={hero ? styles.contextHero : styles.context}
         >
           {context}
         </Text>
@@ -143,7 +159,7 @@ export function LookCard({
     <Animated.View style={[container, animatedStyle]}>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={mood}
+        accessibilityLabel={`${moment} ${mood}`}
         accessibilityHint={context}
         onPress={onPress}
         {...pressHandlers}
@@ -189,14 +205,20 @@ const styles = StyleSheet.create({
   },
   legendHero: {
     flex: 1,
-    gap: spacing.xs,
   },
   legendStacked: {
     marginTop: spacing.lg,
-    gap: spacing.xs,
+  },
+  // "Hoje." e a leitura do stylist são uma frase só, quebrada em duas linhas.
+  mood: {
+    marginTop: 2,
+  },
+  context: {
+    marginTop: spacing.sm,
   },
   contextHero: {
-    opacity: 0.75,
+    marginTop: spacing.sm,
+    opacity: 0.7,
   },
   action: {
     width: 40,

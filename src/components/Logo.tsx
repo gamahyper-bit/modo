@@ -16,7 +16,21 @@ import { Text } from './Text';
  * fonte de display troca a marca junto, como deve ser.
  */
 const GRID = 64;
-const FRAME_PATH = 'M40 58 L6 58 L6 6 L58 6 L58 40';
+
+/**
+ * A moldura, aberta no quadrante inferior direito.
+ *
+ * O vão vai de (58,30) a (30,58) — largo o bastante para o M ocupá-lo inteiro.
+ * Com uma abertura estreita o M encostava nas arestas e o símbolo lia como
+ * erro de alinhamento; aqui ele **fecha** a moldura, que é exatamente o
+ * conceito: enquadrar para revelar o essencial.
+ */
+const FRAME_PATH = 'M30 58 L6 58 L6 6 L58 6 L58 30';
+
+/** Centro do vão. O M é posicionado nele, não no centro do quadro. */
+const MARK_X = 44;
+const MARK_BASELINE = 55;
+const MARK_SIZE = 32;
 
 type LogoProps = {
   /** `mark` = só o símbolo. `wordmark` = símbolo + MODO. */
@@ -44,10 +58,10 @@ export function Logo({
           strokeLinejoin="miter"
         />
         <SvgText
-          x={42}
-          y={54}
+          x={MARK_X}
+          y={MARK_BASELINE}
           fill={color}
-          fontSize={40}
+          fontSize={MARK_SIZE}
           fontFamily={fontFamily.display}
           textAnchor="middle"
         >

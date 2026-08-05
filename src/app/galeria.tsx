@@ -222,8 +222,9 @@ export default function Galeria() {
 
         <Section title="LookCard — emoção antes da ocasião">
           <LookCard
-            mood="Confiante e contemporâneo"
-            context="Trabalho · Hoje · 18°C"
+            moment="Hoje."
+            mood="Confiante e contemporâneo."
+            context="Trabalho · 18°C"
             onPress={() => {}}
           />
         </Section>
@@ -270,9 +271,9 @@ export default function Galeria() {
 
         <Section title="EmptyState">
           <EmptyState
-            title="Comece pelo essencial"
-            description="Fotografe as peças que você mais usa. Com poucas, o Modo já revela combinações."
-            actionLabel="Adicionar peça"
+            title={'Seu guarda-roupa\ntem mais potencial\ndo que parece.'}
+            description="Fotografe as peças que você mais usa."
+            actionLabel="Adicionar primeira peça"
             onAction={() => {}}
           />
         </Section>

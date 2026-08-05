@@ -11,7 +11,7 @@ import Animated from 'react-native-reanimated';
 
 import { colors, disabledOpacity, radius, spacing } from '@/theme';
 
-import { AppIcon } from './AppIcon';
+import { AppIcon, type AppIconName } from './AppIcon';
 import { Skeleton } from './Skeleton';
 import { Text } from './Text';
 import { usePressMotion } from './motion';
@@ -53,10 +53,18 @@ type ClothingCardProps = {
    * no armário a peça se identifica pela própria foto.
    */
   showCaption?: boolean;
+  /**
+   * Glifo exibido enquanto não há foto. Passe a categoria da peça: um cabide
+   * genérico numa fileira de quatro peças não distingue nada.
+   */
+  placeholderIcon?: AppIconName;
 };
 
-const COMPACT_SIZE = 56;
-const LIST_THUMB_SIZE = 72;
+// Miniaturas em retrato, na mesma proporção 3:4 do grid.
+const COMPACT_WIDTH = 48;
+const COMPACT_HEIGHT = 64;
+const LIST_THUMB_WIDTH = 60;
+const LIST_THUMB_HEIGHT = 80;
 
 /**
  * O componente principal do Modo.
@@ -78,6 +86,7 @@ export function ClothingCard({
   slots,
   style,
   showCaption = variant === 'list',
+  placeholderIcon = 'cabide',
 }: ClothingCardProps) {
   const inactive = disabled || loading || !onPress;
   const { animatedStyle, pressHandlers } = usePressMotion({ inactive });
@@ -114,7 +123,11 @@ export function ClothingCard({
         />
       ) : (
         <View style={styles.placeholder}>
-          <AppIcon name="cabide" size="lg" color={colors.border} />
+          <AppIcon
+            name={placeholderIcon}
+            size={variant === 'grid' ? 40 : 'lg'}
+            color={colors.border}
+          />
         </View>
       )}
 
@@ -201,7 +214,7 @@ function SelectionMark({ selected }: { selected: boolean }) {
   return (
     <View style={[styles.mark, selected && styles.markSelected]}>
       {selected ? (
-        <AppIcon name="confirmar" size={12} color={colors.onAccent} />
+        <AppIcon name="confirmar" size={12} color={colors.onSignature} />
       ) : null}
     </View>
   );
@@ -220,7 +233,7 @@ function ClothingCardSkeleton({
   if (variant === 'compact') {
     return (
       <View style={[styles.compact, style]}>
-        <Skeleton width={COMPACT_SIZE} height={COMPACT_SIZE} radius="md" />
+        <Skeleton width={COMPACT_WIDTH} height={COMPACT_HEIGHT} radius="md" />
       </View>
     );
   }
@@ -229,7 +242,11 @@ function ClothingCardSkeleton({
     return (
       <View style={[styles.container, style]}>
         <View style={styles.row}>
-          <Skeleton width={LIST_THUMB_SIZE} height={LIST_THUMB_SIZE} radius="md" />
+          <Skeleton
+            width={LIST_THUMB_WIDTH}
+            height={LIST_THUMB_HEIGHT}
+            radius="md"
+          />
           <View style={styles.captionList}>
             <Skeleton width="70%" height={17} />
             <View style={{ height: spacing.xs }} />
@@ -261,7 +278,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   compact: {
-    width: COMPACT_SIZE,
+    width: COMPACT_WIDTH,
   },
   row: {
     flexDirection: 'row',
@@ -269,31 +286,36 @@ const styles = StyleSheet.create({
     gap: spacing.lg,
   },
   stage: {
-    aspectRatio: 1,
+    // Retrato, não quadrado: a roupa é vertical e o quadrado a comprimia. E o
+    // respiro que sobrava nas laterais virava moldura em vez de ar.
+    aspectRatio: 3 / 4,
     backgroundColor: colors.garmentStage,
     borderRadius: radius.lg,
     borderWidth: 1,
     borderColor: colors.border,
-    padding: spacing.lg,
+    // Padding mínimo: a foto ocupa praticamente todo o card. A peça é a
+    // protagonista, o palco é só o que a sustenta.
+    padding: spacing.sm,
     overflow: 'hidden',
   },
   stageCompact: {
-    width: COMPACT_SIZE,
-    height: COMPACT_SIZE,
+    width: COMPACT_WIDTH,
+    height: COMPACT_HEIGHT,
     borderRadius: radius.md,
-    padding: spacing.sm,
+    padding: spacing.xs,
   },
   stageList: {
-    width: LIST_THUMB_SIZE,
-    height: LIST_THUMB_SIZE,
+    width: LIST_THUMB_WIDTH,
+    height: LIST_THUMB_HEIGHT,
     borderRadius: radius.md,
-    padding: spacing.sm,
+    padding: spacing.xs,
   },
   stageSelected: {
-    borderColor: colors.accent,
+    borderColor: colors.signature,
+    borderWidth: 1.5,
   },
   stageSkeleton: {
-    aspectRatio: 1,
+    aspectRatio: 3 / 4,
   },
   photo: {
     flex: 1,
@@ -329,7 +351,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   markSelected: {
-    backgroundColor: colors.accent,
-    borderColor: colors.accent,
+    backgroundColor: colors.signature,
+    borderColor: colors.signature,
   },
 });

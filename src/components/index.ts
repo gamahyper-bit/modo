@@ -44,4 +44,4 @@ export { Skeleton } from './Skeleton';
 export { Text } from './Text';
 export type { TextTone } from './Text';
 
-export { Reveal, Stagger } from './motion';
+export { Reveal, Stagger, usePressMotion } from './motion';
