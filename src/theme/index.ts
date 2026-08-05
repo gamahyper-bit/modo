@@ -13,7 +13,14 @@ export type { RadiusToken } from './radius';
 export { shadow } from './shadow';
 export type { ShadowToken } from './shadow';
 
-export { duration, easing, revealOffset } from './motion';
+export {
+  duration,
+  easing,
+  revealOffset,
+  press,
+  disabledOpacity,
+  staggerStep,
+} from './motion';
 export type { DurationToken, EasingToken } from './motion';
 
 export { iconSize, iconStroke } from './icons';

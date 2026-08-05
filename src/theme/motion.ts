@@ -6,6 +6,9 @@ import { Easing } from 'react-native-reanimated';
  * Nada entra em cena com salto ou quique. Tudo desliza curto e desacelera —
  * o movimento precisa parecer que alguém posicionou a peça, não que o software
  * animou um elemento.
+ *
+ * Estes são os *tokens*. Quem os aplica é `src/components/motion`: nenhum
+ * componente escreve `withTiming` por conta própria.
  */
 export const duration = {
   /** Feedback de toque. */
@@ -29,6 +32,21 @@ export const easing = {
 
 /** Deslocamento vertical padrão de uma entrada revelada. */
 export const revealOffset = 12;
+
+/**
+ * Resposta ao toque. O elemento cede de leve — o suficiente para o dedo sentir,
+ * pouco o bastante para não parecer brinquedo.
+ */
+export const press = {
+  scale: 0.97,
+  opacity: 0.9,
+} as const;
+
+/** Opacidade de um elemento desabilitado. */
+export const disabledOpacity = 0.35;
+
+/** Intervalo entre itens de uma sequência revelada (grid do armário, chips). */
+export const staggerStep = 45;
 
 export type DurationToken = keyof typeof duration;
 export type EasingToken = keyof typeof easing;
