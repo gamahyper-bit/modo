@@ -5,6 +5,34 @@ look — a IA trabalha nos bastidores, o usuário apenas confirma.
 
 > O Modo revela a melhor escolha.
 
+## Documentação
+
+| Documento                                | Para quê                           |
+| ---------------------------------------- | ---------------------------------- |
+| [Backlog](./docs/backlog.md)             | fonte única das entregas           |
+| [Roadmap](./docs/roadmap.md)             | versões e o que fecha cada uma     |
+| [Produto](./docs/product.md)             | o que é, o que não é, tom de voz   |
+| [Arquitetura](./docs/architecture.md)    | camadas, portas, estado            |
+| [Decisões](./docs/decisions.md)          | por que cada escolha foi feita     |
+| [Design system](./docs/design-system.md) | tokens e componentes               |
+| [API](./docs/api.md)                     | portas de serviço e Edge Functions |
+| [Banco](./docs/database.md)              | schema, RLS e Storage              |
+| [Changelog](./docs/changelog.md)         | o que mudou em cada versão         |
+
+## Como trabalhamos
+
+`main` é sempre estável — nunca receba commit direto.
+
+```
+main → feature/nome → PR → review → merge → delete branch
+```
+
+Prefixos: `feature/` · `fix/` · `refactor/`.
+
+Antes de abrir branch, o item precisa existir no backlog. Uma tarefa só é
+`Done` com os sete itens da definição de pronto — o
+[template de PR](./.github/pull_request_template.md) cobra todos.
+
 ## Estado atual
 
 O ciclo principal do produto funciona ponta a ponta, com dados de demonstração:
