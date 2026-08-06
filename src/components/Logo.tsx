@@ -1,7 +1,17 @@
 import { View } from 'react-native';
 import Svg, { Path, Text as SvgText } from 'react-native-svg';
 
-import { colors, fontFamily, spacing } from '@/theme';
+import {
+  BRAND_GRID,
+  FRAME_PATH,
+  FRAME_STROKE,
+  MARK_BASELINE,
+  MARK_SIZE,
+  MARK_X,
+  colors,
+  fontFamily,
+  spacing,
+} from '@/theme';
 
 import { Text } from './Text';
 
@@ -14,24 +24,10 @@ import { Text } from './Text';
  *
  * O M é tipografia real (a serifa de display do produto), não um path: trocar a
  * fonte de display troca a marca junto, como deve ser.
- */
-const GRID = 64;
-
-/**
- * A moldura, aberta no quadrante inferior direito.
  *
- * O vão vai de (58,30) a (30,58) — largo o bastante para o M ocupá-lo inteiro.
- * Com uma abertura estreita o M encostava nas arestas e o símbolo lia como
- * erro de alinhamento; aqui ele **fecha** a moldura, que é exatamente o
- * conceito: enquadrar para revelar o essencial.
+ * A geometria vive em `theme/brand.ts`, e não aqui, porque o ícone do app e o
+ * splash são gerados a partir dela pelo mesmo conjunto de números.
  */
-const FRAME_PATH = 'M30 58 L6 58 L6 6 L58 6 L58 30';
-
-/** Centro do vão. O M é posicionado nele, não no centro do quadro. */
-const MARK_X = 44;
-const MARK_BASELINE = 55;
-const MARK_SIZE = 32;
-
 type LogoProps = {
   /** `mark` = só o símbolo. `wordmark` = símbolo + MODO. */
   variant?: 'mark' | 'wordmark';
@@ -45,11 +41,16 @@ export function Logo({
   color = colors.textPrimary,
 }: LogoProps) {
   // O traço acompanha a escala do símbolo, como na família de ícones.
-  const stroke = (2.5 * size) / GRID;
+  const stroke = (FRAME_STROKE * size) / BRAND_GRID;
 
   return (
     <View className="items-center">
-      <Svg width={size} height={size} viewBox={`0 0 ${GRID} ${GRID}`} fill="none">
+      <Svg
+        width={size}
+        height={size}
+        viewBox={`0 0 ${BRAND_GRID} ${BRAND_GRID}`}
+        fill="none"
+      >
         <Path
           d={FRAME_PATH}
           stroke={color}

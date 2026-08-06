@@ -10,6 +10,27 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
 
 ## [Não lançado]
 
+### Adicionado — identidade própria no aparelho (MOD-021)
+
+- **Ícone, splash e favicon com a marca**, no lugar dos ativos de template do
+  Expo. O símbolo FRAME em tinta sobre off-white; no Android, ícone adaptativo
+  com camada da frente transparente e versão monocromática para o tema do
+  sistema.
+- **`npm run brand` gera todos os PNG** a partir de `theme/brand.ts`, a mesma
+  geometria que o componente `Logo` desenha em tela (DEC-021). O M é tipografia
+  real, então o gerador carrega a fonte de display do app — comprar a licença de
+  PP Editorial New (DEC-001) troca o ícone junto.
+- **Um teste compara os arquivos em disco com o que a geometria produz agora.**
+  Mexer na marca e esquecer de regenerar deixa de ser possível em silêncio: é o
+  jeito clássico de o ícone da tela inicial virar uma versão antiga do logo.
+- As margens de cada ativo passaram a ser explícitas e justificadas: o iOS
+  recorta em cantos arredondados a partir de uns 22% da borda, o Android usa uma
+  máscara que muda por aparelho, e o favicon vive com 16 pixels.
+- `assets/android-icon-background.png` removido — órfão, o `app.json` já pinta o
+  fundo do ícone adaptativo por `backgroundColor`.
+- Splash de 120 para 160 px de largura: com a marca em traço fino, 120 lia como
+  inacabado.
+
 ### Corrigido — "Ajustar" passa a ajustar (MOD-018)
 
 - **O ajuste chega ao motor.** `composeLook` lê `adjustments` e os traduz em
@@ -86,6 +107,7 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
 - **DEC-018** — ajuste é parâmetro do motor, não caso especial.
 - **DEC-019** — régua de formalidade no lugar da prioridade por ocasião.
 - **DEC-020** — o ajuste entra no id do look.
+- **DEC-021** — ícone gerado a partir da geometria da marca.
 
 ### Adicionado — marca e jornadas
 

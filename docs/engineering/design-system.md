@@ -81,6 +81,35 @@ cabide.
 
 Tamanhos: `sm` 16 · `md` 20 · `lg` 24 · `xl` 28.
 
+## A marca
+
+A geometria do símbolo FRAME vive em `theme/brand.ts` — grid, path da moldura,
+espessura do traço e posição do M. Ela tem **dois consumidores**:
+
+| Consumidor             | Onde aparece              |
+| ---------------------- | ------------------------- |
+| `Logo`                 | cabeçalho, login, galeria |
+| `scripts/brand-assets` | ícone, splash e favicon   |
+
+```bash
+npm run brand   # regenera todos os PNG de assets/
+```
+
+**Por que um script.** "Gerado à mão uma vez" é como o ícone de um app vira uma
+versão antiga da marca: o logo em tela atualiza sozinho, o ícone da tela inicial
+fica no desenho de seis meses atrás, e a diferença só aparece quando alguém põe
+os dois lado a lado. Um teste compara os PNG em disco com o que a geometria
+produz agora — mexeu em `brand.ts` e não rodou `npm run brand`, reprova.
+
+**O M é tipografia, não desenho.** O gerador carrega a mesma fonte de display
+que o app embarca. Comprar a licença de PP Editorial New (DEC-001) troca o
+ícone junto, e é o comportamento certo.
+
+**As margens não são iguais entre os ativos**, e é de propósito: o iOS recorta
+em cantos arredondados a partir de uns 22% da borda, o Android recorta a camada
+da frente com uma máscara que muda por aparelho, e o favicon vive com 16 pixels.
+Cada receita em `scripts/brand-assets.ts` diz por quê.
+
 ## Componentes
 
 | Componente              | Variantes                           | Estados            |

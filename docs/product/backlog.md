@@ -50,7 +50,7 @@ Cada item declara também o **valor** que entrega, em uma frase.
 | MOD-017     | Edge Function de leitura              | 06     | J3     | 2     | Done          | P0     | M     | v0.4     |
 | **MOD-018** | **Ajustar não altera a recomendação** | **02** | **J2** | **5** | **In Review** | **P0** | **M** | **v0.2** |
 | **MOD-019** | **Testes do motor**                   | **07** | **J2** | **2** | **Ready**     | **P0** | **P** | **v0.2** |
-| **MOD-021** | **Ícone e splash da marca**           | **01** | **J1** | **3** | **Ready**     | **P1** | **P** | **v0.2** |
+| **MOD-021** | **Ícone e splash da marca**           | **01** | **J1** | **3** | **In Review** | **P1** | **P** | **v0.2** |
 | **MOD-020** | **Integração contínua**               | **07** | **J5** | **1** | **Ready**     | **P1** | **P** | **v0.2** |
 | MOD-022     | Detalhe da peça                       | 03     | J4     | 3     | Backlog       | P1     | M     | v0.2     |
 | MOD-023     | Editar e remover peça                 | 03     | J3     | 4     | Backlog       | P1     | M     | v0.2     |
@@ -77,12 +77,17 @@ Cada item declara também o **valor** que entrega, em uma frase.
 | #   | Branch                         | Item    | Valor entregue                           |
 | --- | ------------------------------ | ------- | ---------------------------------------- |
 | 1   | `fix/look-adjustments`         | MOD-018 | "Ajustar" passa a fazer o que promete    |
-| 2   | `feature/recommendation-tests` | MOD-019 | a recomendação para de errar em silêncio |
-| 3   | `feature/brand-assets`         | MOD-021 | o app deixa de ter ícone de template     |
+| 2   | `feature/brand-assets`         | MOD-021 | o app deixa de ter ícone de template     |
+| 3   | `feature/recommendation-tests` | MOD-019 | a recomendação para de errar em silêncio |
 | 4   | `feature/ci`                   | MOD-020 | _(risco)_ nenhuma entrega quebra `main`  |
 
 MOD-020 é **o único item de risco puro** da sprint, e por isso vai por último —
 quando já reduziu a incerteza dos três anteriores.
+
+**MOD-021 passou na frente de MOD-019.** MOD-018 trouxe o runner de testes e a
+cobertura dos ajustes, então MOD-019 encolheu para o que sobrou e deixou de ser
+o próximo passo natural. Entre um item de produto pronto para entregar e um de
+cobertura reduzida, a regra do valor manda o produto na frente.
 
 ---
 
@@ -214,7 +219,7 @@ uniforme; camisa antes de camiseta; sem peça estrutural não recomenda.
 
 ## EPIC-01 — Identidade
 
-### MOD-021 — Ícone e splash da marca · `Ready` · P1 · P
+### MOD-021 — Ícone e splash da marca · `In Review` · P1 · P
 
 **Objetivo.** Tirar o ícone do template Expo da tela inicial do aparelho.
 
@@ -230,10 +235,17 @@ marca. Geração por script, para o ícone nunca divergir do logo.
 
 **Critérios de aceite**
 
-- [ ] Ícone iOS e Android derivados do `Logo`
-- [ ] Splash com a marca sobre o off-white
-- [ ] Favicon da web
-- [ ] Geração reprodutível por script versionado
+- [x] Ícone iOS e Android derivados do `Logo`
+- [x] Splash com a marca sobre o off-white
+- [x] Favicon da web
+- [x] Geração reprodutível por script versionado
+
+**A geometria subiu para `theme/brand.ts`.** "Derivar do `Logo`" na prática
+significava importar um componente React de dentro de um script Node, o que não
+funciona. O que os dois precisam compartilhar não é o componente: são os
+números. `Logo` desenha a partir deles em tela, o script desenha a partir deles
+em PNG, e um teste compara os PNG em disco com o que a geometria produz agora —
+esquecer de rodar `npm run brand` reprova.
 
 ---
 
