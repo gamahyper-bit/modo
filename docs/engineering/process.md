@@ -54,10 +54,17 @@ Um item só entra numa sprint quando **todos** estes forem verdade.
 
 - [ ] **Pertence a um epic.** Se não couber em nenhum, está fora do produto ou
       falta um epic.
+- [ ] **Serve a uma jornada.** Qual das
+      [jornadas](../product/journeys.md) esta entrega aproxima de utilizável.
+      Item que não serve nenhuma é candidato a sair do backlog.
 - [ ] **Objetivo em uma frase**, do ponto de vista do usuário — não da
       implementação.
 - [ ] **Valor declarado.** O que o usuário percebe depois desta entrega. Se
       nada, ver a regra do valor abaixo.
+- [ ] **Impacto de 1 a 5** atribuído, com a escala do
+      [backlog](../product/backlog.md).
+- [ ] **Hipótese de produto declarada.** O que esta entrega permite descobrir —
+      ver abaixo.
 - [ ] **Critérios de aceite verificáveis.** Cada um precisa ser respondível com
       sim ou não por outra pessoa.
 - [ ] **Dependências resolvidas ou identificadas**, com o item que as resolve.
@@ -66,6 +73,52 @@ Um item só entra numa sprint quando **todos** estes forem verdade.
 - [ ] **Nenhuma pergunta aberta** que mude o escopo.
 
 Item que não passa fica em `Backlog`. Item que passa vira `Ready`.
+
+---
+
+## Planejamento orientado por jornadas
+
+**Não planejamos por tela. Planejamos por jornada.**
+
+Uma tela pronta não é valor. Valor é o usuário conseguir ir do começo ao fim de
+uma intenção sem travar. Cinco telas bonitas com um buraco entre elas valem
+menos que três telas simples que se conectam.
+
+As cinco jornadas estão em [`journeys.md`](../product/journeys.md), com o estado
+de cada uma. Consequências práticas:
+
+1. Todo item do backlog declara a jornada que serve.
+2. Todo PR responde qual jornada aproximou de utilizável.
+3. **Preferimos fechar uma jornada a avançar quatro pela metade.**
+4. Uma tela pronta sem jornada fechada não conta como entrega.
+
+A sprint deixa de ser descrita como "entrega o Armário e o Perfil" e passa a ser
+"leva J2 de Frágil para Utilizável".
+
+---
+
+## A hipótese de produto
+
+Todo PR responde: **qual hipótese de produto esta entrega valida?**
+
+Uma hipótese é uma afirmação que pode estar errada e que a entrega permite
+testar. Não é o objetivo repetido com outras palavras.
+
+❌ _"A hipótese é que o usuário quer ajustar o look."_ — isso é o objetivo.
+✅ _"Hipótese: o usuário confia mais na recomendação quando o ajuste responde de
+forma previsível. Se depois disso ele continuar gerando outro várias vezes antes
+de aceitar, o problema não é o ajuste — é a recomendação inicial."_
+
+A hipótese boa tem três partes:
+
+1. **A afirmação** — o que acreditamos.
+2. **O que confirmaria** — qual comportamento indicaria que estávamos certos.
+3. **O que refutaria** — e este é o que quase sempre falta. Uma hipótese que não
+   pode ser refutada não é hipótese, é torcida.
+
+**Por que isso importa.** O produto ainda não tem usuários, então nenhuma
+hipótese será medida agora. O valor está em **escrever o critério antes** — é o
+que impede racionalizar qualquer resultado depois como sucesso.
 
 ---
 

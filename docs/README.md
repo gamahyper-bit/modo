@@ -2,32 +2,44 @@
 
 ```
 docs/
-  vision.md          princípios permanentes — quase não muda
+  vision.md          pilares e princípios permanentes — quase não muda
   decisions.md       DEC-*, a ponte entre produto e engenharia
   changelog.md       o que mudou em cada versão
+  brand/             quem o Modo é
   product/           o quê e por quê
   engineering/       como
 ```
 
 ## Comece por aqui
 
-| Se você quer…                 | Leia                                                                                        |
-| ----------------------------- | ------------------------------------------------------------------------------------------- |
-| entender o produto            | [`vision.md`](./vision.md) → [`product/product.md`](./product/product.md)                   |
-| saber o que vem a seguir      | [`product/roadmap.md`](./product/roadmap.md) → [`product/backlog.md`](./product/backlog.md) |
-| pegar uma tarefa              | [`engineering/process.md`](./engineering/process.md) → o item no backlog                    |
-| mexer no código               | [`engineering/architecture.md`](./engineering/architecture.md)                              |
-| mexer na interface            | [`engineering/design-system.md`](./engineering/design-system.md)                            |
-| entender uma escolha estranha | [`decisions.md`](./decisions.md)                                                            |
+| Se você quer…                 | Leia                                                                                          |
+| ----------------------------- | --------------------------------------------------------------------------------------------- |
+| entender o produto            | [`vision.md`](./vision.md) → [`brand/manifesto.md`](./brand/manifesto.md)                     |
+| saber o que vem a seguir      | [`product/journeys.md`](./product/journeys.md) → [`product/backlog.md`](./product/backlog.md) |
+| escrever qualquer texto       | [`brand/copy.md`](./brand/copy.md)                                                            |
+| pegar uma tarefa              | [`engineering/process.md`](./engineering/process.md) → o item no backlog                      |
+| mexer no código               | [`engineering/architecture.md`](./engineering/architecture.md)                                |
+| mexer na interface            | [`engineering/design-system.md`](./engineering/design-system.md)                              |
+| entender uma escolha estranha | [`decisions.md`](./decisions.md)                                                              |
+
+## Marca
+
+| Documento                              | Responde                                     |
+| -------------------------------------- | -------------------------------------------- |
+| [`manifesto.md`](./brand/manifesto.md) | por que o Modo existe e o que promete        |
+| [`voice.md`](./brand/voice.md)         | como o Modo fala                             |
+| [`visual.md`](./brand/visual.md)       | como o Modo se parece                        |
+| [`copy.md`](./brand/copy.md)           | regras práticas para escrever qualquer texto |
 
 ## Produto
 
-| Documento                            | Responde                                            |
-| ------------------------------------ | --------------------------------------------------- |
-| [`product.md`](./product/product.md) | o que é, o que não é, tom de voz, regras de produto |
-| [`epics.md`](./product/epics.md)     | os sete eixos de valor                              |
-| [`roadmap.md`](./product/roadmap.md) | versões, milestones e o que fecha cada uma          |
-| [`backlog.md`](./product/backlog.md) | fonte única das entregas                            |
+| Documento                              | Responde                                   |
+| -------------------------------------- | ------------------------------------------ |
+| [`product.md`](./product/product.md)   | o que é, o que não é, regras de produto    |
+| [`journeys.md`](./product/journeys.md) | as cinco jornadas e o estado de cada uma   |
+| [`epics.md`](./product/epics.md)       | os sete eixos de valor                     |
+| [`roadmap.md`](./product/roadmap.md)   | versões, milestones e o que fecha cada uma |
+| [`backlog.md`](./product/backlog.md)   | fonte única das entregas                   |
 
 ## Engenharia
 

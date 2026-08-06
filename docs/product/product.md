@@ -46,17 +46,19 @@ Estas não são preferências. São regras que a implementação precisa garanti
 Claro, direto, humano, inteligente, inspirador. O stylist entende, sugere e
 confia.
 
-**A regra prática:** o texto fala do dia do usuário, não da composição. "Ancora
-o look", "abre o contraste" e "quebra a formalidade" são laudo técnico — o
-usuário não sabe o que fazer com isso.
+**A regra que resolve quase tudo:** o texto fala do dia do usuário, não da
+composição. Se a frase caberia numa etiqueta de vitrine, reescreva.
 
 ✅ _"Comecei pela camisa preta: ela aguenta o dia inteiro sem marcar nada."_
 ❌ _"A camisa preta ancora o look e a alfaiataria abre o contraste."_
 
-Se a frase caberia numa etiqueta de vitrine, reescreva.
+O tratamento completo está em [`brand/voice.md`](../brand/voice.md); as regras
+por elemento de interface, em [`brand/copy.md`](../brand/copy.md).
 
-**Estado vazio é convite, não constatação.** "Seu guarda-roupa tem mais
-potencial do que parece", nunca "Nenhuma peça encontrada".
+## Jornadas
+
+O planejamento é orientado por jornadas, não por telas — a lista das cinco e o
+estado de cada uma estão em [`journeys.md`](./journeys.md).
 
 ## Telas
 
