@@ -21,6 +21,7 @@ import {
   NAV_ITEMS,
   Search,
   Text,
+  Toggle,
   type AppIconName,
 } from '@/components';
 import { colors, spacing, typography, type TypographyToken } from '@/theme';
@@ -36,6 +37,7 @@ export default function Galeria() {
   const insets = useSafeAreaInsets();
   const [busca, setBusca] = useState('');
   const [chipAtivo, setChipAtivo] = useState('elegante');
+  const [uniforme, setUniforme] = useState(true);
 
   return (
     <View style={styles.root}>
@@ -254,6 +256,30 @@ export default function Galeria() {
           <Input label="Verificando" value="voce@email.com" loading />
           <Search value={busca} onChangeText={setBusca} />
           <Search value="camisa" onChangeText={() => {}} loading />
+        </Section>
+
+        <Section title="Toggle">
+          <View style={styles.row}>
+            <Toggle
+              value={uniforme}
+              onChange={setUniforme}
+              accessibilityLabel="Uniforme de trabalho"
+            />
+            <Text variant="body" tone="secondary">
+              Uniforme de trabalho
+            </Text>
+          </View>
+          <View style={styles.row}>
+            <Toggle
+              value
+              onChange={() => {}}
+              accessibilityLabel="Desabilitado"
+              disabled
+            />
+            <Text variant="body" tone="secondary">
+              Desabilitado
+            </Text>
+          </View>
         </Section>
 
         <Section title="Badge, Avatar e Loading">
