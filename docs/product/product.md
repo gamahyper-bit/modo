@@ -79,7 +79,12 @@ protagonistas. Nunca visual de marketplace. Nunca visual de startup de IA.
 
 Referências: Apple, COS, Notion, Aesop, Arc Browser.
 
-Detalhes de paleta, tipografia e motion em [`design-system.md`](./design-system.md).
+Detalhes de paleta, tipografia e motion em
+[`design-system.md`](../engineering/design-system.md).
+
+Os princípios permanentes que sustentam tudo isto estão em
+[`vision.md`](../vision.md) — quando este documento e a visão discordarem, a
+visão vence.
 
 ## Fora de escopo até o v1.0
 

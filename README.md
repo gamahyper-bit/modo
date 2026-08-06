@@ -7,17 +7,17 @@ look — a IA trabalha nos bastidores, o usuário apenas confirma.
 
 ## Documentação
 
-| Documento                                | Para quê                           |
-| ---------------------------------------- | ---------------------------------- |
-| [Backlog](./docs/backlog.md)             | fonte única das entregas           |
-| [Roadmap](./docs/roadmap.md)             | versões e o que fecha cada uma     |
-| [Produto](./docs/product.md)             | o que é, o que não é, tom de voz   |
-| [Arquitetura](./docs/architecture.md)    | camadas, portas, estado            |
-| [Decisões](./docs/decisions.md)          | por que cada escolha foi feita     |
-| [Design system](./docs/design-system.md) | tokens e componentes               |
-| [API](./docs/api.md)                     | portas de serviço e Edge Functions |
-| [Banco](./docs/database.md)              | schema, RLS e Storage              |
-| [Changelog](./docs/changelog.md)         | o que mudou em cada versão         |
+Índice completo em [`docs/README.md`](./docs/README.md).
+
+| Comece por                                        | Para quê                             |
+| ------------------------------------------------- | ------------------------------------ |
+| [Visão](./docs/vision.md)                         | os princípios permanentes do produto |
+| [Produto](./docs/product/product.md)              | o que é, o que não é, tom de voz     |
+| [Roadmap](./docs/product/roadmap.md)              | versões e o que fecha cada uma       |
+| [Backlog](./docs/product/backlog.md)              | fonte única das entregas             |
+| [Processo](./docs/engineering/process.md)         | git flow, DoR, DoD                   |
+| [Arquitetura](./docs/engineering/architecture.md) | camadas, portas, estado              |
+| [Decisões](./docs/decisions.md)                   | por que cada escolha foi feita       |
 
 ## Como trabalhamos
 
@@ -29,9 +29,13 @@ main → feature/nome → PR → review → merge → delete branch
 
 Prefixos: `feature/` · `fix/` · `refactor/`.
 
-Antes de abrir branch, o item precisa existir no backlog. Uma tarefa só é
-`Done` com os sete itens da definição de pronto — o
-[template de PR](./.github/pull_request_template.md) cobra todos.
+Antes de abrir branch, o item precisa existir no backlog e passar na
+**Definition of Ready**. Uma tarefa só é `Done` com os sete itens da definição
+de pronto — o [template de PR](./.github/pull_request_template.md) cobra todos.
+
+**Todo PR entrega valor perceptível para o produto.** Trabalho puramente técnico
+precisa declarar qual falha impede e por que agora, e é limitado a um item por
+sprint ([DEC-013](./docs/decisions.md)).
 
 ## Estado atual
 
