@@ -20,7 +20,4 @@ export type RecommendationRequest = {
 export interface RecommendationService {
   /** A recomendação principal da Home. */
   getRecommendation(request: RecommendationRequest): Promise<Look>;
-
-  /** Guarda o look na coleção do usuário. */
-  saveLook(lookId: string): Promise<void>;
 }

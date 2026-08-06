@@ -1,6 +1,3 @@
-import { EmScaffold } from '@/components/EmScaffold';
+import { ProfileScreen } from '@/features/profile';
 
-/** Placeholder — o perfil depende da autenticação. */
-export default function Perfil() {
-  return <EmScaffold title="Perfil" />;
-}
+export default ProfileScreen;

@@ -21,9 +21,20 @@ const ARTICLES: Record<GarmentCategory, string> = {
   acessorio: 'o',
 };
 
+const lower = (name: string) => name.charAt(0).toLowerCase() + name.slice(1);
+
 /** "a camisa de algodão" — artigo pela categoria, nome em caixa baixa. */
 export const describe = (garment: Garment) =>
-  `${ARTICLES[garment.category]} ${garment.name.charAt(0).toLowerCase()}${garment.name.slice(1)}`;
+  `${ARTICLES[garment.category]} ${lower(garment.name)}`;
+
+/**
+ * "pela camisa de algodão" — a contração de `por` com o artigo.
+ *
+ * Existe porque juntar preposição e artigo à mão produz "Comecei a camisa",
+ * que é exatamente o tipo de erro que denuncia texto gerado por máquina.
+ */
+export const describeBy = (garment: Garment) =>
+  `${ARTICLES[garment.category] === 'a' ? 'pela' : 'pelo'} ${lower(garment.name)}`;
 
 export const momentFor = (occasion: Occasion): string =>
   occasion === 'noite' ? 'Para hoje à noite.' : 'Hoje.';
@@ -56,11 +67,11 @@ export const moodFor = (occasion: Occasion, variant: number): string => {
 /** A frase da Home: começa pela peça que decidiu o look. */
 export const summaryFor = (anchor: Garment, occasion: Occasion): string => {
   const openings: Record<Occasion, string> = {
-    trabalho: `Comecei ${describe(anchor)}: ela resolve o dia sem pedir atenção.`,
-    casual: `Comecei ${describe(anchor)}, que é o que você veste sem pensar.`,
-    noite: `Comecei ${describe(anchor)}: à noite, menos peça é mais presença.`,
-    encontro: `Comecei ${describe(anchor)} — confortável o bastante para você esquecer que está bem vestido.`,
-    viagem: `Comecei ${describe(anchor)}, que aguenta o dia inteiro fora de casa.`,
+    trabalho: `Comecei ${describeBy(anchor)}: ela resolve o dia sem pedir atenção.`,
+    casual: `Comecei ${describeBy(anchor)}, que é o que você veste sem pensar.`,
+    noite: `Comecei ${describeBy(anchor)}: à noite, menos peça é mais presença.`,
+    encontro: `Comecei ${describeBy(anchor)} — confortável o bastante para você esquecer que está bem vestido.`,
+    viagem: `Comecei ${describeBy(anchor)}, que aguenta o dia inteiro fora de casa.`,
   };
 
   return openings[occasion];

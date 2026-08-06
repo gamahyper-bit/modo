@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 
+import { lookService } from '@/services/looks';
 import { recommendationService } from '@/services/recommendation';
 import type { LookAdjustment } from '@/types/look';
 import type { Occasion } from '@/types/wardrobe';
@@ -48,8 +49,13 @@ export function useRecommendation(initialOccasion: Occasion = 'trabalho') {
     },
   });
 
+  // Salvar é persistência, não recomendação: passa pela porta dos looks e
+  // avisa a aba Looks, que é onde o look vai aparecer.
   const save = useMutation({
-    mutationFn: (lookId: string) => recommendationService.saveLook(lookId),
+    mutationFn: (lookId: string) => lookService.save(lookId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['looks'] });
+    },
   });
 
   const applyAdjustment = (adjustment: LookAdjustment) => {

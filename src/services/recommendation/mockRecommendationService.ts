@@ -52,8 +52,4 @@ export const mockRecommendationService: RecommendationService = {
       'Seu armário ainda não tem peças suficientes para montar um look.'
     );
   },
-
-  async saveLook(): Promise<void> {
-    await delay(LATENCY_MS / 2);
-  },
 };

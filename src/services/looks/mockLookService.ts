@@ -11,8 +11,12 @@ const LATENCY_MS = 450;
 const delay = (ms: number) =>
   new Promise<void>((resolve) => setTimeout(resolve, ms));
 
-/** Coleção salva do usuário, em memória — some ao recarregar, e tudo bem. */
-const saved = new Set<string>();
+/**
+ * Coleção salva do usuário, em memória — some ao recarregar, e tudo bem.
+ *
+ * Ordenada: o mais recente primeiro, que é como a aba Looks apresenta.
+ */
+const saved: string[] = [];
 
 /**
  * Reconstrói o look a partir do próprio id.
@@ -58,17 +62,31 @@ export const mockLookService: LookService = {
     return rebuild(lookId);
   },
 
+  async listSaved(): Promise<Look[]> {
+    await delay(LATENCY_MS);
+
+    // Um look salvo pode ter perdido uma peça desde então. Nesse caso ele
+    // simplesmente não aparece — mostrar um look que não existe mais seria pior
+    // que a ausência dele.
+    const looks = await Promise.all(
+      saved.map((id) => rebuild(id).catch(() => undefined))
+    );
+
+    return looks.filter((look): look is Look => look !== undefined);
+  },
+
   async save(lookId: string): Promise<void> {
     await delay(LATENCY_MS);
-    saved.add(lookId);
+    if (!saved.includes(lookId)) saved.unshift(lookId);
   },
 
   async remove(lookId: string): Promise<void> {
     await delay(LATENCY_MS);
-    saved.delete(lookId);
+    const index = saved.indexOf(lookId);
+    if (index >= 0) saved.splice(index, 1);
   },
 
   async isSaved(lookId: string): Promise<boolean> {
-    return saved.has(lookId);
+    return saved.includes(lookId);
   },
 };

@@ -9,6 +9,8 @@ import type { Look } from '@/types/look';
  */
 export interface LookService {
   getById(lookId: string): Promise<Look>;
+  /** A coleção salva, do mais recente para o mais antigo. */
+  listSaved(): Promise<Look[]>;
   save(lookId: string): Promise<void>;
   remove(lookId: string): Promise<void>;
   isSaved(lookId: string): Promise<boolean>;

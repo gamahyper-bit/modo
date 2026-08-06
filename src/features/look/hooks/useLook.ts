@@ -35,6 +35,7 @@ export function useLook(lookId: string) {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: savedKey(lookId) });
+      queryClient.invalidateQueries({ queryKey: ['looks', 'saved'] });
     },
   });
 

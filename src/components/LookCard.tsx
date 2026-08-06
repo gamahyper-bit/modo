@@ -12,6 +12,7 @@ import Animated from 'react-native-reanimated';
 import { colors, disabledOpacity, radius, spacing } from '@/theme';
 
 import { AppIcon } from './AppIcon';
+import { LookBackdrop, type BackdropItem } from './LookBackdrop';
 import { Skeleton } from './Skeleton';
 import { Text } from './Text';
 import { usePressMotion } from './motion';
@@ -31,6 +32,8 @@ type LookCardProps = {
   /** Rodapé factual: ocasião e clima. */
   context?: string;
   imageUri?: string;
+  /** Peças do look, para compor o cenário enquanto não há fotografia. */
+  backdrop?: BackdropItem[];
   layout?: LookCardLayout;
   onPress?: () => void;
   disabled?: boolean;
@@ -55,6 +58,7 @@ export function LookCard({
   mood,
   context,
   imageUri,
+  backdrop,
   layout = 'hero',
   onPress,
   disabled = false,
@@ -109,6 +113,8 @@ export function LookCard({
           transition={0}
           accessibilityIgnoresInvertColors
         />
+      ) : backdrop ? (
+        <LookBackdrop items={backdrop} align="upper" />
       ) : (
         <View style={styles.placeholder} />
       )}

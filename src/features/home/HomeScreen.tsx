@@ -12,7 +12,9 @@ import {
   Reveal,
   Text,
 } from '@/components';
+import { useAuth } from '@/features/auth';
 import { colors, screenPadding, spacing, staggerStep } from '@/theme';
+import { firstNameOf } from '@/types/session';
 import type { LookAdjustment } from '@/types/look';
 import { OCCASION_LABELS, type Occasion } from '@/types/wardrobe';
 import { greetingFor } from '@/utils/greeting';
@@ -21,9 +23,6 @@ import { AdjustSheet } from './components/AdjustSheet';
 import { HeroCard, HeroCardSkeleton } from './components/HeroCard';
 import { LookPieces } from './components/LookPieces';
 import { useRecommendation } from './hooks/useRecommendation';
-
-/** Virá da sessão do Supabase na etapa de autenticação. */
-const MOCK_USER_NAME = 'Gabriel';
 
 const ALL_OCCASIONS = Object.keys(OCCASION_LABELS) as Occasion[];
 
@@ -39,6 +38,7 @@ const ALL_OCCASIONS = Object.keys(OCCASION_LABELS) as Occasion[];
  */
 export function HomeScreen() {
   const insets = useSafeAreaInsets();
+  const { session } = useAuth();
   const [adjusting, setAdjusting] = useState(false);
   const [pendingAdjustment, setPendingAdjustment] = useState<LookAdjustment>();
 
@@ -82,7 +82,8 @@ export function HomeScreen() {
 
         <Reveal>
           <Text variant="display">
-            {greetingFor()}, {MOCK_USER_NAME}.
+            {greetingFor()}
+            {session ? `, ${firstNameOf(session.user)}` : ''}.
           </Text>
           <Text variant="body" tone="secondary" style={styles.subtitle}>
             Aqui está a melhor escolha para hoje.

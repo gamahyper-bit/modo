@@ -1,6 +1,3 @@
-import { EmScaffold } from '@/components/EmScaffold';
+import { LooksScreen } from '@/features/looks';
 
-/** Placeholder — a coleção de looks vem depois da Home. */
-export default function Looks() {
-  return <EmScaffold title="Looks" />;
-}
+export default LooksScreen;

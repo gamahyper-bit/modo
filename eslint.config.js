@@ -4,7 +4,16 @@ const expoConfig = require('eslint-config-expo/flat');
 module.exports = defineConfig([
   expoConfig,
   {
-    ignores: ['dist/*', '.expo/*', 'node_modules/*', 'android/*', 'ios/*'],
+    // Edge Functions rodam em Deno, com globais e imports próprios: o ESLint do
+    // app não tem como julgá-las.
+    ignores: [
+      'dist/*',
+      '.expo/*',
+      'node_modules/*',
+      'android/*',
+      'ios/*',
+      'supabase/functions/*',
+    ],
   },
   {
     // Arquivos de configuração rodam no Node, fora do bundle: `require` é o
