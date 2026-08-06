@@ -33,6 +33,30 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
   camurça e produziu "o bota de camurça". O erro já existia em "o jaqueta leve"
   e "o bolsa de couro" — nunca tinha aparecido porque o motor nunca escolhia
   essas peças.
+- **A ocasião "Viagem" não montava look nenhum.** Nenhuma calça e nenhum calçado
+  do armário de demonstração estavam marcados para viagem, e sem peça estrutural
+  o motor não recomenda — o chip da Home entregava a tela de erro. Duas peças
+  reetiquetadas resolvem; o teste novo cobre as cinco ocasiões para que não
+  volte a acontecer em silêncio. Encontrado pelos testes desta entrega.
+
+### Alterado — refinamentos de UX do ajuste
+
+- **"Você pediu" virou "Ajuste"** na Home. Mesmo vocabulário do sheet, que se
+  chama "Ajustar".
+- **O sheet tem dois grupos: _Trocar peças_ e _Refinar o look_.** Trocar mira
+  uma peça, refinar mira o conjunto — numa fileira só, os seis chips pareciam
+  seis filtros equivalentes e o usuário descobria a diferença tocando. A
+  separação é a mesma que o motor já fazia entre salto de categoria e
+  deslocamento de régua.
+- **"Outro tênis" virou "Outro calçado".** O rótulo nomeava o modelo, e o modelo
+  passou a ser uma bota assim que a régua de formalidade entrou.
+- **Fala do stylist mais curta.** Uma oração, uma vírgula, ponto — quem já
+  decidiu não precisa de subordinadas. "Você pediu mais elegante, então fui
+  atrás do que o seu armário tem de mais formal para hoje" virou "Subi o tom com
+  o que você tem de mais formal"; "o casaco dá conta sozinho — você não vai
+  precisar carregar mais nada" virou "o casaco dá conta sozinho". Um teste
+  limita a frase da Home a 80 caracteres em toda ocasião e todo ajuste, porque
+  a saída fácil quando o texto cresce é truncar, e o tipo `Look` proíbe truncar.
 
 ### Adicionado — testes
 
@@ -40,7 +64,7 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
   import de React Native, então testar a regra não exige ambiente de
   renderização. Era para ser MOD-019; veio antes porque MOD-018 mexeu no núcleo
   do motor, e mudar o núcleo sem rede é aposta.
-- Dezessete testes, um por ajuste — mais a garantia de que nenhum ajuste
+- Dezenove testes, um por ajuste — mais a garantia de que nenhum ajuste
   ressuscita o uniforme fora do trabalho.
 
 ### Alterado

@@ -126,14 +126,19 @@ export const moodFor = (occasion: Occasion, variant: number): string => {
   return options[variant % options.length] ?? options[0]!;
 };
 
-/** A abertura: começa pela peça que decidiu o look. */
+/**
+ * A abertura: começa pela peça que decidiu o look.
+ *
+ * Uma oração, uma vírgula, ponto. O stylist fala como quem já decidiu — quem
+ * está decidindo é que precisa de subordinadas.
+ */
 export const openingFor = (anchor: Garment, occasion: Occasion): string => {
   const openings: Record<Occasion, string> = {
-    trabalho: `Comecei ${describeBy(anchor)}: ela resolve o dia sem pedir atenção.`,
-    casual: `Comecei ${describeBy(anchor)}, que é o que você veste sem pensar.`,
+    trabalho: `Comecei ${describeBy(anchor)}: resolve o dia sem pedir atenção.`,
+    casual: `Comecei ${describeBy(anchor)} — é o que você veste sem pensar.`,
     noite: `Comecei ${describeBy(anchor)}: à noite, menos peça é mais presença.`,
-    encontro: `Comecei ${describeBy(anchor)} — confortável o bastante para você esquecer que está bem vestido.`,
-    viagem: `Comecei ${describeBy(anchor)}, que aguenta o dia inteiro fora de casa.`,
+    encontro: `Comecei ${describeBy(anchor)}: você esquece que está bem vestido.`,
+    viagem: `Comecei ${describeBy(anchor)} — aguenta o dia inteiro fora de casa.`,
   };
 
   return openings[occasion];
@@ -156,16 +161,16 @@ const noteFor = (adjustment: LookAdjustment, narration: Narration): string => {
 
   switch (adjustment) {
     case 'mais-elegante':
-      return 'Fui atrás do que o seu armário tem de mais formal para hoje.';
+      return 'Subi o tom com o que você tem de mais formal.';
     case 'mais-casual':
-      return 'Tirei o peso do conjunto sem tirar o cuidado.';
+      return 'Tirei o peso, mantive o cuidado.';
     case 'esta-frio':
     case 'esta-calor':
-      return `Montei para ${felt} graus, e não para os ${weather.temperature} do termômetro.`;
+      return `Montei para ${felt} graus, não para os ${weather.temperature} do termômetro.`;
     case 'outra-calca':
-      return 'Troquei só a calça — o resto do look já estava funcionando.';
+      return 'Troquei só a calça. O resto já estava certo.';
     case 'outro-calcado':
-      return 'Troquei só o calçado — o resto do look já estava funcionando.';
+      return 'Troquei só o calçado. O resto já estava certo.';
   }
 };
 
@@ -207,21 +212,19 @@ export const rationaleFor = (narration: Narration): string => {
   if (bottom) {
     parts.push(
       bottom.color.name === anchor.color.name
-        ? `Mantive ${describe(bottom)} no mesmo tom: quando tudo conversa, ninguém repara na roupa e sim em você.`
-        : `${capitalize(describe(bottom))} em ${bottom.color.name.toLowerCase()} clareia o conjunto e evita que o look pese.`
+        ? `Mantive ${describe(bottom)} no mesmo tom — ninguém repara na roupa, repara em você.`
+        : `${capitalize(describe(bottom))} em ${bottom.color.name.toLowerCase()} clareia o conjunto.`
     );
   }
 
   if (coat) {
     parts.push(
-      `Com ${weather.temperature} graus, ${describe(coat)} dá conta ${agreeing(coat, 'sozinh')} — você não vai precisar carregar mais nada.`
+      `Com ${weather.temperature} graus, ${describe(coat)} dá conta ${agreeing(coat, 'sozinh')}.`
     );
   }
 
   if (shoes) {
-    parts.push(
-      `${capitalize(describe(shoes))} fecha tudo sem endurecer a barra da calça.`
-    );
+    parts.push(`${capitalize(describe(shoes))} fecha sem endurecer a barra.`);
   }
 
   // O ajuste fecha a nota: o usuário lê a recomendação e, no fim, o que o

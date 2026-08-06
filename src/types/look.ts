@@ -18,13 +18,41 @@ export type LookAdjustment =
   | 'esta-frio';
 
 export const ADJUSTMENT_LABELS: Record<LookAdjustment, string> = {
-  'outro-calcado': 'Outro tênis',
+  // "Outro tênis" nomeava a peça errada assim que a régua de formalidade passou
+  // a alcançar a bota. A categoria não muda com a escolha; o modelo, sim.
+  'outro-calcado': 'Outro calçado',
   'outra-calca': 'Outra calça',
   'mais-elegante': 'Mais elegante',
   'mais-casual': 'Mais casual',
   'esta-calor': 'Está calor',
   'esta-frio': 'Está frio',
 };
+
+/**
+ * Os dois pedidos que o usuário faz, e eles não são a mesma coisa.
+ *
+ * **Trocar** é sobre uma peça: "essa não, outra". **Refinar** é sobre o
+ * conjunto: "todo ele mais elegante", "todo ele mais quente". Misturados numa
+ * fileira só de chips, os seis pareciam seis filtros equivalentes, e o usuário
+ * tinha de descobrir a diferença tocando.
+ *
+ * A separação não é cosmética: é a mesma que o motor já fazia. Trocar vira
+ * salto dentro de uma categoria; refinar vira deslocamento de uma régua que
+ * atravessa o look inteiro (DEC-018).
+ */
+export const ADJUSTMENT_GROUPS: {
+  title: string;
+  adjustments: LookAdjustment[];
+}[] = [
+  {
+    title: 'Trocar peças',
+    adjustments: ['outro-calcado', 'outra-calca'],
+  },
+  {
+    title: 'Refinar o look',
+    adjustments: ['mais-elegante', 'mais-casual', 'esta-calor', 'esta-frio'],
+  },
+];
 
 export type Look = {
   id: string;

@@ -20,6 +20,23 @@ import { formalityOf } from './ranking';
  * o app encontra, e é sobre ele que a promessa precisa se sustentar.
  */
 
+const ALL_OCCASIONS: Occasion[] = [
+  'trabalho',
+  'casual',
+  'noite',
+  'encontro',
+  'viagem',
+];
+
+const EVERY_ADJUSTMENT: LookAdjustment[] = [
+  'mais-elegante',
+  'mais-casual',
+  'esta-frio',
+  'esta-calor',
+  'outra-calca',
+  'outro-calcado',
+];
+
 /** 18 graus: o motor já põe casaco (limiar em 20) e ainda não põe bermuda. */
 const MILD: Weather = { temperature: 18, condition: 'nublado' };
 /** 24 graus: sem casaco, ainda de calça. */
@@ -166,6 +183,22 @@ describe('a fala do stylist', () => {
     expect(elegant.rationale).not.toContain('O bota');
   });
 
+  it('a frase da Home cabe em uma respiração', () => {
+    // A Home mostra uma frase só, inteira, nunca truncada. Passando de umas
+    // dezenas de caracteres ela vira quatro linhas e o hero perde o ar — e a
+    // saída fácil, cortar com reticências, é justamente a que o tipo `Look`
+    // proíbe. O limite é aqui, no texto, não na renderização.
+    for (const occasion of ALL_OCCASIONS) {
+      expect(compose([], MILD, occasion).summary.length).toBeLessThanOrEqual(80);
+
+      for (const adjustment of EVERY_ADJUSTMENT) {
+        expect(
+          compose([adjustment], MILD, occasion).summary.length
+        ).toBeLessThanOrEqual(80);
+      }
+    }
+  });
+
   it('concorda o adjetivo com a peça', () => {
     const cold = compose([], { temperature: 12, condition: 'frio' }, 'casual');
 
@@ -174,22 +207,23 @@ describe('a fala do stylist', () => {
 });
 
 describe('o que o ajuste não pode quebrar', () => {
+  it('toda ocasião oferecida na Home monta um look', () => {
+    // A Home oferece as cinco ocasiões como chips. Uma ocasião sem peça
+    // estrutural elegível não gera look nenhum, e o chip entrega a tela de
+    // erro — foi o que aconteceu com "viagem", que não tinha nem calça nem
+    // calçado marcados no armário de demonstração.
+    for (const occasion of ALL_OCCASIONS) {
+      expect(compose([], MILD, occasion).garments.length).toBeGreaterThanOrEqual(3);
+    }
+  });
+
   it('uniforme continua fora de qualquer ocasião que não seja trabalho', () => {
     const uniformIds = wardrobeSeed
       .filter((garment) => garment.isUniform)
       .map((garment) => garment.id);
 
-    const everyAdjustment: LookAdjustment[] = [
-      'mais-elegante',
-      'mais-casual',
-      'esta-frio',
-      'esta-calor',
-      'outra-calca',
-      'outro-calcado',
-    ];
-
     for (const occasion of ['casual', 'noite', 'encontro', 'viagem'] as const) {
-      for (const adjustment of everyAdjustment) {
+      for (const adjustment of EVERY_ADJUSTMENT) {
         const look = composeLook({
           wardrobe: wardrobeSeed,
           occasion,

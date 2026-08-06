@@ -155,7 +155,7 @@ export function HomeScreen() {
             {activeAdjustment ? (
               <View style={styles.adjustment}>
                 <Text variant="label" tone="secondary">
-                  Você pediu
+                  Ajuste
                 </Text>
                 <Chip
                   label={ADJUSTMENT_LABELS[activeAdjustment]}
