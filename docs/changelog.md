@@ -10,6 +10,59 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
 
 ## [Não lançado]
 
+### Corrigido — "Ajustar" passa a ajustar (MOD-018)
+
+- **O ajuste chega ao motor.** `composeLook` lê `adjustments` e os traduz em
+  três parâmetros — formalidade, temperatura sentida, salto de categoria — por
+  uma tabela única em `services/recommendation/tuning.ts` (DEC-018). Antes o
+  campo era declarado no contrato, passado pela Home e lido por ninguém: o look
+  mudava de vez em quando, por coincidência de variante, e o usuário concluía
+  que tinha sido ouvido.
+- **"Mais elegante" e "mais casual" mexem no look inteiro.** No trabalho, a
+  calça reta vira alfaiataria; no casual, a camiseta vira camisa de linho;
+  "mais casual" no trabalho troca a bota pelo tênis.
+- **"Está calor" tira o casaco; "está frio" o põe** num dia que ainda não
+  pedia. A temperatura na tela continua sendo a do termômetro — quem explica a
+  diferença é a nota do stylist, não um dado adulterado.
+- **"Outro calçado" e "outra calça" trocam só aquela peça**, com o resto do
+  look intacto.
+- **O pedido fica visível.** O topo do look passa a ler "Para o frio.", a nota
+  explica o que foi feito com o pedido, um chip marcado mostra o ajuste em vigor
+  até o usuário desfazê-lo, e o sheet reabre com a opção já marcada.
+- **Artigo pelo nome da peça, não pela categoria.** A régua alcançou a bota de
+  camurça e produziu "o bota de camurça". O erro já existia em "o jaqueta leve"
+  e "o bolsa de couro" — nunca tinha aparecido porque o motor nunca escolhia
+  essas peças.
+
+### Adicionado — testes
+
+- **Runner de testes** (`npm test`, Vitest). O motor é TypeScript puro, sem
+  import de React Native, então testar a regra não exige ambiente de
+  renderização. Era para ser MOD-019; veio antes porque MOD-018 mexeu no núcleo
+  do motor, e mudar o núcleo sem rede é aposta.
+- Dezessete testes, um por ajuste — mais a garantia de que nenhum ajuste
+  ressuscita o uniforme fora do trabalho.
+
+### Alterado
+
+- **Régua de formalidade no lugar da tabela de prioridade por ocasião**
+  (DEC-019). "Camisa antes de camiseta no trabalho" deixa de ser uma linha
+  escrita à mão e passa a ser consequência de camisa ser mais formal. O look
+  padrão de trabalho mudou de tênis branco para bota de camurça.
+- **O id do look carrega o ajuste** (DEC-020):
+  `l-<ocasião>-<variante>-<ajustes>-<peças>`. Sem isso, abrir o detalhe de um
+  look ajustado acusaria "peça não está mais no armário" sobre um look que
+  existia meio segundo antes.
+- **J2 (a manhã) fecha em v0.4, não em v0.2.** O ajuste era o último item de
+  produto da jornada, mas o clima real é MOD-027. A data anterior media o item,
+  não a jornada.
+
+### Decisões
+
+- **DEC-018** — ajuste é parâmetro do motor, não caso especial.
+- **DEC-019** — régua de formalidade no lugar da prioridade por ocasião.
+- **DEC-020** — o ajuste entra no id do look.
+
 ### Adicionado — marca e jornadas
 
 - `docs/brand/` — manifesto, tom de voz, linguagem visual e diretrizes de copy.

@@ -314,3 +314,94 @@ do valor quer expor.
 **Impacto.** A CI é P1 e impacto 1: bloqueia o projeto, invisível para o
 usuário. Antes, a prioridade sozinha a fazia parecer relevante para quem usa o
 app. Agora a distância entre as duas colunas é o próprio sinal de alerta.
+
+---
+
+## DEC-018 — Ajuste é parâmetro do motor, não caso especial
+
+**Data.** 2026-08-06 · **Status.** Ativa
+
+Cada `LookAdjustment` é traduzido, por uma tabela única em
+`services/recommendation/tuning.ts`, em três parâmetros do motor: deslocamento
+na régua de formalidade, graus somados à temperatura, e salto dentro de uma
+categoria. `composeLook` não sabe que ajustes existem — só lê os três números.
+
+**Motivo.** O caminho óbvio era um `if` por ajuste dentro do compositor. Seis
+ajustes viram seis ramos, e o sétimo — quando ele existir — vira o sétimo. Pior:
+dois ajustes ao mesmo tempo passam a depender da ordem dos ramos, que ninguém
+escreveu de propósito.
+
+**Alternativas.** Ramos no compositor (não compõe, não testa isolado);
+recomposição em cima do look anterior (precisaria carregar o look anterior no
+contrato do serviço, e o serviço deixaria de ser sem estado).
+
+**Impacto.** Um ajuste novo é uma linha na tabela. Ajustes somam: dois pedidos
+na mesma direção empurram mais, e opostos se cancelam — sem que ninguém escreva
+essa regra em lugar nenhum. A tabela é testável sem motor e o motor é testável
+sem tabela.
+
+**O que custou.** Os três parâmetros são um vocabulário fixo. Um ajuste futuro
+que não caiba neles — "sem estampa", "sem essa peça hoje" — vai exigir um
+parâmetro novo, e é aí que a decisão precisa ser revisitada em vez de forçada.
+
+---
+
+## DEC-019 — Régua de formalidade no lugar da prioridade por ocasião
+
+**Data.** 2026-08-06 · **Status.** Ativa
+
+A tabela `TOP_PRIORITY`, que dizia camisa antes de camiseta no trabalho e o
+inverso no casual, foi substituída por uma régua de formalidade de 0 a 4.
+Cada peça recebe uma nota por categoria, nome e material; cada ocasião tem um
+alvo; o motor escolhe **a peça mais próxima do alvo**, não a mais formal.
+
+**Motivo.** "Mais elegante" não tinha em que se apoiar. A única coisa que o
+motor sabia sobre uma peça era a categoria, e categoria não distingue um tênis
+de corrida de uma bota de camurça — os dois são `calcado`. Sem uma régua, o
+ajuste só poderia reordenar categorias, e o calçado ficaria de fora dele.
+
+**Alternativas.** Um campo `formalidade` na peça (mais um campo para o usuário
+confirmar, contra o PILAR-03); manter a tabela e tratar calçado à parte (dois
+mecanismos para o mesmo problema).
+
+**Impacto.** A tabela por ocasião deixou de existir: camisa vem antes de
+camiseta no trabalho porque camisa é mais formal e trabalho pede formalidade —
+uma regra no lugar de cinco linhas. O look padrão de trabalho mudou de tênis
+branco para bota de camurça, que é a escolha certa e não era a que estava sendo
+feita.
+
+**O que custou.** A nota sai de palavras no nome e no material, então uma peça
+mal nomeada é mal pontuada. É aceitável enquanto a leitura da peça é mock; com
+MOD-025 a IA passa a preencher esses campos, e a régua fica tão boa quanto ela.
+
+**Efeito colateral que revelou um defeito.** Ao alcançar a bota, a régua
+produziu "o bota de camurça": o artigo saía da categoria, e `calcado` é
+masculino. O artigo passou a sair do nome da peça. O erro existia antes — em
+"o jaqueta leve", "o bolsa de couro" — e nunca tinha aparecido porque o motor
+nunca escolhia essas peças.
+
+---
+
+## DEC-020 — O ajuste entra no id do look
+
+**Data.** 2026-08-06 · **Status.** Ativa · **Substitui** parte de DEC-010
+
+O id passa de `l-<ocasião>-<variante>-<peças>` para
+`l-<ocasião>-<variante>-<ajustes>-<peças>`, com `_` marcando a ausência de
+ajuste. A leitura é por segmento, não por expressão regular: os ajustes têm
+hífen no próprio nome.
+
+**Motivo.** O detalhe do look reconstrói a partir do id e confere se o id bate.
+Sem o ajuste no id, abrir um look ajustado recomporia o look sem ajuste, os ids
+não bateriam e a tela acusaria "esse look usava uma peça que não está mais no
+armário" — uma mentira, sobre um look que existia meio segundo antes.
+
+**Alternativas.** Guardar o look num cache por id (o id deixaria de ser
+autossuficiente, que é a única razão de ele existir); códigos curtos em vez dos
+nomes dos ajustes (id ilegível, e a legibilidade do id já pagou por si mais de
+uma vez em depuração).
+
+**Impacto.** O id continua sendo tudo que o motor precisa para produzir o mesmo
+look de novo, sem banco. Ids gerados antes desta mudança deixam de resolver —
+não custa nada, porque nada é persistido ainda. Depois de MOD-029 custaria, e é
+por isso que a mudança precisava vir antes dela.

@@ -25,6 +25,7 @@ const MAX_VARIANTS = 8;
 export const mockRecommendationService: RecommendationService = {
   async getRecommendation({
     occasion = 'trabalho',
+    adjustments = [],
     excludeLookIds = [],
   }: RecommendationRequest): Promise<Look> {
     await delay(LATENCY_MS);
@@ -37,7 +38,13 @@ export const mockRecommendationService: RecommendationService = {
     let fallback: Look | undefined;
 
     for (let variant = 0; variant < MAX_VARIANTS; variant += 1) {
-      const look = composeLook({ wardrobe, occasion, weather, variant });
+      const look = composeLook({
+        wardrobe,
+        occasion,
+        weather,
+        variant,
+        adjustments,
+      });
       if (!look) continue;
 
       fallback ??= look;

@@ -62,7 +62,15 @@ export function useRecommendation(initialOccasion: Occasion = 'trabalho') {
     // Um ajuste é uma nova pergunta ao stylist: o histórico de vistos é
     // irrelevante para ela, e a resposta anterior deixa de valer.
     seen.current = [];
+    // Um ajuste por vez. Pedir "mais elegante" e "está frio" juntos é uma
+    // conversa, e o Modo não conversa — o usuário reage a uma resposta de cada
+    // vez, e cada reação recomeça a pergunta.
     setAdjustments([adjustment]);
+  };
+
+  const clearAdjustment = () => {
+    seen.current = [];
+    setAdjustments([]);
   };
 
   const changeOccasion = (next: Occasion) => {
@@ -74,6 +82,8 @@ export function useRecommendation(initialOccasion: Occasion = 'trabalho') {
   return {
     look: query.data,
     occasion,
+    /** O ajuste em vigor, para a Home poder mostrá-lo e desfazê-lo. */
+    activeAdjustment: adjustments[0],
     isLoading: query.isPending,
     isRegenerating: regenerate.isPending,
     isSaving: save.isPending,
@@ -82,6 +92,7 @@ export function useRecommendation(initialOccasion: Occasion = 'trabalho') {
     regenerate: regenerate.mutate,
     save: save.mutate,
     applyAdjustment,
+    clearAdjustment,
     changeOccasion,
     retry: query.refetch,
   };

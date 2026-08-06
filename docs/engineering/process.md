@@ -147,11 +147,12 @@ no fim da sprint, quando já reduziu a incerteza do que veio antes.
 
 ## Definition of Done
 
-Uma tarefa só é `Done` com os sete:
+Uma tarefa só é `Done` com os oito:
 
 - [ ] Código implementado
 - [ ] `npm run typecheck` limpo
 - [ ] `npm run lint` limpo
+- [ ] `npm test` verde
 - [ ] Build funcionando (`npx expo export --platform web`)
 - [ ] Screenshot atualizado
 - [ ] Documentação atualizada

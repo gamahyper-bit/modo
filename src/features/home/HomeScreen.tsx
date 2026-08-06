@@ -15,7 +15,7 @@ import {
 import { useAuth } from '@/features/auth';
 import { colors, screenPadding, spacing, staggerStep } from '@/theme';
 import { firstNameOf } from '@/types/session';
-import type { LookAdjustment } from '@/types/look';
+import { ADJUSTMENT_LABELS, type LookAdjustment } from '@/types/look';
 import { OCCASION_LABELS, type Occasion } from '@/types/wardrobe';
 import { greetingFor } from '@/utils/greeting';
 
@@ -45,6 +45,7 @@ export function HomeScreen() {
   const {
     look,
     occasion,
+    activeAdjustment,
     isLoading,
     isRegenerating,
     isSaving,
@@ -53,13 +54,17 @@ export function HomeScreen() {
     regenerate,
     save,
     applyAdjustment,
+    clearAdjustment,
     changeOccasion,
     retry,
   } = useRecommendation();
 
   const handleAdjust = (adjustment: LookAdjustment) => {
     setPendingAdjustment(adjustment);
-    applyAdjustment(adjustment);
+    // Tocar de novo no ajuste que já está valendo desfaz. É a mesma gramática
+    // do chip em qualquer outro lugar do app: ele liga e desliga.
+    if (adjustment === activeAdjustment) clearAdjustment();
+    else applyAdjustment(adjustment);
     setAdjusting(false);
     setPendingAdjustment(undefined);
   };
@@ -143,6 +148,23 @@ export function HomeScreen() {
               />
             </View>
 
+            {/* O pedido do usuário fica na tela até ele desfazer. Um ajuste
+                que some depois de aplicado deixa o usuário sem saber se o look
+                que está vendo é o de sempre ou o que ele pediu — e essa dúvida
+                é a mesma coisa que não ter sido ouvido. */}
+            {activeAdjustment ? (
+              <View style={styles.adjustment}>
+                <Text variant="label" tone="secondary">
+                  Você pediu
+                </Text>
+                <Chip
+                  label={ADJUSTMENT_LABELS[activeAdjustment]}
+                  selected
+                  onPress={clearAdjustment}
+                />
+              </View>
+            ) : null}
+
             <LookPieces garments={look.garments} />
 
             <View style={styles.occasions}>
@@ -168,6 +190,7 @@ export function HomeScreen() {
         onClose={() => setAdjusting(false)}
         onAdjust={handleAdjust}
         pending={pendingAdjustment}
+        active={activeAdjustment}
       />
     </View>
   );
@@ -205,6 +228,12 @@ const styles = StyleSheet.create({
   },
   primaryAction: {
     flex: 1,
+  },
+  adjustment: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    marginTop: spacing.lg,
   },
   occasions: {
     marginTop: spacing['3xl'],

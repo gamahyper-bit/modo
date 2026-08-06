@@ -19,13 +19,14 @@ demonstração ou depende de sorte · `Utilizável` — vai do começo ao fim ·
 |        | Jornada             | Estado   | Fecha em |
 | ------ | ------------------- | -------- | -------- |
 | **J1** | Primeiro uso        | Frágil   | v0.3     |
-| **J2** | A manhã             | Frágil   | v0.2     |
+| **J2** | A manhã             | Frágil   | v0.4     |
 | **J3** | Crescer o armário   | Frágil   | v0.3     |
 | **J4** | Reencontrar um look | Frágil   | v0.6     |
 | **J5** | Confiar no produto  | Quebrada | v0.6     |
 
 Nenhuma jornada está `Utilizável` ainda. Todas param no mesmo lugar: os dados
-somem ao recarregar.
+somem ao recarregar. J2 tem um segundo motivo, e é dela sozinha: o clima é fixo
+em 18 graus.
 
 ---
 
@@ -62,14 +63,24 @@ abrir → ver o look → entender o porquê → ajustar se preciso → vestir
 
 **É a jornada central do produto.** Todas as outras existem para alimentá-la.
 
-**Onde está.** Abrir, ver e entender funcionam. **Ajustar não funciona** —
-MOD-018. O usuário toca em "Está frio", vê algo mudar por acaso e conclui que
-foi ouvido.
+**Onde está.** Os cinco passos funcionam. Ajustar passou a funcionar em
+MOD-018: o ajuste vira parâmetro do motor, o look muda de forma previsível e o
+pedido fica visível na tela até o usuário desfazer.
 
-**O que falta.** MOD-018, MOD-027 (clima real), MOD-026 (texto por IA).
+Continua `Frágil` por um motivo só, e ele é grande: **o clima é fixo.** São
+sempre 18 graus nublados. A recomendação está certa para um dia que não é o de
+hoje, e "está frio" é a única maneira de o usuário corrigir isso — corrigir à
+mão o que o produto prometeu fazer sozinho é o oposto do PILAR-03.
 
-**Fecha quando.** O ajuste altera o look de forma previsível, e o clima do dia
-já está considerado antes de o usuário pedir.
+**O que falta.** MOD-027 (clima real), MOD-026 (texto por IA), MOD-036 (régua
+de agasalho).
+
+**Fecha quando.** O clima do dia já está considerado antes de o usuário pedir.
+
+**A data mudou de v0.2 para v0.4.** MOD-018 fechou o ajuste, mas o clima real é
+MOD-027, que está em v0.4 — a jornada não podia fechar antes dele. A data
+anterior media o item, não a jornada; é exatamente o erro que planejar por
+jornada existe para evitar.
 
 **Métrica que importa.** Quantas vezes o usuário precisa gerar outro antes de
 aceitar.

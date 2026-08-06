@@ -46,6 +46,7 @@ desde que seja verdade.
 
 ```bash
 npm install
+npm test
 npm run web
 ```
 
@@ -63,6 +64,7 @@ ajuste de algo existente.
 - [ ] Código implementado
 - [ ] `npm run typecheck` limpo
 - [ ] `npm run lint` limpo
+- [ ] `npm test` verde
 - [ ] Build funcionando (`npx expo export --platform web`)
 - [ ] Screenshot atualizado
 - [ ] Documentação atualizada
