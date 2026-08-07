@@ -200,3 +200,49 @@ branch de sessão. Ela foi criada a partir do último estado verificado
 
 **Impacto.** Nenhuma entrega futura toca `main` diretamente. Enquanto MOD-020
 não existir, a proteção depende de disciplina; depois dela, de CI.
+
+---
+
+## DEC-013 — Todo PR entrega valor perceptível
+
+**Data.** 2026-08-06 · **Status.** Ativa
+
+Toda entrega precisa mudar alguma coisa para quem usa o app. Trabalho puramente
+técnico não está proibido, mas passa a exigir justificativa: qual falha concreta
+impede, e por que agora. No máximo **um** item de risco puro por sprint.
+
+**Motivo.** Um projeto com processo bom e sem entrega visível parece produtivo e
+não é. A régua deixa de ser "o backlog andou" e passa a ser "o produto ficou
+melhor".
+
+**Alternativas.** Alternar sprints de produto e de plataforma (cria períodos
+inteiros sem valor visível); nenhuma regra (a manutenção sempre perde para o
+urgente, até a qualidade cobrar a fatura de uma vez).
+
+**Impacto.** Muda a ordenação: quando um item de risco disputa espaço com um de
+produto, o de produto vai primeiro. Foi o que reordenou a sprint v0.2 — o ícone
+da marca subiu à frente da CI.
+
+O risco desta regra é adiar indefinidamente o trabalho invisível. A defesa é o
+EPIC-07 existir: ele dá um lugar declarado a esse trabalho, e o limite de um por
+sprint garante que ele nunca é zero.
+
+---
+
+## DEC-014 — Documentação separada entre produto e engenharia
+
+**Data.** 2026-08-06 · **Status.** Ativa
+
+`docs/product/` responde **o que** e **por quê**. `docs/engineering/` responde
+**como**. Visão, decisões e changelog ficam na raiz, porque atravessam os dois.
+
+**Motivo.** Os dois públicos leem em momentos diferentes. Quem decide escopo não
+deveria atravessar detalhe de RLS; quem vai implementar não deveria caçar o
+critério de aceite dentro de um documento de arquitetura.
+
+**Alternativas.** Pasta única (funcionava com nove arquivos, não com trinta);
+separar por versão (transforma documento vivo em arquivo morto).
+
+**Impacto.** O decision log **não** foi dividido de propósito: uma decisão como
+"grade de duas colunas" é de produto e de engenharia ao mesmo tempo, e separá-la
+obrigaria a escolher um lado ou a duplicar. Ele é a ponte, e fica na raiz.

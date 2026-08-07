@@ -3,16 +3,23 @@
 Versões, não datas. Uma versão fecha quando seus critérios estão cumpridos —
 não quando o calendário vira.
 
-| Versão | Tema         | Estado          |
-| ------ | ------------ | --------------- |
-| v0.1   | Fundação     | ✅ Fechada      |
-| v0.2   | Armário      | 🔄 Em andamento |
-| v0.3   | Captura      | ◻︎               |
-| v0.4   | IA           | ◻︎               |
-| v0.5   | Looks        | ◻︎               |
-| v0.6   | Backend      | ◻︎               |
-| v0.7   | Beta fechado | ◻︎               |
-| v1.0   | Lançamento   | ◻︎               |
+Cada versão tem uma **milestone no GitHub** de mesmo nome. Todo PR aponta para a
+milestone da versão que ajuda a fechar: é ela que responde "quanto falta para
+esta sair" — pergunta que o backlog não responde bem.
+
+| Versão | Tema         | Milestone | Estado          |
+| ------ | ------------ | --------- | --------------- |
+| v0.1   | Fundação     | —         | ✅ Fechada      |
+| v0.2   | Armário      | `v0.2`    | 🔄 Em andamento |
+| v0.3   | Captura      | `v0.3`    | ◻︎               |
+| v0.4   | IA           | `v0.4`    | ◻︎               |
+| v0.5   | Looks        | `v0.5`    | ◻︎               |
+| v0.6   | Backend      | `v0.6`    | ◻︎               |
+| v0.7   | Beta fechado | `v0.7`    | ◻︎               |
+| v1.0   | Lançamento   | `v1.0`    | ◻︎               |
+
+Os [epics](./epics.md) cortam as versões na perpendicular: versão é fatia de
+tempo, epic é eixo de valor.
 
 ---
 
@@ -32,20 +39,29 @@ uma recomendação, detalhe do look e autenticação com modo de demonstração.
 
 **Tese.** O produto ter dados de verdade e uma lógica confiável em cima deles.
 
-MOD-010 ✅ · MOD-012 ✅ · **MOD-018** · **MOD-019** · **MOD-020** · **MOD-021** ·
-MOD-022 · MOD-023
+MOD-010 ✅ · MOD-012 ✅ · MOD-022 · MOD-023
+
+**Sprint em execução, nesta ordem**
+
+| #   | Branch                         | Item    | O que o usuário percebe                  |
+| --- | ------------------------------ | ------- | ---------------------------------------- |
+| 1   | `fix/look-adjustments`         | MOD-018 | "Ajustar" passa a fazer o que promete    |
+| 2   | `feature/recommendation-tests` | MOD-019 | a recomendação para de errar em silêncio |
+| 3   | `feature/brand-assets`         | MOD-021 | o app deixa de ter ícone de template     |
+| 4   | `feature/ci`                   | MOD-020 | _(risco)_ nenhuma entrega quebra `main`  |
 
 **Fecha quando**
 
 - "Ajustar" alterar de fato a recomendação
 - O motor tiver cobertura de teste
-- A CI verificar a definição de pronto por máquina
 - O app tiver ícone próprio
+- A CI verificar a definição de pronto por máquina
 - Tocar numa peça levar ao detalhe dela
 
-**Por que a CI entra aqui e não depois.** Sete critérios de pronto verificados à
-mão não sobrevivem a dez PRs. Automatizar cedo é mais barato que corrigir a
-disciplina depois.
+**Por que a CI vai por último.** Ela é o único item da sprint sem valor
+perceptível, e a regra do valor manda o produto na frente. Vindo depois de
+MOD-018 e MOD-019, ela também nasce sabendo o que precisa verificar — instalar
+CI antes dos testes existirem seria instalar metade dela duas vezes.
 
 ---
 

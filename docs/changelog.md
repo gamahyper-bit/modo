@@ -1,8 +1,8 @@
 # Changelog
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
-Versionamento por marcos do [roadmap](./roadmap.md), não semântico — o produto
-ainda não tem API pública.
+Versionamento por marcos do [roadmap](./product/roadmap.md), não semântico — o
+produto ainda não tem API pública.
 
 Toda feature mesclada atualiza este arquivo no mesmo PR.
 
@@ -12,15 +12,36 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
 
 ### Adicionado
 
-- Documentação de projeto em `/docs`: backlog, roadmap, arquitetura, produto,
-  decision log, design system, API, banco e este changelog.
+- `docs/vision.md` — os cinco princípios permanentes, os compromissos que valem
+  independentemente de prazo, e os sinais de que o produto perdeu o rumo.
+- `docs/product/epics.md` — sete eixos de valor, cobrindo os 35 itens do
+  backlog.
+- `docs/engineering/process.md` — git flow, Definition of Ready, Definition of
+  Done, estimativas e milestones.
+- Milestones por versão no roadmap (`v0.2` a `v1.0`).
+- Índice da documentação em `docs/README.md`.
+
+### Alterado
+
+- Documentação separada entre `docs/product/` (o quê e por quê) e
+  `docs/engineering/` (como). Visão, decisões e changelog ficam na raiz por
+  atravessarem os dois (DEC-014).
+- Backlog reorganizado por epic, com campo de valor em cada item.
+- Sprint v0.2 reordenada: MOD-018, MOD-019, MOD-021, MOD-020. O ícone da marca
+  subiu à frente da CI por entregar valor perceptível (DEC-013).
+
+### Decisões
+
+- **DEC-013** — todo PR entrega valor perceptível; item de risco puro precisa
+  declarar qual falha impede, e é limitado a um por sprint.
+- **DEC-014** — documentação separada entre produto e engenharia.
+
+### Anterior
+
+- Documentação de projeto inicial em `/docs`.
 - Branch `main` como linha estável, criada a partir de `ba57ae4`.
-
-### Descoberto
-
-- **MOD-018** — "Ajustar" não altera a recomendação. `adjustments` é declarado e
-  passado, mas nem o serviço nem o motor o leem. O look às vezes muda por
-  coincidência de variante. Registrado como P0.
+- **MOD-018 descoberto** — "Ajustar" não altera a recomendação. `adjustments` é
+  declarado e passado, mas nem o serviço nem o motor o leem. Registrado como P0.
 
 ---
 
