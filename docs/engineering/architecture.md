@@ -74,7 +74,8 @@ responsabilidade cada:
 | ------------- | ---------------------------------------------------------- |
 | `tuning.ts`   | o que cada ajuste do usuário faz com o motor (DEC-018)     |
 | `ranking.ts`  | quão formal é uma peça, e em que ordem o stylist a alcança |
-| `composer.ts` | monta o look a partir dos dois anteriores                  |
+| `lookId.ts`   | o formato do id — escrita, leitura e assinatura (DEC-025)  |
+| `composer.ts` | monta o look a partir dos anteriores                       |
 | `copy.ts`     | escreve o que o stylist diz sobre o resultado              |
 
 `composer.ts` filtra por ocasião e clima, aplica a regra de uniforme e escolhe
@@ -83,9 +84,19 @@ parte de cima, parte de baixo, calçado e, conforme o clima, casaco e acessório
 - casaco abaixo de 20 °C; bermuda acima de 26 °C — sobre a temperatura
   **sentida**, que é a real mais o que o usuário pediu
 - a peça escolhida é a mais próxima do alvo de formalidade da ocasião, não a
-  mais formal (DEC-019)
-- uniforme fora de look casual e no fim da fila no trabalho (DEC-011)
+  mais formal (DEC-019); empate desfeito pelo id, nunca pela ordem de chegada
+- uniforme fora de look casual, e fora de qualquer vaga que tenha alternativa
+  comum (DEC-011, DEC-024)
 - sem uma das três peças estruturais, não recomenda
+
+**A variante é um número em base mista** (DEC-023). Cada vaga consome um dígito,
+então percorrer as variantes percorre o **produto** das listas de candidatos.
+Girando em bloco — a mesma posição em todas as listas — só o mínimo múltiplo
+comum era alcançável, e "gerar outro" repetia com alternativas de sobra.
+
+**"Já mostrei este look?" se pergunta pela assinatura**, não pelo id: o id
+carrega a variante, e duas variantes caem na mesma combinação assim que uma
+lista dá a volta (DEC-025).
 
 O ajuste do usuário nunca vira um `if` aqui: `tuning.ts` o converte em três
 números — deslocamento de formalidade, graus somados, salto dentro de uma
@@ -100,9 +111,15 @@ arquivo desaparece.
 DEC-020). O motor é determinístico, então o mesmo id recompõe o mesmo look —
 sem banco.
 
-**Testes.** `composer.test.ts`, por `npm test`. A camada 1 inteira é TypeScript
-puro, sem import de React Native: testar a regra do look não exige ambiente de
-renderização, e é isso que mantém a decisão separada da interface que a mostra.
+**Testes.** Por `npm test`. A camada 1 inteira é TypeScript puro, sem import de
+React Native: testar a regra do look não exige ambiente de renderização, e é
+isso que mantém a decisão separada da interface que a mostra.
+
+| Arquivo                             | Cobre                                     |
+| ----------------------------------- | ----------------------------------------- |
+| `composer.test.ts`                  | ajustes, uniforme, limiares, determinismo |
+| `lookId.test.ts`                    | ida e volta do id, assinatura             |
+| `mockRecommendationService.test.ts` | "gerar outro" e o alcance das combinações |
 
 ## Motion
 

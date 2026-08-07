@@ -10,6 +10,56 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
 
 ## [Não lançado]
 
+### Corrigido — o motor escolhia por acidente (MOD-019)
+
+Quatro defeitos, todos encontrados pelos testes desta entrega. Três deles o
+usuário sentia.
+
+- **Uniforme misturado com peça comum.** DEC-011 dizia que peça de uniforme só
+  entra quando não há alternativa, mas implementava isso como ordenação — e o
+  fim da fila só protege a primeira variante. No segundo "gerar outro" do
+  trabalho, a polo do uniforme vinha com calça de alfaiataria. Hoje é filtro por
+  vaga (DEC-024): a peça sai dos candidatos sempre que aquela vaga tem
+  alternativa comum.
+- **"Gerar outro" alcançava duas das oito combinações.** A mesma variante
+  escolhia a mesma posição em todas as listas, então as peças giravam em bloco e
+  só o mínimo múltiplo comum dos tamanhos era alcançável. A variante virou um
+  número em base mista, com um dígito por vaga (DEC-023) — percorrer as
+  variantes passou a percorrer o produto.
+- **A repetição era comparada pelo id, que carrega a variante.** Duas variantes
+  caem na mesma combinação assim que uma lista dá a volta, então o produto
+  anunciava um look novo entregando a mesma roupa com outro número. A comparação
+  passou a ser por **assinatura** — ocasião, ajustes e peças (DEC-025).
+- **A escolha herdava a ordem de chegada do armário.** Duas peças igualmente
+  formais empatavam na régua, e quem decidia era a ordem da lista — do serviço,
+  não do motor. Invisível hoje; depois do MOD-028 seria um look salvo parando de
+  abrir porque o Postgres devolveu a bolsa antes do cinto. O empate passou a ser
+  desfeito pelo id (DEC-023).
+
+### Adicionado — cobertura do motor (MOD-019)
+
+- **Sessenta testes**, contra trinta antes: uniforme, limiares de casaco e
+  bermuda, armário incompleto, determinismo, independência da ordem do armário,
+  ida e volta do id, e o alcance real de "gerar outro".
+- **O teto de oito variantes saiu.** Era um número escrito à mão que cabia no
+  armário de demonstração por coincidência; com duas camisas a mais, esconderia
+  dezesseis das vinte e quatro combinações. Agora o laço percorre até a
+  assinatura repetir, que é o momento exato em que não há mais o que mostrar.
+- `npm test` entrou na Definition of Done e no template de PR.
+
+### Alterado — arquitetura do motor (MOD-019)
+
+- **`services/recommendation/lookId.ts`** passa a ser o dono do formato do id:
+  escrita, leitura e assinatura no mesmo módulo (DEC-025). O formato vivia
+  metade no compositor e metade no serviço de looks — duas metades que divergem
+  no primeiro segmento novo, e o sintoma seria a tela acusando "peça não está
+  mais no armário" sobre um look que existe.
+- `rankFor` ficou com uma chave só: a regra de uniforme saiu da ordenação para
+  um lugar onde ela é legível.
+- **Revisão crítica de fim de MOD** entrou no processo: entre concluir um item e
+  abrir a próxima branch, uma passada procurando o que virou conhecimento
+  duplicado, número mágico ou caso especial que já é geral.
+
 ### Adicionado — identidade própria no aparelho (MOD-021)
 
 - **Ícone, splash e favicon com a marca**, no lugar dos ativos de template do
@@ -131,6 +181,9 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
 - **DEC-020** — o ajuste entra no id do look.
 - **DEC-021** — ícone gerado a partir da geometria da marca.
 - **DEC-022** — o ícone é um ativo próprio, não o logo reduzido.
+- **DEC-023** — a escolha do look não depende de acidentes.
+- **DEC-024** — uniforme é filtro por vaga, não ordenação.
+- **DEC-025** — o id tem um dono, e a repetição se compara por assinatura.
 
 ### Adicionado — marca e jornadas
 

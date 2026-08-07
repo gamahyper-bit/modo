@@ -251,3 +251,143 @@ describe('o que o ajuste não pode quebrar', () => {
     expect(cold.summary).not.toBe(base.summary);
   });
 });
+
+describe('a regra do uniforme', () => {
+  const UNIFORM_IDS = wardrobeSeed
+    .filter((garment) => garment.isUniform)
+    .map((garment) => garment.id);
+
+  it('não entra no trabalho enquanto houver alternativa comum', () => {
+    // Ordenar não bastava. A peça de uniforme ia para o fim da fila, o que a
+    // protegia só na primeira variante — na segunda, "gerar outro" entregava a
+    // polo do trabalho com calça de alfaiataria. É o acidente que DEC-011
+    // existe para impedir, e ele estava acontecendo.
+    for (let variant = 0; variant < 24; variant += 1) {
+      const look = composeLook({
+        wardrobe: wardrobeSeed,
+        occasion: 'trabalho',
+        weather: MILD,
+        variant,
+      });
+
+      for (const garment of look?.garments ?? []) {
+        expect(UNIFORM_IDS).not.toContain(garment.id);
+      }
+    }
+  });
+
+  it('entra quando é a única coisa que a vaga tem', () => {
+    // Quem de fato vai de uniforme não tem outra camisa de trabalho. Aí a peça
+    // precisa aparecer: recusar seria deixar a pessoa sem look.
+    const uniformOnly = wardrobeSeed.filter(
+      (garment) => garment.category !== 'camisa' && garment.category !== 'camiseta'
+    );
+
+    const polo = wardrobeSeed.find((garment) => garment.id === 'g15')!;
+    const look = composeLook({
+      wardrobe: [...uniformOnly, polo],
+      occasion: 'trabalho',
+      weather: MILD,
+      variant: 0,
+    });
+
+    expect(look?.garments.map((garment) => garment.id)).toContain('g15');
+  });
+});
+
+describe('os limiares de clima', () => {
+  const workAt = (temperature: number) =>
+    compose([], { temperature, condition: 'nublado' });
+
+  it('põe casaco abaixo de 20 graus e não põe a partir de 20', () => {
+    expect(piece(workAt(19), 'casaco')).toBeDefined();
+    expect(piece(workAt(20), 'casaco')).toBeUndefined();
+  });
+
+  it('veste calça abaixo de 26 graus e bermuda a partir de 26', () => {
+    const casualAt = (temperature: number) =>
+      compose([], { temperature, condition: 'sol' }, 'casual');
+
+    expect(piece(casualAt(25), 'calca')).toBeDefined();
+    expect(piece(casualAt(25), 'bermuda')).toBeUndefined();
+    expect(piece(casualAt(26), 'bermuda')).toBeDefined();
+    expect(piece(casualAt(26), 'calca')).toBeUndefined();
+  });
+});
+
+describe('armário incompleto', () => {
+  const withoutCategory = (...categories: string[]) =>
+    wardrobeSeed.filter((garment) => !categories.includes(garment.category));
+
+  const composeWith = (wardrobe: typeof wardrobeSeed) =>
+    composeLook({ wardrobe, occasion: 'trabalho', weather: MILD, variant: 0 });
+
+  it.each([
+    ['sem parte de cima', ['camisa', 'camiseta']],
+    ['sem parte de baixo', ['calca', 'bermuda']],
+    ['sem calçado', ['calcado']],
+  ])('não recomenda %s', (_label, categories) => {
+    // Melhor não recomendar do que recomendar pela metade: um look sem calçado
+    // não é uma versão simplificada, é um defeito.
+    expect(composeWith(withoutCategory(...categories))).toBeUndefined();
+  });
+
+  it('não recomenda com o armário vazio', () => {
+    expect(composeWith([])).toBeUndefined();
+  });
+
+  it('recomenda sem casaco e sem acessório — nenhum dos dois é estrutural', () => {
+    const look = composeWith(withoutCategory('casaco', 'acessorio'));
+
+    expect(look?.garments).toHaveLength(3);
+  });
+});
+
+describe('determinismo', () => {
+  it('os mesmos parâmetros devolvem o mesmo look', () => {
+    // É a propriedade que sustenta o id: sem ela, abrir o detalhe de um look
+    // recomporia outra coisa e a tela acusaria uma peça que nunca saiu do
+    // armário.
+    for (const occasion of ALL_OCCASIONS) {
+      for (let variant = 0; variant < 8; variant += 1) {
+        const first = composeLook({
+          wardrobe: wardrobeSeed,
+          occasion,
+          weather: MILD,
+          variant,
+          adjustments: ['mais-elegante'],
+        });
+        const second = composeLook({
+          wardrobe: wardrobeSeed,
+          occasion,
+          weather: MILD,
+          variant,
+          adjustments: ['mais-elegante'],
+        });
+
+        expect(second).toEqual(first);
+      }
+    }
+  });
+
+  it('a ordem das peças no armário não muda o look', () => {
+    // O armário chega ordenado por categoria, e o serviço real pode devolver
+    // outra ordem. A escolha precisa vir da regra, não da ordem de chegada.
+    const reversed = [...wardrobeSeed].reverse();
+
+    const fromSeed = composeLook({
+      wardrobe: wardrobeSeed,
+      occasion: 'trabalho',
+      weather: MILD,
+      variant: 0,
+    });
+    const fromReversed = composeLook({
+      wardrobe: reversed,
+      occasion: 'trabalho',
+      weather: MILD,
+      variant: 0,
+    });
+
+    expect(fromReversed?.id).toBe(fromSeed?.id);
+  });
+});
