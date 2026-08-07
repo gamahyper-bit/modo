@@ -21,7 +21,61 @@ alguém que saiba combiná-las.
 
 ---
 
+## Os quatro pilares
+
+As colunas que sustentam o produto. Se uma cair, o Modo vira outra coisa.
+
+Cada pilar é uma escolha com um lado rejeitado — é o lado rejeitado que
+transforma o pilar em régua, e não em slogan.
+
+### PILAR-01 — Curadoria, não catálogo
+
+O Modo **escolhe**. Não organiza, não lista, não ordena por relevância.
+
+Um catálogo transfere a decisão de volta para o usuário e chama isso de
+liberdade. Curadoria assume a decisão e responde por ela.
+
+_Sustenta:_ EPIC-02 · _Ameaçado por:_ qualquer tela que mostre duas
+recomendações lado a lado.
+
+### PILAR-02 — Explicação, não sugestão
+
+Toda escolha vem com o porquê. Sempre.
+
+Sugerir sem explicar produz obediência ou descarte — nunca confiança. A
+explicação é o que faz o usuário acreditar na **próxima** recomendação, e é o
+único ativo que compõe com o tempo.
+
+_Sustenta:_ EPIC-02, EPIC-04 · _Ameaçado por:_ qualquer atalho que entregue look
+sem texto porque "o texto estava lento".
+
+### PILAR-03 — Esforço mínimo, sempre
+
+O trabalho é da máquina. Do usuário é só a confirmação.
+
+Cada campo que pedimos é um usuário que desiste. Cada passo do cadastro é um
+guarda-roupa que fica pela metade — e um armário incompleto produz recomendação
+ruim, que destrói o PILAR-01.
+
+_Sustenta:_ EPIC-03, EPIC-05 · _Ameaçado por:_ formulário, onboarding longo,
+tela de configuração.
+
+### PILAR-04 — Beleza como função
+
+A estética não é acabamento. É o que faz alguém confiar a decisão do próprio
+dia a um aplicativo.
+
+Um produto feio pode estar certo e ainda assim não ser obedecido. No Modo,
+polimento visual é requisito, não capricho.
+
+_Sustenta:_ EPIC-01 · _Ameaçado por:_ "depois a gente melhora o visual".
+
+---
+
 ## Os cinco princípios
+
+Os pilares dizem **no que apostamos**. Os princípios dizem **como nos
+comportamos** — são os pilares traduzidos em regra de todo dia.
 
 ### 1. A IA faz o trabalho. O usuário confirma.
 

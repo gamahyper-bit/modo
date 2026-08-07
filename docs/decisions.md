@@ -246,3 +246,71 @@ separar por versão (transforma documento vivo em arquivo morto).
 **Impacto.** O decision log **não** foi dividido de propósito: uma decisão como
 "grade de duas colunas" é de produto e de engenharia ao mesmo tempo, e separá-la
 obrigaria a escolher um lado ou a duplicar. Ele é a ponte, e fica na raiz.
+
+---
+
+## DEC-015 — Quatro pilares acima dos princípios
+
+**Data.** 2026-08-06 · **Status.** Ativa
+
+Curadoria (não catálogo) · Explicação (não sugestão) · Esforço mínimo · Beleza
+como função. Os cinco princípios passam a ser a tradução operacional deles.
+
+**Motivo.** Os princípios diziam como nos comportamos, mas não no que
+apostamos. Faltava a camada que explica **por que** uma tela sem explicação é um
+defeito e não uma versão simplificada.
+
+**Cada pilar carrega um lado rejeitado.** É o lado rejeitado que transforma o
+pilar em régua: "curadoria" sozinho é slogan; "curadoria, não catálogo" reprova
+uma tela com duas recomendações lado a lado.
+
+**Alternativas.** Deixar só os cinco princípios (não separava aposta de
+comportamento); usar os pilares no lugar deles (perderia as regras práticas do
+dia a dia).
+
+**Impacto.** Toda decisão de escopo passa a poder ser checada contra quatro
+frases curtas. Os quatro foram **derivados** do material acumulado, não ditados
+— se algum estiver errado, corrigir aqui é barato e corrigir depois de dez
+sprints não é.
+
+---
+
+## DEC-016 — Planejamento orientado por jornadas
+
+**Data.** 2026-08-06 · **Status.** Ativa
+
+O planejamento deixa de ser por tela e passa a ser por jornada do usuário. Cinco
+jornadas declaradas, cada uma com estado (`Quebrada`, `Frágil`, `Utilizável`,
+`Boa`). Toda entrega declara qual jornada aproxima de utilizável.
+
+**Motivo.** Sete telas prontas e nenhuma jornada utilizável era o estado real do
+produto — e a régua anterior não mostrava isso. Uma tela pronta parece progresso;
+um buraco entre duas telas não aparece em lugar nenhum.
+
+**Alternativas.** Continuar por tela (mede produção, não utilidade); medir por
+funcionalidade (mesmo problema com outro nome).
+
+**Impacto.** A sprint passa a ser descrita como "leva J2 de Frágil para
+Utilizável". Preferimos fechar uma jornada a avançar quatro pela metade.
+
+**A tensão que isso cria.** Fechar J5 (confiar no produto) exigiria parar tudo e
+fazer backend, congelando o produto por uma versão inteira. Por isso J2 fecha
+primeiro: é a jornada que dá sentido às outras e está a um item de distância.
+
+---
+
+## DEC-017 — Impacto separado de prioridade
+
+**Data.** 2026-08-06 · **Status.** Ativa
+
+Cada item ganha **impacto de 1 a 5** — o quanto o usuário sente — além da
+prioridade.
+
+**Motivo.** Prioridade estava carregando dois significados ao mesmo tempo: "o
+quanto isso importa para o usuário" e "o quanto isso bloqueia o projeto". São
+coisas diferentes, e misturá-las escondia exatamente o tipo de item que a regra
+do valor quer expor.
+
+**Impacto.** A CI é P1 e impacto 1: bloqueia o projeto, invisível para o
+usuário. Antes, a prioridade sozinha a fazia parecer relevante para quem usa o
+app. Agora a distância entre as duas colunas é o próprio sinal de alerta.

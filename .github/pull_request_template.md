@@ -2,7 +2,27 @@
 
 <!-- Uma frase. Qual item do backlog isto entrega? -->
 
-Backlog: MOD-000
+Backlog: MOD-000 · Epic: EPIC-00 · Impacto: 0/5
+
+## Qual hipótese de produto esta entrega valida?
+
+<!--
+Uma afirmação que pode estar errada. Três partes:
+1. o que acreditamos
+2. o que confirmaria
+3. o que REFUTARIA — se não dá para refutar, não é hipótese, é torcida
+
+Não repita o objetivo com outras palavras.
+-->
+
+## Qual jornada isto aproxima de utilizável?
+
+<!--
+J1 primeiro uso · J2 a manhã · J3 crescer o armário · J4 reencontrar um look ·
+J5 confiar no produto
+
+De qual estado para qual estado. Ver docs/product/journeys.md.
+-->
 
 ## Arquivos alterados
 
@@ -47,5 +67,7 @@ ajuste de algo existente.
 - [ ] Screenshot atualizado
 - [ ] Documentação atualizada
 - [ ] `docs/changelog.md` atualizado
-- [ ] Status do item alterado em `docs/backlog.md`
+- [ ] Status do item alterado em `docs/product/backlog.md`
+- [ ] Estado da jornada revisado em `docs/product/journeys.md`
 - [ ] Componente novo adicionado à `/galeria`
+- [ ] Texto novo passa pelo checklist de `docs/brand/copy.md`

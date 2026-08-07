@@ -10,7 +10,32 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
 
 ## [Não lançado]
 
-### Adicionado
+### Adicionado — marca e jornadas
+
+- `docs/brand/` — manifesto, tom de voz, linguagem visual e diretrizes de copy.
+  O tom de voz saiu de `product.md` e ganhou tratamento completo, com regras por
+  elemento de interface e um checklist antes de subir texto.
+- `docs/product/journeys.md` — cinco jornadas com estado declarado. Nenhuma está
+  utilizável; todas param no mesmo lugar, os dados somem ao recarregar.
+- **Quatro pilares** em `vision.md`, acima dos cinco princípios. Cada um carrega
+  o lado rejeitado — é ele que transforma o pilar em régua e não em slogan.
+- Campo **Impacto (1–5)** e campo **Jornada** em todos os 35 itens do backlog.
+- Pergunta obrigatória no template de PR: _qual hipótese de produto esta entrega
+  valida?_ — com exigência de declarar o que a **refutaria**.
+
+### Alterado
+
+- DoR ganhou três critérios: jornada servida, impacto atribuído e hipótese
+  declarada.
+- Planejamento passa a ser descrito por jornada, não por tela.
+
+### Decisões
+
+- **DEC-015** — quatro pilares acima dos princípios.
+- **DEC-016** — planejamento orientado por jornadas.
+- **DEC-017** — impacto separado de prioridade.
+
+### Adicionado — organização
 
 - `docs/vision.md` — os cinco princípios permanentes, os compromissos que valem
   independentemente de prazo, e os sinais de que o produto perdeu o rumo.
