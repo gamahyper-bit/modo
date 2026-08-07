@@ -2,8 +2,8 @@ import type { Look, LookAdjustment, Weather } from '@/types/look';
 import type { Garment, GarmentCategory, Occasion } from '@/types/wardrobe';
 
 import { momentFor, moodFor, rationaleFor, summaryFor } from './copy';
-import { lookIdFor } from './lookId';
 import { formalityTargetFor, rankFor } from './ranking';
+import { type LookRecipe, recipeIdFor, recipeOf } from './recipe';
 import { tuningFor } from './tuning';
 
 /**
@@ -154,12 +154,34 @@ export function composeLook({
     (garment): garment is Garment => garment !== undefined
   );
 
+  return lookFrom(recipeOf(occasion, adjustments, garments), garments, weather);
+}
+
+/**
+ * Monta o `Look` a partir da receita e das peças já resolvidas.
+ *
+ * Existe para que **compor** e **reconstruir** produzam o mesmo objeto pelo
+ * mesmo caminho. Compor escolhe as peças e chama isto; reconstruir procura as
+ * peças no armário pelo id e chama isto. Antes, reconstruir refazia a escolha
+ * inteira e conferia se o id batia — o que só funcionava enquanto a fala do
+ * stylist fosse determinística, e vai deixar de ser em MOD-026.
+ *
+ * Tudo aqui é derivado: o id vem da receita, e o texto vem da receita mais o
+ * clima de agora. Nada é guardado, e nada precisa ser.
+ */
+export function lookFrom(
+  recipe: LookRecipe,
+  garments: Garment[],
+  weather: Weather
+): Look {
+  const { occasion, adjustments } = recipe;
+  const felt = weather.temperature + tuningFor(adjustments).temperature;
   const narration = { garments, occasion, weather, felt, adjustments };
 
   return {
-    id: lookIdFor({ occasion, variant, adjustments }, garments),
+    id: recipeIdFor(recipe),
     moment: momentFor(occasion, adjustments),
-    mood: moodFor(occasion, variant),
+    mood: moodFor(occasion, garments),
     summary: summaryFor(narration),
     rationale: rationaleFor(narration),
     occasion,

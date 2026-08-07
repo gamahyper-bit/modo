@@ -121,9 +121,30 @@ const MOODS: Record<Occasion, string[]> = {
   ],
 };
 
-export const moodFor = (occasion: Occasion, variant: number): string => {
+/**
+ * Um número estável a partir das peças.
+ *
+ * A leitura do stylist era escolhida pela variante — o botão que o motor gira
+ * para enumerar combinações. Com a variante fora da identidade do look
+ * (DEC-028), a fala precisava de outra âncora, e as peças são a âncora certa: o
+ * mesmo conjunto lê do mesmo jeito, e ler o mesmo conjunto de dois jeitos seria
+ * o produto mudando de opinião sem motivo.
+ */
+const seedOf = (garments: Garment[]): number => {
+  let hash = 0;
+
+  for (const garment of garments) {
+    for (let i = 0; i < garment.id.length; i += 1) {
+      hash = (hash * 31 + garment.id.charCodeAt(i)) % 1_000_003;
+    }
+  }
+
+  return hash;
+};
+
+export const moodFor = (occasion: Occasion, garments: Garment[]): string => {
   const options = MOODS[occasion];
-  return options[variant % options.length] ?? options[0]!;
+  return options[seedOf(garments) % options.length] ?? options[0]!;
 };
 
 /**

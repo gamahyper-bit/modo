@@ -656,3 +656,55 @@ lá passa a ser evidência de disponibilidade, não desculpa para existir.
 **O que custou.** Um pouco de retrabalho quando um caso de uso aparecer para
 algo que foi removido. Aceito: reescrever um componente pequeno é mais barato
 que carregar cinco anos de abstrações que ninguém sabe se estão em uso.
+
+---
+
+## DEC-028 — Um look é uma receita, não um registro
+
+**Data.** 2026-08-07 · **Status.** Ativa · **Substitui** DEC-020 e DEC-025
+
+O motor produz uma **receita reprodutível**: ocasião, ajustes e peças. É isso
+que identifica um look, é isso que o banco guarda, e é a partir disso que tudo
+o mais é derivado.
+
+Em consequência:
+
+- a identidade é determinística e vem do conteúdo — duas receitas iguais são o
+  mesmo look, e não duas instâncias dele;
+- reconstruir produz exatamente as mesmas peças enquanto o armário for
+  compatível;
+- **texto gerado por IA nunca participa da identidade**;
+- `moment`, `mood`, `summary` e `rationale` passam a ser derivados, cacheáveis e
+  descartáveis;
+- **a variante saiu do id.** Ela é o botão que o motor gira para enumerar
+  combinações, não a escolha.
+
+**Motivo.** A revisão arquitetural (MOD-037) achou o app e o banco discordando
+sobre o que identifica um look: no app, uma string que carrega a composição; no
+schema, um `uuid` com tabela de ligação. Dois modelos incompatíveis do mesmo
+conceito, e MOD-028/029 bateriam neles de frente.
+
+O segundo motivo é mais fundo e independe de persistência. `rebuild` **recompunha
+o look inteiro** e conferia se o id batia. Isso só funciona enquanto o texto for
+determinístico — com o Gemini, duas chamadas com a mesma entrada não devolvem a
+mesma frase, e a comparação deixaria de significar o que significava.
+
+**Alternativas.** Look como registro, com o texto congelado no banco (perde-se a
+capacidade de reescrever a explicação, e um look salvo vira uma fotografia que
+envelhece); guardar receita **e** resultado (duas verdades sobre a mesma coisa, e
+a pergunta "qual está certa" sem resposta).
+
+**Impacto — o que sumiu.** Tirar a variante do id eliminou a "assinatura"
+paralela criada em DEC-025: dois ids diferentes não podem mais vestir a mesma
+roupa, então **o id é a assinatura**. E `mockLookService` deixou de importar o
+compositor: ele guarda ids de receita, e quem reproduz a receita é a porta da
+recomendação, por `rebuild`.
+
+**O que custou.** A fala do stylist escolhia a leitura pela variante, e precisou
+de outra âncora — passou a derivar das próprias peças, o que é mais correto: o
+mesmo conjunto lê do mesmo jeito.
+
+**O que fica em aberto.** As peças aparecem duas vezes no banco — dentro de
+`recipe_id` e em `look_garments`. É deliberado: a string é a identidade que
+viaja, as linhas são a integridade que o Postgres sabe verificar. Se divergirem,
+quem manda é `recipe_id`.

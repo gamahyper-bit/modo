@@ -74,26 +74,58 @@ create index garments_user_category_idx
 --
 -- Um look é guardado só quando o usuário o salva. As recomendações do dia a dia
 -- são efêmeras e não ocupam banco — são recompostas a partir do armário.
+--
+-- **Guarda a receita, não o resultado** (DEC-028). Ocasião, ajustes e as peças
+-- em `look_garments` são o que identifica o look e o que basta para reproduzi-lo.
+-- O `id` uuid é chave de linha, detalhe de armazenamento: a identidade de
+-- domínio é a receita, e ela nunca sai daqui em forma de número.
 -- ---------------------------------------------------------------------------
 
 create table public.looks (
+  -- Chave de linha. Detalhe de armazenamento: nunca sai daqui, e o app não a
+  -- conhece.
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users (id) on delete cascade,
+
+  -- **A identidade.** A receita serializada — ocasião, ajustes e peças —, que é
+  -- por onde o app pede um look. Duas receitas iguais são o mesmo look, e é o
+  -- `unique` abaixo que impede a mesma roupa de aparecer duas vezes na aba
+  -- Looks.
+  recipe_id text not null,
+
+  -- Contexto do dia em que o look foi montado. Não identifica nada: fica
+  -- registrado para que a explicação possa ser reescrita com o clima que havia,
+  -- e não com o de hoje.
+  weather_temperature smallint,
+  weather_condition weather_condition,
+
+  -- A fala do stylist. Derivada da receita, e por isso descartável — some em
+  -- MOD-039, que separa a decisão da narrativa. Continua `not null` até lá
+  -- porque o Modo nunca mostra roupa sem justificar a escolha.
   moment text not null,
   mood text not null,
   summary text not null,
-  -- A explicação do stylist. `not null` de propósito: o Modo nunca mostra roupa
-  -- sem justificar a escolha, e o banco não deve permitir um look mudo.
   rationale text not null,
-  occasion occasion not null,
-  weather_temperature smallint,
-  weather_condition weather_condition,
+
   image_path text,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+
+  unique (user_id, recipe_id)
 );
 
 create index looks_user_idx on public.looks (user_id, created_at desc);
 
+-- As peças do look, de novo.
+--
+-- Elas já estão dentro de `recipe_id`, e a duplicação é deliberada: a string é a
+-- identidade que **viaja** — vai para a rota, para o cache, para o `unique` — e
+-- estas linhas são a integridade que o **banco sabe verificar**. Sem elas,
+-- apagar uma peça deixaria um id órfão dentro de uma string, invisível para o
+-- Postgres; com elas, o `on delete cascade` apaga o vínculo e a receita fica
+-- reconhecivelmente quebrada.
+--
+-- Se as duas visões divergirem, quem manda é `recipe_id`. Um gatilho para
+-- garantir isso é possível, e só vale a pena se a divergência acontecer.
 create table public.look_garments (
   look_id uuid not null references public.looks (id) on delete cascade,
   garment_id uuid not null references public.garments (id) on delete cascade,

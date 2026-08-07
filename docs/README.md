@@ -3,6 +3,7 @@
 ```
 docs/
   vision.md          pilares e princípios permanentes — quase não muda
+  architecture/      o modelo de domínio
   decisions.md       DEC-*, a ponte entre produto e engenharia
   changelog.md       o que mudou em cada versão
   brand/             quem o Modo é
@@ -20,6 +21,7 @@ docs/
 | pegar uma tarefa              | [`engineering/process.md`](./engineering/process.md) → o item no backlog                      |
 | mexer no código               | [`engineering/architecture.md`](./engineering/architecture.md)                                |
 | mexer na interface            | [`engineering/design-system.md`](./engineering/design-system.md)                              |
+| entender o domínio            | [`architecture/domain-model.md`](./architecture/domain-model.md)                              |
 | entender uma escolha estranha | [`decisions.md`](./decisions.md)                                                              |
 
 ## Marca
