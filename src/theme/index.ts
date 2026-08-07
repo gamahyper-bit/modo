@@ -27,3 +27,13 @@ export type { DurationToken, EasingToken } from './motion';
 
 export { iconSize, iconStroke } from './icons';
 export type { IconSizeToken } from './icons';
+
+export {
+  BRAND_GRID,
+  BRAND_COMPACT,
+  BRAND_DISPLAY,
+  COMPACT_BELOW,
+  framePathOf,
+  geometryFor,
+} from './brand';
+export type { BrandGeometry } from './brand';

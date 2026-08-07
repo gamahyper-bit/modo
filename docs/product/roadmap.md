@@ -46,23 +46,28 @@ MOD-010 ✅ · MOD-012 ✅ · MOD-022 · MOD-023
 | #   | Branch                         | Item    | O que o usuário percebe                  |
 | --- | ------------------------------ | ------- | ---------------------------------------- |
 | 1   | `fix/look-adjustments`         | MOD-018 | "Ajustar" passa a fazer o que promete    |
-| 2   | `feature/recommendation-tests` | MOD-019 | a recomendação para de errar em silêncio |
-| 3   | `feature/brand-assets`         | MOD-021 | o app deixa de ter ícone de template     |
+| 2   | `feature/brand-assets`         | MOD-021 | o app deixa de ter ícone de template     |
+| 3   | `feature/recommendation-tests` | MOD-019 | a recomendação para de errar em silêncio |
 | 4   | `feature/ci`                   | MOD-020 | _(risco)_ nenhuma entrega quebra `main`  |
 
 **Fecha quando**
 
 - ~~"Ajustar" alterar de fato a recomendação~~ — MOD-018
+- ~~O app tiver ícone próprio~~ — MOD-021
 - O motor tiver cobertura de teste — runner e ajustes cobertos em MOD-018;
   falta o resto das regras
-- O app tiver ícone próprio
 - A CI verificar a definição de pronto por máquina
 - Tocar numa peça levar ao detalhe dela
 
-**Por que a CI vai por último.** Ela é o único item da sprint sem valor
-perceptível, e a regra do valor manda o produto na frente. Vindo depois de
-MOD-018 e MOD-019, ela também nasce sabendo o que precisa verificar — instalar
-CI antes dos testes existirem seria instalar metade dela duas vezes.
+**MOD-021 passou na frente de MOD-019.** MOD-018 trouxe o runner e a cobertura
+dos ajustes junto, então MOD-019 encolheu para o que sobrou e deixou de ser o
+próximo passo natural. Entre um item de produto pronto para entregar e um de
+cobertura reduzida, a regra do valor manda o produto na frente.
+
+**Por que a CI continua por último.** Ela é o único item da sprint sem valor
+perceptível. Vindo depois dos testes, ela também nasce sabendo o que precisa
+verificar — instalar CI antes de os testes existirem seria instalar metade dela
+duas vezes.
 
 ---
 

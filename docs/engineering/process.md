@@ -61,6 +61,8 @@ Um item só entra numa sprint quando **todos** estes forem verdade.
       implementação.
 - [ ] **Valor declarado.** O que o usuário percebe depois desta entrega. Se
       nada, ver a regra do valor abaixo.
+- [ ] **Confiança ou percepção de qualidade.** Qual dos dois esta entrega
+      aumenta, e como. É o critério permanente de revisão — ver abaixo.
 - [ ] **Impacto de 1 a 5** atribuído, com a escala do
       [backlog](../product/backlog.md).
 - [ ] **Hipótese de produto declarada.** O que esta entrega permite descobrir —
@@ -128,6 +130,28 @@ que impede racionalizar qualquer resultado depois como sucesso.
 
 Perceptível significa: alguém que usa o app nota a diferença — uma tela nova, um
 defeito que sumiu, algo que ficou mais rápido, mais bonito ou mais confiável.
+
+### O critério de revisão
+
+Toda entrega responde, em uma frase: **isto aumenta a confiança do usuário ou a
+percepção de qualidade do produto?**
+
+São os dois eixos que o Modo tem para vender, e nenhum outro. Não vendemos
+funcionalidade — vendemos que a escolha do dia pode ser terceirizada. Quem não
+confia não obedece, e quem acha o produto tosco não confia.
+
+|                            | O que é                                         | Exemplo                                          |
+| -------------------------- | ----------------------------------------------- | ------------------------------------------------ |
+| **Confiança**              | o usuário acredita que o produto sabe o que faz | o ajuste responder de forma previsível (MOD-018) |
+| **Percepção de qualidade** | o produto parece feito por gente que se importa | o ícone deixar de ser template (MOD-021)         |
+
+Um item pode servir os dois, e os melhores servem. O que não pode é não servir
+nenhum e passar assim mesmo — nesse caso ele cai na justificativa abaixo, e no
+limite de um por sprint.
+
+**Este critério é permanente.** Não é da sprint v0.2: vale para toda revisão
+daqui em diante, e uma entrega que não responde a pergunta não está pronta para
+revisão.
 
 Trabalho puramente técnico não está proibido. Está **sujeito a justificativa**:
 um item sem valor perceptível precisa declarar

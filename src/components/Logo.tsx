@@ -1,7 +1,15 @@
 import { View } from 'react-native';
 import Svg, { Path, Text as SvgText } from 'react-native-svg';
 
-import { colors, fontFamily, spacing } from '@/theme';
+import {
+  BRAND_GRID,
+  type BrandGeometry,
+  colors,
+  fontFamily,
+  framePathOf,
+  geometryFor,
+  spacing,
+} from '@/theme';
 
 import { Text } from './Text';
 
@@ -14,54 +22,58 @@ import { Text } from './Text';
  *
  * O M é tipografia real (a serifa de display do produto), não um path: trocar a
  * fonte de display troca a marca junto, como deve ser.
- */
-const GRID = 64;
-
-/**
- * A moldura, aberta no quadrante inferior direito.
  *
- * O vão vai de (58,30) a (30,58) — largo o bastante para o M ocupá-lo inteiro.
- * Com uma abertura estreita o M encostava nas arestas e o símbolo lia como
- * erro de alinhamento; aqui ele **fecha** a moldura, que é exatamente o
- * conceito: enquadrar para revelar o essencial.
+ * A geometria vive em `theme/brand.ts`, e não aqui, porque o ícone do app é
+ * gerado a partir dela pelo mesmo conjunto de números.
+ *
+ * **O desenho muda com o tamanho.** Abaixo de 40 pontos o componente troca para
+ * o grau compacto — moldura mais grossa, M maior, vão mais largo. Não é uma
+ * marca diferente: é a mesma marca desenhada para sobreviver ao pixel. O
+ * cabeçalho do app usa 28, então quem mais ganha com isso é a própria tela
+ * principal.
  */
-const FRAME_PATH = 'M30 58 L6 58 L6 6 L58 6 L58 30';
-
-/** Centro do vão. O M é posicionado nele, não no centro do quadro. */
-const MARK_X = 44;
-const MARK_BASELINE = 55;
-const MARK_SIZE = 32;
-
 type LogoProps = {
   /** `mark` = só o símbolo. `wordmark` = símbolo + MODO. */
   variant?: 'mark' | 'wordmark';
   size?: number;
   color?: string;
+  /** Força um grau óptico. Por padrão, decide pelo tamanho. */
+  geometry?: BrandGeometry;
 };
 
 export function Logo({
   variant = 'wordmark',
   size = 64,
   color = colors.textPrimary,
+  geometry,
 }: LogoProps) {
-  // O traço acompanha a escala do símbolo, como na família de ícones.
-  const stroke = (2.5 * size) / GRID;
+  const brand = geometry ?? geometryFor(size);
 
   return (
     <View className="items-center">
-      <Svg width={size} height={size} viewBox={`0 0 ${GRID} ${GRID}`} fill="none">
+      <Svg
+        width={size}
+        height={size}
+        viewBox={`0 0 ${BRAND_GRID} ${BRAND_GRID}`}
+        fill="none"
+      >
+        {/* `strokeWidth` está em unidades do viewBox, não em pixels: o
+            `viewBox` de 64 já é escalado para `size` pelo próprio SVG.
+            Converter aqui escalava duas vezes, e o traço saía a 44% do peso
+            desenhado no cabeçalho — foi o que fez a marca em tela parecer
+            sempre mais fina que o ícone gerado. */}
         <Path
-          d={FRAME_PATH}
+          d={framePathOf(brand)}
           stroke={color}
-          strokeWidth={stroke}
+          strokeWidth={brand.stroke}
           strokeLinecap="square"
           strokeLinejoin="miter"
         />
         <SvgText
-          x={MARK_X}
-          y={MARK_BASELINE}
+          x={brand.markX}
+          y={brand.markBaseline}
           fill={color}
-          fontSize={MARK_SIZE}
+          fontSize={brand.markSize}
           fontFamily={fontFamily.display}
           textAnchor="middle"
         >

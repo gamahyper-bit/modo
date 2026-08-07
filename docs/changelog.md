@@ -10,6 +10,49 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
 
 ## [Não lançado]
 
+### Adicionado — identidade própria no aparelho (MOD-021)
+
+- **Ícone, splash e favicon com a marca**, no lugar dos ativos de template do
+  Expo. O símbolo FRAME em tinta sobre off-white; no Android, ícone adaptativo
+  com camada da frente transparente e versão monocromática para o tema do
+  sistema.
+- **O ícone é um ativo próprio, não o logo reduzido** (DEC-022). A marca tem
+  dois graus ópticos: `display` (traço 2,5 · M 32 · vão 30) para 40 pontos para
+  cima, e `compacto` (traço 4 · M 35 · vão 26) para o launcher, a aba do
+  navegador e o cabeçalho do app. As folgas dentro do vão passam de
+  2,6 / 1,8 / 2,6 para 3,8 / 2,6 / 2,9 — abrir folga importa tanto quanto
+  engrossar traço, porque espaço em branco é o que fecha primeiro quando a tinta
+  espalha. `geometryFor(size)` escolhe sozinho.
+- **A moldura passou a ser gerada por parâmetros**, e não escrita como literal
+  de path: dois literais seriam duas formas que por acaso se parecem, e que
+  divergiriam no primeiro ajuste. Um teste garante que o grau de marca continua
+  produzindo exatamente o path original.
+- **O `splash-icon.png` é o único ativo do sistema em grau de marca** — aparece
+  a 160 pontos, tamanho em que o traço fino é qualidade e não fragilidade.
+- **`npm run brand` gera todos os PNG** a partir de `theme/brand.ts`, a mesma
+  geometria que o componente `Logo` desenha em tela (DEC-021). O M é tipografia
+  real, então o gerador carrega a fonte de display do app — comprar a licença de
+  PP Editorial New (DEC-001) troca o ícone junto.
+- **Um teste compara os arquivos em disco com o que a geometria produz agora.**
+  Mexer na marca e esquecer de regenerar deixa de ser possível em silêncio: é o
+  jeito clássico de o ícone da tela inicial virar uma versão antiga do logo.
+- As margens de cada ativo passaram a ser explícitas e justificadas: o iOS
+  recorta em cantos arredondados a partir de uns 22% da borda, o Android usa uma
+  máscara que muda por aparelho, e o favicon vive com 16 pixels.
+- `assets/android-icon-background.png` removido — órfão, o `app.json` já pinta o
+  fundo do ícone adaptativo por `backgroundColor`.
+- Splash de 120 para 160 px de largura: com a marca em traço fino, 120 lia como
+  inacabado.
+
+### Corrigido — o traço do logo saía a 44% do peso
+
+- **`Logo` escalava `strokeWidth` duas vezes.** O atributo está em unidades do
+  `viewBox`, e o `viewBox` de 64 já é escalado para `size` pelo próprio SVG;
+  converter à mão multiplicava por `size/64` de novo. No cabeçalho, que desenha
+  a 28, o traço saía a 44% do desenhado. É a razão de a marca em tela sempre ter
+  parecido mais fina que o ícone exportado — apareceu ao **medir** o traço
+  renderizado para conferir o grau óptico, não a olho.
+
 ### Corrigido — "Ajustar" passa a ajustar (MOD-018)
 
 - **O ajuste chega ao motor.** `composeLook` lê `adjustments` e os traduz em
@@ -50,10 +93,6 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
   deslocamento de régua.
 - **"Outro tênis" virou "Outro calçado".** O rótulo nomeava o modelo, e o modelo
   passou a ser uma bota assim que a régua de formalidade entrou.
-- **O título do `BottomSheet` encostou no conteúdo.** As margens do título caíram
-  de 16/16 para 12/12: a folha sobe ocupando pouca altura, e um título boiando
-  entre dois vazios fazia o topo parecer que ainda estava carregando. Vale para
-  todas as folhas, não só a de ajuste.
 - **Fala do stylist mais curta.** Uma oração, uma vírgula, ponto — quem já
   decidiu não precisa de subordinadas. "Você pediu mais elegante, então fui
   atrás do que o seu armário tem de mais formal para hoje" virou "Subi o tom com
@@ -90,6 +129,8 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
 - **DEC-018** — ajuste é parâmetro do motor, não caso especial.
 - **DEC-019** — régua de formalidade no lugar da prioridade por ocasião.
 - **DEC-020** — o ajuste entra no id do look.
+- **DEC-021** — ícone gerado a partir da geometria da marca.
+- **DEC-022** — o ícone é um ativo próprio, não o logo reduzido.
 
 ### Adicionado — marca e jornadas
 

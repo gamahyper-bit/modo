@@ -15,6 +15,16 @@ Uma afirmação que pode estar errada. Três partes:
 Não repita o objetivo com outras palavras.
 -->
 
+## Isto aumenta a confiança ou a percepção de qualidade?
+
+<!--
+Uma frase, e diga qual dos dois. São os únicos dois eixos que o Modo tem para
+vender — quem não confia não obedece, e quem acha o produto tosco não confia.
+
+Servir os dois é melhor. Não servir nenhum exige a justificativa da regra do
+valor, e vale no máximo uma vez por sprint.
+-->
+
 ## Qual jornada isto aproxima de utilizável?
 
 <!--
