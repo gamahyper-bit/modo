@@ -134,7 +134,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.border,
   },
   title: {
-    marginTop: spacing.lg,
-    marginBottom: spacing.lg,
+    // Perto da alça e perto do conteúdo. A folha sobe ocupando pouca altura, e
+    // um título boiando no meio de dois vazios fazia o topo parecer que ainda
+    // estava carregando alguma coisa.
+    marginTop: spacing.md,
+    marginBottom: spacing.md,
   },
 });

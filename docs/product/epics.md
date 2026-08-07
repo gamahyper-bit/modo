@@ -43,7 +43,7 @@ clima, e as telas que apresentam a escolha.
 
 **Pronto quando.** O usuário abre o app de manhã, lê uma frase e se veste.
 
-MOD-007 · MOD-008 · MOD-009 · MOD-012 · MOD-018 · MOD-026 · MOD-027
+MOD-007 · MOD-008 · MOD-009 · MOD-012 · MOD-018 · MOD-026 · MOD-027 · MOD-036
 
 ---
 

@@ -67,24 +67,42 @@ armário  →  motor determinístico  →  candidatos válidos  →  IA  →  lo
             (TypeScript, local)                          (Edge Function)
 ```
 
-**Camada 1 — `services/recommendation/composer.ts`**
+**Camada 1 — `services/recommendation/`**, quatro arquivos com uma
+responsabilidade cada:
 
-Filtra por ocasião, estação e clima; aplica a regra de uniforme; escolhe parte
-de cima, parte de baixo, calçado e, conforme o clima, casaco e acessório.
+| Arquivo       | Responde                                                   |
+| ------------- | ---------------------------------------------------------- |
+| `tuning.ts`   | o que cada ajuste do usuário faz com o motor (DEC-018)     |
+| `ranking.ts`  | quão formal é uma peça, e em que ordem o stylist a alcança |
+| `composer.ts` | monta o look a partir dos dois anteriores                  |
+| `copy.ts`     | escreve o que o stylist diz sobre o resultado              |
 
-- casaco abaixo de 20 °C; bermuda acima de 26 °C
-- camisa antes de camiseta em trabalho, noite e encontro; o inverso no casual e
-  na viagem
+`composer.ts` filtra por ocasião e clima, aplica a regra de uniforme e escolhe
+parte de cima, parte de baixo, calçado e, conforme o clima, casaco e acessório.
+
+- casaco abaixo de 20 °C; bermuda acima de 26 °C — sobre a temperatura
+  **sentida**, que é a real mais o que o usuário pediu
+- a peça escolhida é a mais próxima do alvo de formalidade da ocasião, não a
+  mais formal (DEC-019)
 - uniforme fora de look casual e no fim da fila no trabalho (DEC-011)
 - sem uma das três peças estruturais, não recomenda
+
+O ajuste do usuário nunca vira um `if` aqui: `tuning.ts` o converte em três
+números — deslocamento de formalidade, graus somados, salto dentro de uma
+categoria — e o compositor só lê os números.
 
 **Camada 2 — hoje `copy.ts`, amanhã Edge Function**
 
 Escreve `moment`, `mood`, `summary` e `rationale`. Quando MOD-026 entrar, este
 arquivo desaparece.
 
-**Identidade do look.** `l-<ocasião>-<variante>-<peças>` (DEC-008). O motor é
-determinístico, então o mesmo id recompõe o mesmo look — sem banco.
+**Identidade do look.** `l-<ocasião>-<variante>-<ajustes>-<peças>` (DEC-008,
+DEC-020). O motor é determinístico, então o mesmo id recompõe o mesmo look —
+sem banco.
+
+**Testes.** `composer.test.ts`, por `npm test`. A camada 1 inteira é TypeScript
+puro, sem import de React Native: testar a regra do look não exige ambiente de
+renderização, e é isso que mantém a decisão separada da interface que a mostra.
 
 ## Motion
 

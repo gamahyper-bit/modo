@@ -29,43 +29,44 @@ Cada item declara também o **valor** que entrega, em uma frase.
 
 ## Visão geral
 
-| ID          | Nome                                  | Epic   | Jor.   | Imp.  | Status    | Prio   | Est.  | Versão   |
-| ----------- | ------------------------------------- | ------ | ------ | ----- | --------- | ------ | ----- | -------- |
-| MOD-001     | Fundação do projeto                   | 06     | —      | 1     | Done      | P0     | M     | v0.1     |
-| MOD-002     | Design tokens                         | 01     | —      | 2     | Done      | P0     | M     | v0.1     |
-| MOD-003     | Sistema de Motion                     | 01     | —      | 2     | Done      | P1     | M     | v0.1     |
-| MOD-004     | Iconografia própria                   | 01     | —      | 3     | Done      | P1     | M     | v0.1     |
-| MOD-005     | Componentes do design system          | 01     | —      | 4     | Done      | P0     | G     | v0.1     |
-| MOD-006     | Galeria de componentes                | 07     | —      | 1     | Done      | P2     | P     | v0.1     |
-| MOD-007     | Home e HeroCard                       | 02     | J2     | 5     | Done      | P0     | G     | v0.1     |
-| MOD-008     | Camada de recomendação                | 02     | J2     | 3     | Done      | P0     | M     | v0.1     |
-| MOD-009     | Detalhe do look                       | 02     | J2     | 4     | Done      | P1     | M     | v0.1     |
-| MOD-010     | Armário                               | 03     | J3     | 4     | Done      | P0     | M     | v0.2     |
-| MOD-011     | Adicionar peça                        | 03     | J3     | 5     | Done      | P0     | G     | v0.3     |
-| MOD-012     | Motor determinístico                  | 02     | J2     | 5     | Done      | P0     | M     | v0.2     |
-| MOD-013     | Autenticação                          | 05     | J1     | 4     | Done      | P0     | G     | v0.1     |
-| MOD-014     | Perfil                                | 05     | J5     | 2     | Done      | P2     | P     | v0.5     |
-| MOD-015     | Aba Looks                             | 04     | J4     | 3     | Done      | P1     | P     | v0.5     |
-| MOD-016     | Schema e RLS                          | 06     | J5     | 2     | Done      | P0     | M     | v0.6     |
-| MOD-017     | Edge Function de leitura              | 06     | J3     | 2     | Done      | P0     | M     | v0.4     |
-| **MOD-018** | **Ajustar não altera a recomendação** | **02** | **J2** | **5** | **Ready** | **P0** | **P** | **v0.2** |
-| **MOD-019** | **Testes do motor**                   | **07** | **J2** | **2** | **Ready** | **P0** | **M** | **v0.2** |
-| **MOD-021** | **Ícone e splash da marca**           | **01** | **J1** | **3** | **Ready** | **P1** | **P** | **v0.2** |
-| **MOD-020** | **Integração contínua**               | **07** | **J5** | **1** | **Ready** | **P1** | **P** | **v0.2** |
-| MOD-022     | Detalhe da peça                       | 03     | J4     | 3     | Backlog   | P1     | M     | v0.2     |
-| MOD-023     | Editar e remover peça                 | 03     | J3     | 4     | Backlog   | P1     | M     | v0.2     |
-| MOD-024     | Remoção de fundo                      | 03     | J3     | 5     | Backlog   | P0     | M     | v0.3     |
-| MOD-025     | Integrar leitura da peça              | 03     | J3     | 5     | Backlog   | P0     | M     | v0.4     |
-| MOD-026     | Ranqueamento e texto por IA           | 02     | J2     | 5     | Backlog   | P0     | G     | v0.4     |
-| MOD-027     | Clima real                            | 02     | J2     | 4     | Backlog   | P1     | M     | v0.4     |
-| MOD-028     | Persistência do armário               | 06     | J5     | 5     | Backlog   | P0     | M     | v0.6     |
-| MOD-029     | Persistência dos looks                | 04     | J4     | 4     | Backlog   | P0     | M     | v0.6     |
-| MOD-030     | Upload de fotos                       | 06     | J5     | 5     | Backlog   | P0     | M     | v0.6     |
-| MOD-031     | Onboarding de estilo                  | 05     | J1     | 4     | Backlog   | P1     | G     | v0.5     |
-| MOD-032     | Preferências no perfil                | 05     | J1     | 2     | Backlog   | P2     | M     | v0.5     |
-| MOD-033     | Development build                     | 06     | J5     | 3     | Backlog   | P0     | M     | v0.7     |
-| MOD-034     | Auditoria de acessibilidade           | 07     | J5     | 3     | Backlog   | P1     | M     | v0.7     |
-| MOD-035     | Beta fechado                          | 07     | J5     | 3     | Backlog   | P1     | M     | v0.7     |
+| ID          | Nome                                  | Epic   | Jor.   | Imp.  | Status        | Prio   | Est.  | Versão   |
+| ----------- | ------------------------------------- | ------ | ------ | ----- | ------------- | ------ | ----- | -------- |
+| MOD-001     | Fundação do projeto                   | 06     | —      | 1     | Done          | P0     | M     | v0.1     |
+| MOD-002     | Design tokens                         | 01     | —      | 2     | Done          | P0     | M     | v0.1     |
+| MOD-003     | Sistema de Motion                     | 01     | —      | 2     | Done          | P1     | M     | v0.1     |
+| MOD-004     | Iconografia própria                   | 01     | —      | 3     | Done          | P1     | M     | v0.1     |
+| MOD-005     | Componentes do design system          | 01     | —      | 4     | Done          | P0     | G     | v0.1     |
+| MOD-006     | Galeria de componentes                | 07     | —      | 1     | Done          | P2     | P     | v0.1     |
+| MOD-007     | Home e HeroCard                       | 02     | J2     | 5     | Done          | P0     | G     | v0.1     |
+| MOD-008     | Camada de recomendação                | 02     | J2     | 3     | Done          | P0     | M     | v0.1     |
+| MOD-009     | Detalhe do look                       | 02     | J2     | 4     | Done          | P1     | M     | v0.1     |
+| MOD-010     | Armário                               | 03     | J3     | 4     | Done          | P0     | M     | v0.2     |
+| MOD-011     | Adicionar peça                        | 03     | J3     | 5     | Done          | P0     | G     | v0.3     |
+| MOD-012     | Motor determinístico                  | 02     | J2     | 5     | Done          | P0     | M     | v0.2     |
+| MOD-013     | Autenticação                          | 05     | J1     | 4     | Done          | P0     | G     | v0.1     |
+| MOD-014     | Perfil                                | 05     | J5     | 2     | Done          | P2     | P     | v0.5     |
+| MOD-015     | Aba Looks                             | 04     | J4     | 3     | Done          | P1     | P     | v0.5     |
+| MOD-016     | Schema e RLS                          | 06     | J5     | 2     | Done          | P0     | M     | v0.6     |
+| MOD-017     | Edge Function de leitura              | 06     | J3     | 2     | Done          | P0     | M     | v0.4     |
+| **MOD-018** | **Ajustar não altera a recomendação** | **02** | **J2** | **5** | **In Review** | **P0** | **M** | **v0.2** |
+| **MOD-019** | **Testes do motor**                   | **07** | **J2** | **2** | **Ready**     | **P0** | **P** | **v0.2** |
+| **MOD-021** | **Ícone e splash da marca**           | **01** | **J1** | **3** | **Ready**     | **P1** | **P** | **v0.2** |
+| **MOD-020** | **Integração contínua**               | **07** | **J5** | **1** | **Ready**     | **P1** | **P** | **v0.2** |
+| MOD-022     | Detalhe da peça                       | 03     | J4     | 3     | Backlog       | P1     | M     | v0.2     |
+| MOD-023     | Editar e remover peça                 | 03     | J3     | 4     | Backlog       | P1     | M     | v0.2     |
+| MOD-024     | Remoção de fundo                      | 03     | J3     | 5     | Backlog       | P0     | M     | v0.3     |
+| MOD-025     | Integrar leitura da peça              | 03     | J3     | 5     | Backlog       | P0     | M     | v0.4     |
+| MOD-026     | Ranqueamento e texto por IA           | 02     | J2     | 5     | Backlog       | P0     | G     | v0.4     |
+| MOD-027     | Clima real                            | 02     | J2     | 4     | Backlog       | P1     | M     | v0.4     |
+| MOD-028     | Persistência do armário               | 06     | J5     | 5     | Backlog       | P0     | M     | v0.6     |
+| MOD-029     | Persistência dos looks                | 04     | J4     | 4     | Backlog       | P0     | M     | v0.6     |
+| MOD-030     | Upload de fotos                       | 06     | J5     | 5     | Backlog       | P0     | M     | v0.6     |
+| MOD-031     | Onboarding de estilo                  | 05     | J1     | 4     | Backlog       | P1     | G     | v0.5     |
+| MOD-032     | Preferências no perfil                | 05     | J1     | 2     | Backlog       | P2     | M     | v0.5     |
+| MOD-033     | Development build                     | 06     | J5     | 3     | Backlog       | P0     | M     | v0.7     |
+| MOD-034     | Auditoria de acessibilidade           | 07     | J5     | 3     | Backlog       | P1     | M     | v0.7     |
+| MOD-035     | Beta fechado                          | 07     | J5     | 3     | Backlog       | P1     | M     | v0.7     |
+| MOD-036     | Régua de agasalho                     | 02     | J2     | 3     | Backlog       | P2     | P     | v0.3     |
 
 **Em negrito:** a sprint v0.2, na ordem de execução.
 
@@ -87,7 +88,7 @@ quando já reduziu a incerteza dos três anteriores.
 
 ## EPIC-02 — Recomendação
 
-### MOD-018 — "Ajustar" não altera a recomendação · `Ready` · P0 · P
+### MOD-018 — "Ajustar" não altera a recomendação · `In Review` · P0 · M
 
 **Objetivo.** Quando o usuário diz "está frio", o próximo look precisa estar
 mais quente.
@@ -104,12 +105,53 @@ vezes muda por coincidência de variante.
 
 **Critérios de aceite**
 
-- [ ] `composeLook` recebe e aplica os ajustes
-- [ ] "Mais elegante" / "Mais casual" desloca a prioridade de categorias
-- [ ] "Está calor" / "Está frio" desloca o limiar de casaco e bermuda
-- [ ] "Outro tênis" / "Outra calça" troca só aquela peça, preservando o resto
-- [ ] Ajuste ativo fica visível na interface — o usuário sabe que está filtrando
-- [ ] Teste cobrindo cada ajuste
+- [x] `composeLook` recebe e aplica os ajustes
+- [x] "Mais elegante" / "Mais casual" desloca a prioridade de categorias
+- [x] "Está calor" / "Está frio" desloca o limiar de casaco e bermuda
+- [x] "Outro tênis" / "Outra calça" troca só aquela peça, preservando o resto
+- [x] Ajuste ativo fica visível na interface — o usuário sabe que está filtrando
+- [x] Teste cobrindo cada ajuste
+
+**Estimativa revisada de `P` para `M`.** A prioridade de categoria por ocasião
+era uma tabela escrita à mão, e "mais elegante" não tinha em que se apoiar nela:
+`camisa` antes de `camiseta` não distingue um tênis de corrida de uma bota de
+camurça. Substituí a tabela por uma régua de formalidade (DEC-019). Foi mais
+trabalho do que o previsto e é a razão de o item ter virado `M`.
+
+**O que ficou de fora, e virou MOD-036.** "Está frio" num dia de 18 graus não
+muda o look: o casaco já estava lá, e é o único que serve para trabalho. O
+usuário vê que foi ouvido — o topo do look passa a ler "Para o frio." e a nota
+explica a decisão — mas nenhuma peça troca. Trocar por uma peça **mais quente**
+exige uma segunda régua, e essa régua é um item próprio.
+
+---
+
+### MOD-036 — Régua de agasalho · `Backlog` · P2 · P
+
+**Objetivo.** "Está frio" trocar por uma peça mais quente, e não só por uma
+peça a mais.
+
+**Valor.** Fecha a metade que faltou do ajuste de clima. Hoje, num dia em que o
+casaco já está no look, "está frio" responde com palavra e não com roupa — e
+palavra sem roupa é a segunda melhor resposta.
+
+**Descrição.** MOD-018 traduziu "está frio" em deslocamento de temperatura, e um
+deslocamento só atravessa um limiar: põe ou tira o casaco. Falta a régua de
+agasalho — a irmã da régua de formalidade — para o motor saber que um casaco de
+lã é mais quente que uma jaqueta leve, e que uma camiseta de malha é mais fresca
+que uma camisa de algodão.
+
+**Dependências.** MOD-018
+**Verificação.** Teste: num armário com dois casacos elegíveis, "está frio"
+escolhe o mais quente. Print antes/depois.
+
+**Critérios de aceite**
+
+- [ ] `warmthOf` pontua a peça por categoria e material, como `formalityOf`
+- [ ] "Está frio" e "está calor" ranqueiam candidatos além de mover o limiar
+- [ ] A régua de formalidade continua decidindo quando as duas se cruzam, com a
+      regra de desempate escrita
+- [ ] Teste com dois casacos elegíveis
 
 ---
 
@@ -433,7 +475,7 @@ chave só como secret. **Integração pendente:** MOD-025.
 
 ## EPIC-07 — Confiança
 
-### MOD-019 — Testes do motor · `Ready` · P0 · M
+### MOD-019 — Testes do motor · `Ready` · P0 · P
 
 **Objetivo.** Mudar a regra de recomendação sem medo.
 
@@ -444,20 +486,26 @@ look, só que o errado. Foi assim que a calça do uniforme apareceu combinada co
 uma camisa comum, e só foi notada porque o id do look estava visível num teste
 manual.
 
-**Por que agora.** MOD-018 mexe no motor, MOD-026 vai reescrevê-lo. Sem rede,
-as duas entregas são apostas.
+**Por que agora.** MOD-026 vai reescrever o motor. Sem rede, essa entrega é uma
+aposta.
+
+**Reduzido de `M` para `P` por MOD-018.** Um item que mexe no núcleo do motor
+não podia esperar a rede chegar depois, então MOD-018 trouxe o runner e os
+testes de ajuste junto com a mudança. Sobrou para cá o que MOD-018 não tocou —
+e é justamente o que já quebrou uma vez em silêncio.
 
 **Dependências.** MOD-018
 
 **Critérios de aceite**
 
-- [ ] Runner configurado, rodando por `npm test`
-- [ ] Uniforme nunca em look casual
+- [x] Runner configurado, rodando por `npm test` — feito em MOD-018
+- [x] Cada ajuste do MOD-018 coberto — feito em MOD-018
 - [ ] Uniforme por último no trabalho
 - [ ] Casaco só abaixo do limiar; bermuda só acima
 - [ ] Armário incompleto não gera look
-- [ ] Id do look reconstrói o mesmo look
-- [ ] Cada ajuste do MOD-018 coberto
+- [ ] Id do look reconstrói o mesmo look, ajuste incluído
+- [ ] "Gerar outro" nunca repete um look já visto
+- [ ] `npm test` entra na Definition of Done
 
 ---
 

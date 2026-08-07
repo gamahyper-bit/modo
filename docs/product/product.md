@@ -37,6 +37,7 @@ Estas não são preferências. São regras que a implementação precisa garanti
 | Uniforme nunca aparece em look casual         | `composer.ts`                        |
 | Uniforme vai por último mesmo no trabalho     | `composer.ts` (DEC-011)              |
 | Todo look tem explicação — nunca só roupa     | tipo `Look`, `rationale` obrigatório |
+| Todo ajuste pedido muda o look ou se explica  | `tuning.ts`, `copy.ts` (DEC-018)     |
 | Sem peça estrutural, não recomenda            | `composer.ts`                        |
 | A Home sempre entrega um look, mesmo sem rede | camada determinística local          |
 | Nada de senha em nenhum caminho de login      | `AuthService`                        |

@@ -44,7 +44,24 @@ getRecommendation(request: {
 }): Promise<Look>
 ```
 
-> ⚠️ `adjustments` é aceito e **ignorado** pela implementação atual. Ver MOD-018.
+`adjustments` chega até o motor: `composeLook` traduz cada um em parâmetro —
+régua de formalidade, temperatura sentida, salto dentro de uma categoria — pela
+tabela única de `tuning.ts`. Um ajuste novo é uma linha nessa tabela, não um
+`if` no compositor (DEC-018).
+
+O ajuste também entra no **id do look**, entre a variante e as peças:
+
+```
+l-<ocasião>-<variante>-<ajustes>-<peças>
+
+l-trabalho-0-_-g1.g6.g9.g12.g13              sem ajuste
+l-trabalho-0-mais-elegante-g1.g5.g9.g12.g13  a calça reta virou alfaiataria
+```
+
+`_` marca a ausência de ajuste; vários ajustes vêm unidos por `+`. Sem esse
+segmento, abrir o detalhe de um look ajustado recomporia o look **sem** ajuste,
+o id não bateria e a tela acusaria "peça não está mais no armário" — sobre um
+look que existia meio segundo antes.
 
 ### `LookService`
 

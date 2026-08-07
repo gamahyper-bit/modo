@@ -1,7 +1,9 @@
-import type { Look, Weather } from '@/types/look';
+import type { Look, LookAdjustment, Weather } from '@/types/look';
 import type { Garment, GarmentCategory, Occasion } from '@/types/wardrobe';
 
 import { momentFor, moodFor, rationaleFor, summaryFor } from './copy';
+import { formalityTargetFor, rankFor } from './ranking';
+import { tuningFor } from './tuning';
 
 /**
  * O motor determinístico.
@@ -20,41 +22,21 @@ const COAT_THRESHOLD = 20;
 /** Acima disso, calça comprida incomoda. */
 const SHORTS_THRESHOLD = 26;
 
+/** Marca a ausência de ajuste no id do look. */
+const NO_ADJUSTMENT = '_';
+
 type ComposeInput = {
   wardrobe: Garment[];
   occasion: Occasion;
   weather: Weather;
   /** Gira as escolhas a cada "Gerar outro". */
   variant: number;
+  /** O que o usuário pediu sobre a recomendação anterior. */
+  adjustments?: LookAdjustment[];
 };
 
-const pick = <T>(options: T[], variant: number): T | undefined =>
-  options.length === 0 ? undefined : options[variant % options.length];
-
-/**
- * Filtra por categoria **respeitando a ordem pedida**.
- *
- * A ordem dos argumentos é prioridade de estilo, não conveniência: pedir
- * `('camisa', 'camiseta')` significa que camisa vem antes na fila de escolha.
- */
-const byCategory = (list: Garment[], ...categories: GarmentCategory[]) =>
-  categories.flatMap((category) =>
-    list.filter((garment) => garment.category === category)
-  );
-
-/**
- * Que parte de cima o stylist alcança primeiro.
- *
- * Para trabalho, noite e encontro, camisa antes de camiseta — é regra de
- * vestir, não preferência do código. No casual e na viagem, o inverso.
- */
-const TOP_PRIORITY: Record<Occasion, GarmentCategory[]> = {
-  trabalho: ['camisa', 'camiseta'],
-  noite: ['camisa', 'camiseta'],
-  encontro: ['camisa', 'camiseta'],
-  casual: ['camiseta', 'camisa'],
-  viagem: ['camiseta', 'camisa'],
-};
+const pick = <T>(options: T[], index: number): T | undefined =>
+  options.length === 0 ? undefined : options[index % options.length];
 
 /**
  * Regra de uniforme: peça de uniforme só existe em look de trabalho.
@@ -67,56 +49,90 @@ const allowedFor = (garment: Garment, occasion: Occasion) => {
   return garment.occasions.includes(occasion);
 };
 
+/**
+ * O segmento de ajuste do id.
+ *
+ * Precisa estar no id porque o detalhe do look reconstrói a partir dele. Sem
+ * isso, abrir um look ajustado recomporia o look sem ajuste, o id não bateria e
+ * a tela acusaria "peça não está mais no armário" — uma mentira, sobre um look
+ * que existia meio segundo antes.
+ */
+const adjustmentSegment = (adjustments: LookAdjustment[]) =>
+  adjustments.length > 0 ? adjustments.join('+') : NO_ADJUSTMENT;
+
 export function composeLook({
   wardrobe,
   occasion,
   weather,
   variant,
+  adjustments = [],
 }: ComposeInput): Look | undefined {
+  const tuning = tuningFor(adjustments);
+  const target = formalityTargetFor(occasion, tuning.formality);
+
+  /**
+   * A temperatura com que o motor decide não é a do termômetro: é a que o
+   * usuário disse sentir.
+   *
+   * `look.weather` continua carregando a leitura real, porque é ela que aparece
+   * na tela — mentir sobre a previsão custaria mais confiança do que o ajuste
+   * ganha. Quem explica a diferença é a nota do stylist.
+   */
+  const felt = weather.temperature + tuning.temperature;
+
   const eligible = wardrobe
     .filter((garment) => allowedFor(garment, occasion))
-    // Uniforme por último, mesmo onde é permitido.
-    //
-    // Uniforme se veste como conjunto: a calça do uniforme com uma camisa
-    // comum não é um look, é um acidente. Deixando essas peças no fim da fila,
-    // elas só entram quando não há alternativa — que é exatamente quando o
-    // usuário de fato vai de uniforme.
-    .sort((a, b) => Number(a.isUniform) - Number(b.isUniform));
+    .sort(rankFor(target));
 
-  const tops = byCategory(eligible, ...TOP_PRIORITY[occasion]);
-  const bottoms = byCategory(
-    eligible,
-    weather.temperature >= SHORTS_THRESHOLD ? 'bermuda' : 'calca'
-  );
-  const shoes = byCategory(eligible, 'calcado');
-  const coats = byCategory(eligible, 'casaco');
-  const extras = byCategory(eligible, 'acessorio');
+  const inCategory = (...categories: GarmentCategory[]) =>
+    eligible.filter((garment) => categories.includes(garment.category));
+
+  const offsetOf = (category: GarmentCategory) => tuning.offsets[category] ?? 0;
+
+  // Camisa e camiseta disputam a mesma vaga. Qual vem primeiro é decidido pela
+  // régua de formalidade, não por uma tabela por ocasião.
+  const tops = inCategory('camisa', 'camiseta');
+  const bottomCategory: GarmentCategory =
+    felt >= SHORTS_THRESHOLD ? 'bermuda' : 'calca';
 
   const top = pick(tops, variant);
-  const bottom = pick(bottoms, variant);
-  const shoe = pick(shoes, variant);
+  const bottom = pick(
+    inCategory(bottomCategory),
+    variant + offsetOf(bottomCategory)
+  );
+  const shoe = pick(inCategory('calcado'), variant + offsetOf('calcado'));
 
   // Sem uma das três peças estruturais não existe look. Melhor não recomendar
   // do que recomendar pela metade.
   if (!top || !bottom || !shoe) return undefined;
 
   const coat =
-    weather.temperature < COAT_THRESHOLD ? pick(coats, variant) : undefined;
-  const extra = pick(extras, variant + 1);
+    felt < COAT_THRESHOLD
+      ? pick(inCategory('casaco'), variant + offsetOf('casaco'))
+      : undefined;
+  const extra = pick(inCategory('acessorio'), variant + 1);
 
   const garments = [top, bottom, coat, shoe, extra].filter(
     (garment): garment is Garment => garment !== undefined
   );
 
+  const narration = { garments, occasion, weather, felt, adjustments };
+
   return {
-    // O id carrega a composição inteira — ocasião, variante e peças. É o que
-    // permite o detalhe reconstruir exatamente o mesmo look sem banco nenhum,
-    // e o que faz um link direto para um look continuar funcionando.
-    id: `l-${occasion}-${variant}-${garments.map((g) => g.id).join('.')}`,
-    moment: momentFor(occasion),
+    // O id carrega a composição inteira — ocasião, variante, ajuste e peças. É
+    // o que permite o detalhe reconstruir exatamente o mesmo look sem banco
+    // nenhum, e o que faz um link direto para um look continuar funcionando.
+    id: [
+      'l',
+      occasion,
+      variant,
+      adjustmentSegment(adjustments),
+      garments.map((garment) => garment.id).join('.'),
+    ].join('-'),
+    moment: momentFor(occasion, adjustments),
     mood: moodFor(occasion, variant),
-    summary: summaryFor(top, occasion),
-    rationale: rationaleFor(garments, occasion, weather),
+    summary: summaryFor(narration),
+    rationale: rationaleFor(narration),
     occasion,
     weather,
     garments,

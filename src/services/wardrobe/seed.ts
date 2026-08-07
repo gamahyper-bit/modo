@@ -68,8 +68,11 @@ export const wardrobeSeed: Garment[] = [
     category: 'calca',
     color: { name: 'Preto', hex: '#0D0D0D' },
     material: 'Sarja',
+    // Sarja escura é a calça de viagem por excelência — e sem ela a ocasião
+    // "viagem" não tinha nenhuma parte de baixo comprida, o que deixava o chip
+    // da Home entregando erro em vez de look.
     seasons: ['outono', 'inverno'],
-    occasions: ['casual', 'noite', 'trabalho'],
+    occasions: ['casual', 'noite', 'trabalho', 'viagem'],
     isUniform: false,
   },
   {
@@ -119,7 +122,9 @@ export const wardrobeSeed: Garment[] = [
     color: { name: 'Branco', hex: '#F7F5F2' },
     material: 'Couro',
     seasons: ['primavera', 'verao', 'outono'],
-    occasions: ['casual', 'trabalho', 'encontro'],
+    // Idem: era o único calçado que faltava marcar, e "viagem" ficava sem
+    // nenhum. Uma ocasião sem peça estrutural não gera look nenhum.
+    occasions: ['casual', 'trabalho', 'encontro', 'viagem'],
     isUniform: false,
   },
   {
