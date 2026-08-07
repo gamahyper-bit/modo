@@ -119,4 +119,4 @@ sem ninguém perceber".
 **Pronto quando.** Alguém novo no projeto consegue mexer no motor de
 recomendação sem medo.
 
-MOD-006 · MOD-019 · MOD-020 · MOD-034 · MOD-035
+MOD-006 · MOD-019 · MOD-020 · MOD-034 · MOD-035 · MOD-037

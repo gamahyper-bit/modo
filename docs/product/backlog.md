@@ -49,9 +49,9 @@ Cada item declara também o **valor** que entrega, em uma frase.
 | MOD-016     | Schema e RLS                      | 06     | J5     | 2     | Done          | P0     | M     | v0.6     |
 | MOD-017     | Edge Function de leitura          | 06     | J3     | 2     | Done          | P0     | M     | v0.4     |
 | MOD-018     | Ajustar não altera a recomendação | 02     | J2     | 5     | Done          | P0     | M     | v0.2     |
-| **MOD-019** | **Testes do motor**               | **07** | **J2** | **2** | **In Review** | **P0** | **M** | **v0.2** |
+| MOD-019     | Testes do motor                   | 07     | J2     | 2     | Done          | P0     | M     | v0.2     |
 | MOD-021     | Ícone e splash da marca           | 01     | J1     | 3     | Done          | P1     | P     | v0.2     |
-| **MOD-020** | **Integração contínua**           | **07** | **J5** | **1** | **Ready**     | **P1** | **P** | **v0.2** |
+| **MOD-020** | **Integração contínua**           | **07** | **J5** | **1** | **In Review** | **P1** | **P** | **v0.2** |
 | MOD-022     | Detalhe da peça                   | 03     | J4     | 3     | Backlog       | P1     | M     | v0.2     |
 | MOD-023     | Editar e remover peça             | 03     | J3     | 4     | Backlog       | P1     | M     | v0.2     |
 | MOD-024     | Remoção de fundo                  | 03     | J3     | 5     | Backlog       | P0     | M     | v0.3     |
@@ -67,6 +67,7 @@ Cada item declara também o **valor** que entrega, em uma frase.
 | MOD-034     | Auditoria de acessibilidade       | 07     | J5     | 3     | Backlog       | P1     | M     | v0.7     |
 | MOD-035     | Beta fechado                      | 07     | J5     | 3     | Backlog       | P1     | M     | v0.7     |
 | MOD-036     | Régua de agasalho                 | 02     | J2     | 3     | Backlog       | P2     | P     | v0.3     |
+| MOD-037     | Revisão arquitetural              | 07     | J5     | 1     | Ready         | P0     | M     | v0.3     |
 
 **Em negrito:** a sprint v0.2, na ordem de execução.
 
@@ -78,8 +79,8 @@ Cada item declara também o **valor** que entrega, em uma frase.
 | --- | ------------------------------ | ------- | --------------- |
 | 1   | `fix/look-adjustments`         | MOD-018 | ✅ mesclada     |
 | 2   | `feature/brand-assets`         | MOD-021 | ✅ mesclada     |
-| 3   | `feature/recommendation-tests` | MOD-019 | 🔄 em andamento |
-| 4   | `feature/ci`                   | MOD-020 | ◻︎ a fazer       |
+| 3   | `feature/recommendation-tests` | MOD-019 | ✅ mesclada     |
+| 4   | `feature/ci`                   | MOD-020 | 🔄 em andamento |
 
 MOD-020 é **o único item de risco puro** da sprint, e por isso vai por último —
 quando já reduziu a incerteza dos três anteriores.
@@ -500,7 +501,7 @@ chave só como secret. **Integração pendente:** MOD-025.
 
 ## EPIC-07 — Confiança
 
-### MOD-019 — Testes do motor · `In Review` · P0 · M
+### MOD-019 — Testes do motor · `Done` · P0 · M
 
 **Objetivo.** Mudar a regra de recomendação sem medo.
 
@@ -548,7 +549,38 @@ reprová-lo não serve para nada.
 
 ---
 
-### MOD-020 — Integração contínua · `Ready` · P1 · P
+### MOD-037 — Revisão arquitetural · `Ready` · P0 · M
+
+**Objetivo.** Saber onde a arquitetura vai doer **antes** de conectar Supabase,
+Gemini, clima e imagens — não depois.
+
+**Falha que impede.** Integração pesada é o momento em que um contrato frágil
+para de ser barato. Hoje toda porta tem uma implementação só; com duas, cada
+suposição escondida vira um comportamento diferente entre demonstração e
+produção — e a diferença aparece no aparelho de um testador, não aqui.
+
+**Por que agora.** É a última janela em que refatorar custa um PR. Depois de
+MOD-025 a MOD-030 haverá rede, banco e IA dependendo das mesmas interfaces.
+
+**Descrição.** Um documento em `docs/engineering/`, escrito **a partir do código
+existente** — não de hipóteses. Cada afirmação aponta para um arquivo.
+
+**Dependências.** MOD-020
+**Verificação.** O documento responde às cinco perguntas, e cada oportunidade de
+simplificação vira item no backlog ou entra numa branch antes das integrações.
+
+**Critérios de aceite**
+
+- [ ] Quais módulos conhecem detalhes que não deveriam conhecer
+- [ ] Onde há contratos frágeis ou difíceis de evoluir
+- [ ] Quais interfaces devem permanecer iguais até a v1.0
+- [ ] Quais decisões podem ser congeladas e quais seguem experimentais
+- [ ] O que impede o motor de ser independente da persistência
+- [ ] Toda simplificação encontrada vira item no backlog, com prioridade
+
+---
+
+### MOD-020 — Integração contínua · `In Review` · P1 · P
 
 **Objetivo.** A definição de pronto ser verificada por máquina.
 
@@ -568,9 +600,15 @@ vai por último.
 
 **Critérios de aceite**
 
-- [ ] Workflow rodando typecheck, lint, testes e build em cada PR
-- [ ] `main` protegida contra push direto
-- [ ] PR sem CI verde não pode ser mesclado
+- [x] Workflow rodando formatação, tipos, lint, testes e build em cada PR
+- [x] `main` protegida contra push direto
+- [ ] PR sem CI verde não pode ser mesclado — **depende de ligar o check
+      obrigatório nas regras do repositório**, ver `engineering/process.md`
+
+**O que a CI não verifica, e por quê.** Screenshot, documentação atualizada e
+status no backlog continuam humanos. São critérios que dependem de julgamento, e
+uma verificação automática ruim para eles é pior que conferir à mão: dá a
+impressão de estar coberto.
 
 ---
 

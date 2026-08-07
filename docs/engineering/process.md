@@ -212,7 +212,8 @@ Mais dois específicos do projeto, quando se aplicarem:
 - [ ] Status alterado em `docs/product/backlog.md`
 - [ ] Componente novo adicionado à `/galeria`
 
-Até MOD-020, a verificação é humana. Depois dela, é a CI que reprova.
+**Quem verifica é a CI**, não a boa vontade de quem revisa. Sete critérios
+conferidos à mão não sobrevivem a dez PRs.
 
 ---
 
@@ -262,6 +263,43 @@ gh api repos/gamahyper-bit/modo/milestones -f title=v0.2 \
 ```
 
 ---
+
+## Integração contínua
+
+`.github/workflows/ci.yml` roda em todo PR para `main` e em todo push para
+`main`. Na ordem, e a ordem importa: o que reprova mais barato vem primeiro.
+
+| Passo      | Comando                          |
+| ---------- | -------------------------------- |
+| Instalar   | `npm ci`                         |
+| Formatação | `npm run format:check`           |
+| Tipos      | `npm run typecheck`              |
+| Lint       | `npm run lint`                   |
+| Testes     | `npm test`                       |
+| Build      | `npx expo export --platform web` |
+
+**`npm ci`, não `npm install`.** Instala exatamente o que está no lock: um PR
+que só passa porque resolveu uma versão diferente da que o revisor viu não
+passou.
+
+**Os testes cobrem mais do que código.** `scripts/brand-assets.test.ts` compara
+os PNG em disco com o que a geometria da marca produz agora — mexer em
+`theme/brand.ts` sem rodar `npm run brand` reprova aqui.
+
+**O que a CI ainda não verifica:** screenshot, documentação atualizada e status
+no backlog. São critérios da Definition of Done que dependem de julgamento, e
+inventar uma verificação automática ruim para eles seria pior que conferir à
+mão.
+
+### O que precisa ser ligado no GitHub
+
+A CI só vira barreira quando a regra de proteção de `main` exigir o check:
+
+_Settings → Rules → Rulesets → `main` → Require status checks to pass_, com
+**`Definition of Done`** marcado.
+
+Sem isso o workflow roda, mostra o resultado e não impede nada — o que é pior
+que não ter CI, porque parece que tem.
 
 ## Verificação visual
 
