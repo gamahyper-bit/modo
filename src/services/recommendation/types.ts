@@ -20,4 +20,13 @@ export type RecommendationRequest = {
 export interface RecommendationService {
   /** A recomendação principal da Home. */
   getRecommendation(request: RecommendationRequest): Promise<Look>;
+
+  /**
+   * Reconstrói um look a partir do id dele.
+   *
+   * Mora aqui, e não na porta dos looks, porque **um look é uma receita**
+   * (DEC-028): reproduzir a receita é trabalho da camada que decide, não da que
+   * guarda. A porta dos looks cuida de *quais* receitas o usuário salvou.
+   */
+  rebuild(lookId: string): Promise<Look>;
 }

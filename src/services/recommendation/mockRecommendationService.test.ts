@@ -4,7 +4,6 @@ import { wardrobeService } from '@/services/wardrobe';
 import type { Look } from '@/types/look';
 import type { GarmentDraft } from '@/types/wardrobe';
 
-import { signatureOf } from './lookId';
 import { mockRecommendationService } from './mockRecommendationService';
 
 /**
@@ -36,31 +35,29 @@ const recommend = async (excludeLookIds: string[] = []): Promise<Look> => {
 /**
  * Repete "Gerar outro" como a Home faz: guarda o que já viu e pede outro.
  *
- * Para quando a assinatura se repete — que é o momento em que o produto ficou
- * sem alternativas.
+ * Para quando um id se repete — que é o momento em que o produto ficou sem
+ * alternativas. Comparar por id passou a bastar quando a variante saiu da
+ * identidade do look: antes, dois ids diferentes podiam vestir a mesma roupa, e
+ * este laço precisava de uma assinatura paralela para enxergar isso.
  */
 const generateUntilRepeat = async (limit = 64) => {
-  const seenIds: string[] = [];
-  const signatures: string[] = [];
+  const seen: string[] = [];
 
   for (let round = 0; round < limit; round += 1) {
-    const look = await recommend(seenIds);
-    const signature = signatureOf(look.id);
+    const look = await recommend(seen);
 
-    if (signatures.includes(signature)) return { signatures, repeated: true };
-
-    seenIds.push(look.id);
-    signatures.push(signature);
+    if (seen.includes(look.id)) return { seen, repeated: true };
+    seen.push(look.id);
   }
 
-  return { signatures, repeated: false };
+  return { seen, repeated: false };
 };
 
 describe('gerar outro', () => {
   it('nunca repete enquanto houver alternativa', async () => {
-    const { signatures } = await generateUntilRepeat();
+    const { seen } = await generateUntilRepeat();
 
-    expect(new Set(signatures).size).toBe(signatures.length);
+    expect(new Set(seen).size).toBe(seen.length);
   });
 
   it('alcança todas as combinações do armário, não só algumas', async () => {
@@ -70,26 +67,26 @@ describe('gerar outro', () => {
     // Antes, a mesma variante escolhia a mesma posição em todas as listas e só
     // o mínimo múltiplo comum era alcançável — duas das oito. O usuário via o
     // botão repetir com seis alternativas guardadas que ele não sabia alcançar.
-    const { signatures } = await generateUntilRepeat();
+    const { seen } = await generateUntilRepeat();
 
-    expect(signatures).toHaveLength(8);
+    expect(seen).toHaveLength(8);
   });
 
   it('repete em vez de falhar quando acaba o que mostrar', async () => {
     // A Home nunca pode ficar sem look. Esgotadas as alternativas, o certo é
     // repetir a primeira — não a tela de erro.
-    const { signatures } = await generateUntilRepeat();
-    const exhausted = await recommend(signatures);
+    const { seen } = await generateUntilRepeat();
+    const exhausted = await recommend(seen);
 
     expect(exhausted.garments.length).toBeGreaterThanOrEqual(3);
   });
 
   it('nunca oferece peça de uniforme quando há alternativa comum', async () => {
-    const { signatures } = await generateUntilRepeat();
+    const { seen } = await generateUntilRepeat();
 
-    for (const signature of signatures) {
-      expect(signature).not.toContain('g15');
-      expect(signature).not.toContain('g16');
+    for (const lookId of seen) {
+      expect(lookId).not.toContain('g15');
+      expect(lookId).not.toContain('g16');
     }
   });
 });
@@ -116,8 +113,8 @@ describe('armário maior', () => {
     await wardrobeService.add(draft('Camisa de popeline'));
     vi.useFakeTimers();
 
-    const { signatures } = await generateUntilRepeat();
+    const { seen } = await generateUntilRepeat();
 
-    expect(signatures).toHaveLength(24);
+    expect(seen).toHaveLength(24);
   });
 });

@@ -156,20 +156,15 @@ describe('outra calça / outro calçado', () => {
   });
 });
 
-describe('o ajuste fica no id', () => {
-  it('marca a ausência de ajuste com um espaço reservado', () => {
-    expect(compose().id.split('-')[3]).toBe('_');
-  });
+describe('o ajuste muda a identidade', () => {
+  it('dois ajustes diferentes não são o mesmo look', () => {
+    // O formato do id é contrato de `recipe.ts`, e é lá que ele é testado. Aqui
+    // interessa só que o compositor de fato o use: um pedido diferente produz
+    // um look diferente, e não o mesmo com outro texto.
+    const base = compose().id;
 
-  it('carrega o ajuste, para o detalhe reconstruir o mesmo look', () => {
-    // Sem isto, abrir um look ajustado recomporia o look sem ajuste, o id não
-    // bateria e a tela acusaria "peça não está mais no armário" — sobre um look
-    // que existia meio segundo antes.
-    const id = compose(['mais-elegante']).id;
-    const segments = id.split('-');
-
-    expect(segments.slice(3, -1).join('-')).toBe('mais-elegante');
-    expect(id).not.toBe(compose().id);
+    expect(compose(['mais-elegante']).id).not.toBe(base);
+    expect(compose(['esta-calor']).id).not.toBe(base);
   });
 });
 

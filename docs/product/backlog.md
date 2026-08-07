@@ -67,8 +67,8 @@ Cada item declara também o **valor** que entrega, em uma frase.
 | MOD-034     | Auditoria de acessibilidade        | 07     | J5     | 3     | Backlog       | P1     | M     | v0.7     |
 | MOD-035     | Beta fechado                       | 07     | J5     | 3     | Backlog       | P1     | M     | v0.7     |
 | MOD-036     | Régua de agasalho                  | 02     | J2     | 3     | Backlog       | P2     | P     | v0.3     |
-| **MOD-037** | **Revisão arquitetural**           | **07** | **J5** | **1** | **In Review** | **P0** | **M** | **v0.3** |
-| **MOD-038** | **Identidade de peça e de look**   | **06** | **J5** | **1** | **Ready**     | **P0** | **M** | **v0.3** |
+| MOD-037     | Revisão arquitetural               | 07     | J5     | 1     | Done          | P0     | M     | v0.3     |
+| **MOD-038** | **Identidade de peça e de look**   | **06** | **J5** | **1** | **In Review** | **P0** | **M** | **v0.3** |
 | **MOD-039** | **Separar escolha e fala do look** | **02** | **J2** | **1** | **Ready**     | **P0** | **M** | **v0.3** |
 | **MOD-040** | **Injetar armário e clima**        | **02** | **J2** | **1** | **Ready**     | **P1** | **P** | **v0.3** |
 | **MOD-041** | **Remover abstrações sem uso**     | **01** | **—**  | **1** | **Ready**     | **P1** | **P** | **v0.3** |
@@ -98,8 +98,8 @@ integrações, cresce com o número de coisas que dependem dele.
 
 | #   | Branch                        | Item    | Estado                                 |
 | --- | ----------------------------- | ------- | -------------------------------------- |
-| 1   | `feature/architecture-review` | MOD-037 | 🔄 em andamento                        |
-| 2   | a definir                     | MOD-038 | identidade de peça e de look           |
+| 1   | `feature/architecture-review` | MOD-037 | ✅ mesclada                            |
+| 2   | `feature/look-identity`       | MOD-038 | 🔄 em andamento                        |
 | 3   | a definir                     | MOD-039 | separar escolha e fala do look         |
 | 4   | a definir                     | MOD-040 | injetar armário e clima no serviço     |
 | 5   | a definir                     | MOD-041 | remover abstrações sem uso             |
@@ -576,7 +576,7 @@ reprová-lo não serve para nada.
 
 ---
 
-### MOD-037 — Revisão arquitetural · `In Review` · P0 · M
+### MOD-037 — Revisão arquitetural · `Done` · P0 · M
 
 **Objetivo.** Saber onde a arquitetura vai doer **antes** de conectar Supabase,
 Gemini, clima e imagens — não depois.
@@ -621,7 +621,7 @@ MOD-026, duas chamadas iguais não devolvem a mesma frase — e o
 
 ---
 
-### MOD-038 — Identidade de peça e de look · `Ready` · P0 · M
+### MOD-038 — Identidade de peça e de look · `In Review` · P0 · M
 
 **Objetivo.** Um look salvo continuar abrindo depois que o banco existir.
 
@@ -640,11 +640,25 @@ descrita, mesmo que não haja o que migrar.
 
 **Critérios de aceite**
 
-- [ ] Uma decisão registrada: o look é receita ou registro
-- [ ] `Garment.id` e `Look.id` com o mesmo formato no app e no schema
-- [ ] `mockLookService` deixa de importar `composeLook` — passa a conversar com
+- [x] Uma decisão registrada: **o look é receita** (DEC-028)
+- [x] `Garment.id` e `Look.id` com o mesmo formato no app e no schema
+- [x] `mockLookService` deixa de importar `composeLook` — passa a conversar com
       a porta, não com as entranhas
-- [ ] `excludeLookIds` revisto: hoje o serviço só usa a assinatura
+- [x] `excludeLookIds` revisto: a assinatura sumiu, o id passou a ser ela
+- [x] Domain Model escrito em
+      [`architecture/domain-model.md`](../architecture/domain-model.md)
+
+**A variante saiu do id.** Foi a consequência mais forte da decisão: ela é o
+botão que o motor gira para enumerar combinações, não a escolha do usuário.
+Enquanto esteve na identidade, duas variantes que caíam nas mesmas peças eram
+dois looks para o produto e um só para quem veste — e foi por isso que MOD-019
+precisou inventar uma "assinatura" paralela. Tirando a variante, **o id é a
+assinatura**, e a assinatura sumiu do código.
+
+**`rebuild` deixou de recompor.** Antes ele refazia a escolha inteira e conferia
+se o id batia; agora resolve no armário as peças que a receita nomeia. Peça que
+saiu é detectada por ausência. Era o que quebraria em MOD-026, quando o texto
+deixar de ser determinístico.
 
 ---
 

@@ -10,6 +10,41 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
 
 ## [Não lançado]
 
+### Alterado — um look é uma receita (MOD-038)
+
+**DEC-028.** O motor produz uma receita reprodutível — ocasião, ajustes e peças
+—, e tudo o mais é derivado dela. O
+[Domain Model](./architecture/domain-model.md) descreve o modelo inteiro em uma
+página.
+
+- **A variante saiu do id.** Ela é o botão que o motor gira para enumerar
+  combinações, não a escolha do usuário. Enquanto esteve na identidade, duas
+  variantes que caíam nas mesmas peças eram dois looks para o produto e um só
+  para quem veste.
+- **A assinatura sumiu.** Ela existia só para desfazer essa confusão (DEC-025).
+  Sem a variante no id, **o id é a assinatura** — e um conceito a menos.
+- **`rebuild` deixou de recompor.** Resolve no armário as peças que a receita
+  nomeia; peça que saiu é detectada por ausência. Antes ele refazia a escolha
+  inteira e conferia se o id batia — o que só funciona enquanto o texto for
+  determinístico, e deixaria de funcionar em MOD-026.
+- **`mockLookService` não conhece mais o motor.** Ele guarda ids de receita, e
+  quem reproduz a receita é a porta da recomendação, por `rebuild`. Era o
+  primeiro achado da revisão arquitetural.
+- **A fala do stylist deriva das peças, não da variante.** O mesmo conjunto lê
+  do mesmo jeito; ler o mesmo conjunto de dois jeitos seria o produto mudando de
+  opinião sem motivo.
+- **O schema passou a guardar a receita.** `looks.recipe_id` é a identidade de
+  domínio, com `unique (user_id, recipe_id)`; o `id uuid` fica como chave de
+  linha e não sai do banco. `look_garments` continua, agora com a função
+  declarada: é a integridade que o Postgres sabe verificar, enquanto a string é
+  a identidade que viaja.
+- `lookId.ts` virou `recipe.ts`, e o vocabulário do código passou a ser o do
+  domínio.
+
+**O que ainda não mudou:** `moment`, `mood`, `summary` e `rationale` continuam
+dentro de `Look` e dentro da tabela. Separar decisão de narrativa é MOD-039 — a
+decisão que permite isso está tomada, a mudança de tipo ainda não.
+
 ### Adicionado — revisão arquitetural (MOD-037)
 
 [`engineering/architecture-review.md`](./engineering/architecture-review.md),
@@ -242,6 +277,7 @@ usuário sentia.
 - **DEC-025** — o id tem um dono, e a repetição se compara por assinatura.
 - **DEC-026** — a Definition of Done é o que a CI roda.
 - **DEC-027** — nenhuma abstração por antecipação.
+- **DEC-028** — um look é uma receita, não um registro.
 
 ### Adicionado — marca e jornadas
 

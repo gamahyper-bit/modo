@@ -1,7 +1,4 @@
-import { composeLook } from '@/services/recommendation/composer';
-import { parseLookId } from '@/services/recommendation/lookId';
-import { wardrobeService } from '@/services/wardrobe';
-import { weatherService } from '@/services/weather';
+import { recommendationService } from '@/services/recommendation';
 import type { Look } from '@/types/look';
 
 import type { LookService } from './types';
@@ -14,42 +11,24 @@ const delay = (ms: number) =>
 /**
  * Coleção salva do usuário, em memória — some ao recarregar, e tudo bem.
  *
+ * **Guarda receitas, não looks.** Um look salvo é o id de uma receita; as peças,
+ * o texto e o clima são reconstruídos na hora de mostrar. É o que faz um look
+ * salvo continuar certo depois de o armário mudar — e o que vai permitir que a
+ * fala do stylist seja reescrita pela IA sem tocar em nada guardado (DEC-028).
+ *
  * Ordenada: o mais recente primeiro, que é como a aba Looks apresenta.
  */
 const saved: string[] = [];
 
 /**
- * Reconstrói o look a partir do próprio id.
- *
- * O id carrega tudo que o motor precisa para produzir o mesmo look de novo, e
- * quem sabe o formato é `recommendation/lookId` — aqui só se lê o resultado.
- * Isso dispensa banco e faz um link direto para um look continuar funcionando
- * depois de fechar o app, desde que as peças ainda existam no armário.
+ * Esta porta cuida de **quais** receitas o usuário guardou. Reproduzir a receita
+ * é trabalho de quem decide, e é por isso que a reconstrução vem da porta da
+ * recomendação em vez de o serviço de looks conhecer o motor por dentro.
  */
-async function rebuild(lookId: string): Promise<Look> {
-  const parts = parseLookId(lookId);
-  if (!parts) throw new Error('Look não encontrado.');
-
-  const [wardrobe, weather] = await Promise.all([
-    wardrobeService.list(),
-    weatherService.current(),
-  ]);
-
-  const look = composeLook({ wardrobe, weather, ...parts });
-
-  // O motor é determinístico, então recompor com os mesmos parâmetros devolve o
-  // mesmo look. Se o id não bate, alguma peça saiu do armário desde então.
-  if (!look || look.id !== lookId) {
-    throw new Error('Este look usava uma peça que não está mais no armário.');
-  }
-
-  return look;
-}
-
 export const mockLookService: LookService = {
   async getById(lookId: string): Promise<Look> {
     await delay(LATENCY_MS);
-    return rebuild(lookId);
+    return recommendationService.rebuild(lookId);
   },
 
   async listSaved(): Promise<Look[]> {
@@ -59,7 +38,7 @@ export const mockLookService: LookService = {
     // simplesmente não aparece — mostrar um look que não existe mais seria pior
     // que a ausência dele.
     const looks = await Promise.all(
-      saved.map((id) => rebuild(id).catch(() => undefined))
+      saved.map((id) => recommendationService.rebuild(id).catch(() => undefined))
     );
 
     return looks.filter((look): look is Look => look !== undefined);
