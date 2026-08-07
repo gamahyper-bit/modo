@@ -55,7 +55,7 @@ MOD-010 ✅ · MOD-012 ✅ · MOD-022 · MOD-023
 - ~~"Ajustar" alterar de fato a recomendação~~ — MOD-018
 - ~~O app tiver ícone próprio~~ — MOD-021
 - ~~O motor tiver cobertura de teste~~ — MOD-019
-- A CI verificar a definição de pronto por máquina
+- ~~A CI verificar a definição de pronto por máquina~~ — MOD-020
 - Tocar numa peça levar ao detalhe dela
 
 **MOD-021 passou na frente de MOD-019.** MOD-018 trouxe o runner e a cobertura
@@ -74,10 +74,18 @@ duas vezes.
 
 **Tese.** A foto virar peça catalogada sem trabalho do usuário.
 
-MOD-011 ✅ · MOD-024 · MOD-036
+MOD-011 ✅ · MOD-037 · MOD-024 · MOD-036
+
+**Abre com uma pausa.** MOD-037 é uma revisão arquitetural, e vem **antes** de
+qualquer integração pesada — Supabase real, Gemini, clima, imagens,
+sincronização. É a última janela em que mexer num contrato custa um PR: com duas
+implementações por porta, cada suposição escondida vira comportamento diferente
+entre demonstração e produção, e a diferença aparece no aparelho de um testador.
 
 **Fecha quando**
 
+- A revisão arquitetural estiver escrita, e o que ela achar, resolvido ou no
+  backlog com prioridade
 - O fundo for removido de verdade
 - Uma peça fotografada em casa aparecer recortada no armário
 - "Está frio" trocar por uma peça mais quente, e não só acrescentar uma

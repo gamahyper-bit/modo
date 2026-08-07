@@ -1,0 +1,63 @@
+name: CI
+
+# A Definition of Done, verificada por máquina.
+#
+# Até aqui os oito critérios eram conferidos à mão, e sete critérios manuais não
+# sobrevivem a dez PRs: alguém abre um PR com lint sujo numa sexta-feira, o
+# revisor confia, e `main` deixa de ser estável — que é a única coisa que o git
+# flow inteiro existe para garantir.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Um PR que recebe três pushes seguidos não precisa de três execuções: as duas
+# primeiras já não interessam a ninguém quando a terceira começa.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verificar:
+    name: Definition of Done
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # A mesma major do ambiente de desenvolvimento. `scripts/brand-assets.ts`
+          # roda direto no Node, sem etapa de build, e isso depende do
+          # apagamento de tipos que só existe a partir do 22.
+          node-version: 22
+          cache: npm
+
+      # `ci` e não `install`: instala exatamente o que está no lock. Um PR que
+      # só passa porque resolveu uma versão diferente da que o revisor viu não
+      # passou.
+      - name: Instalar
+        run: npm ci
+
+      - name: Formatação
+        run: npm run format:check
+
+      - name: Tipos
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      # Cobre o motor de recomendação e os ativos da marca — este último compara
+      # os PNG em disco com o que a geometria produz agora, então mexer na marca
+      # sem rodar `npm run brand` reprova aqui.
+      - name: Testes
+        run: npm test
+
+      # O passo mais lento, e por isso o último: um erro de tipo ou de lint
+      # reprova antes de gastar o empacotamento.
+      - name: Build
+        run: npx expo export --platform web

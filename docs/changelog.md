@@ -10,6 +10,33 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
 
 ## [Não lançado]
 
+### Adicionado — a definição de pronto virou máquina (MOD-020)
+
+- **CI em todo PR para `main`** e em todo push para `main`: `npm ci`, formatação,
+  tipos, lint, testes e build, nessa ordem — o que reprova mais barato vem
+  primeiro (DEC-026).
+- **`npm ci`, não `npm install`.** Um PR que só passa porque resolveu uma versão
+  diferente da que o revisor viu não passou.
+- Execuções superadas são canceladas: um PR que recebe três pushes seguidos não
+  precisa de três execuções.
+- **O que a CI não verifica continua humano:** screenshot, documentação e status
+  no backlog. São critérios de julgamento, e automatizá-los mal é pior que
+  conferir à mão — passa a impressão de estar coberto.
+- ⚠️ **Falta ligar o check obrigatório** em _Settings → Rules → Rulesets →
+  `main` → Require status checks to pass_, com `Definition of Done` marcado. Sem
+  isso o workflow roda e não impede nada.
+
+### Adicionado — pausa arquitetural marcada (MOD-037)
+
+- Item novo no backlog, **antes de qualquer integração pesada** — Supabase real,
+  Gemini, clima, imagens, sincronização. Cinco perguntas respondidas a partir do
+  código, não de hipóteses: que módulos sabem o que não deveriam, onde os
+  contratos são frágeis, que interfaces vão até a v1.0, o que pode ser congelado,
+  e o que ainda prende o motor à persistência.
+- É a última janela em que mexer num contrato custa um PR. Com duas
+  implementações por porta, cada suposição escondida vira comportamento
+  diferente entre demonstração e produção.
+
 ### Corrigido — o motor escolhia por acidente (MOD-019)
 
 Quatro defeitos, todos encontrados pelos testes desta entrega. Três deles o
@@ -184,6 +211,7 @@ usuário sentia.
 - **DEC-023** — a escolha do look não depende de acidentes.
 - **DEC-024** — uniforme é filtro por vaga, não ordenação.
 - **DEC-025** — o id tem um dono, e a repetição se compara por assinatura.
+- **DEC-026** — a Definition of Done é o que a CI roda.
 
 ### Adicionado — marca e jornadas
 

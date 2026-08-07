@@ -586,3 +586,40 @@ complica a reconstrução).
 **Impacto.** Um lugar só sabe o formato, e um teste faz a ida e a volta. O
 serviço percorre variantes até a assinatura repetir, o que substitui um teto de
 oito escrito à mão que cabia no armário de demonstração por coincidência.
+
+---
+
+## DEC-026 — A Definition of Done é o que a CI roda
+
+**Data.** 2026-08-07 · **Status.** Ativa
+
+`.github/workflows/ci.yml` executa, em todo PR para `main`, os seis passos que
+até aqui eram conferidos à mão: instalar com o lock, formatação, tipos, lint,
+testes e build. A ordem é de custo crescente — o que reprova barato vem antes.
+
+**Motivo.** Sete critérios manuais não sobrevivem a dez PRs. O modo de falha é
+conhecido e não tem nada de exótico: alguém abre um PR com lint sujo numa
+sexta-feira, o revisor confia, e `main` deixa de ser estável — que é a única
+coisa que o git flow inteiro existe para garantir.
+
+**`npm ci`, e não `npm install`.** Instala exatamente o que está no lock. Um PR
+que só passa porque resolveu uma versão diferente da que o revisor viu não
+passou, e a diferença aparece na máquina de outra pessoa.
+
+**O que ficou de fora, de propósito.** Screenshot, documentação atualizada e
+status no backlog continuam humanos. São critérios de julgamento, e uma
+verificação automática ruim para eles é pior do que nenhuma: passa a impressão
+de estar coberto.
+
+**Alternativas.** Rodar tudo em paralelo (mais rápido, mas o log fica confuso e o
+custo de um PR errado é seis jobs vermelhos em vez de um passo); rodar só nos
+pushes para `main` (descobrir o problema depois do merge é descobrir tarde).
+
+**Impacto.** A CI só vira barreira quando o check `Definition of Done` for
+exigido nas regras do repositório. Enquanto não for, o workflow roda, mostra o
+resultado e não impede nada — o que é pior que não ter CI, porque parece que
+tem.
+
+**O que custou.** O Node ficou preso na major 22: `scripts/brand-assets.ts` roda
+direto no Node, sem etapa de build, e isso depende do apagamento de tipos que só
+existe a partir do 22.
