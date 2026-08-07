@@ -69,23 +69,28 @@ export const formalityTargetFor = (occasion: Occasion, shift: number) =>
   clamp(OCCASION_FORMALITY[occasion] + shift);
 
 /**
- * A ordem em que o stylist alcança as peças.
+ * A ordem em que o stylist alcança as peças: **a mais próxima do alvo**.
  *
- * Duas chaves, nesta ordem:
+ * Não "a mais formal" — a mais próxima. Terno para tomar café é tão errado
+ * quanto moletom na reunião.
  *
- *  1. **Uniforme por último**, mesmo onde é permitido. Uniforme se veste como
- *     conjunto: a calça do uniforme com uma camisa comum não é um look, é um
- *     acidente. No fim da fila, essas peças só entram quando não há
- *     alternativa — que é exatamente quando o usuário de fato vai de uniforme.
- *  2. **Distância até o alvo de formalidade.** Não "o mais formal": o mais
- *     próximo. Terno para tomar café é tão errado quanto moletom na reunião.
+ * **O empate é desfeito pelo id**, e não pela ordem de chegada. Duas peças
+ * igualmente formais são igualmente boas para a regra, então quem escolhia era
+ * a ordem em que o armário chegou — e essa ordem é do serviço, não do motor.
+ * Hoje é o mock, ordenado por categoria; amanhã é o Postgres, que não promete
+ * ordem nenhuma sem `ORDER BY`. O sintoma seria um look salvo parar de abrir
+ * porque o banco devolveu a bolsa antes do cinto.
  *
- * Empate mantém a ordem do armário, porque `Array.prototype.sort` é estável
- * desde ES2019 — e ordem estável é o que faz o mesmo id de look reconstruir o
- * mesmo look.
+ * A ordem entre ids é arbitrária — `g10` vem antes de `g2` — e isso não
+ * importa: o que importa é que seja **sempre a mesma**.
+ *
+ * A regra de uniforme **não** vive mais aqui. Ela era uma segunda chave de
+ * ordenação que empurrava a peça para o fim da fila, o que só a protegia na
+ * primeira variante; hoje é um filtro por vaga no compositor, que é o que
+ * DEC-011 sempre quis dizer.
  */
 export function rankFor(target: number) {
   return (a: Garment, b: Garment) =>
-    Number(a.isUniform) - Number(b.isUniform) ||
-    Math.abs(formalityOf(a) - target) - Math.abs(formalityOf(b) - target);
+    Math.abs(formalityOf(a) - target) - Math.abs(formalityOf(b) - target) ||
+    a.id.localeCompare(b.id);
 }

@@ -54,8 +54,7 @@ MOD-010 ✅ · MOD-012 ✅ · MOD-022 · MOD-023
 
 - ~~"Ajustar" alterar de fato a recomendação~~ — MOD-018
 - ~~O app tiver ícone próprio~~ — MOD-021
-- O motor tiver cobertura de teste — runner e ajustes cobertos em MOD-018;
-  falta o resto das regras
+- ~~O motor tiver cobertura de teste~~ — MOD-019
 - A CI verificar a definição de pronto por máquina
 - Tocar numa peça levar ao detalhe dela
 

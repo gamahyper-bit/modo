@@ -169,6 +169,31 @@ no fim da sprint, quando já reduziu a incerteza do que veio antes.
 
 ---
 
+## A revisão crítica de fim de MOD
+
+**Concluir um item não é abrir a próxima branch.** Entre um e outro há uma
+passada procurando o que pode ser **simplificado ou generalizado** no que acabou
+de entrar.
+
+Três perguntas, nesta ordem:
+
+1. **Alguma coisa ficou sabida em dois lugares?** Duas cópias de uma regra
+   divergem — é questão de quando. Se o mesmo conhecimento aparece duas vezes,
+   ele quer um módulo.
+2. **Algum número mágico sobrou?** Um literal sem nome é uma decisão que ninguém
+   registrou. Ou vira constante com o motivo ao lado, ou vira cálculo.
+3. **Algum caso especial virou caso geral?** Dois `if` que fazem a mesma coisa
+   com nomes diferentes costumam ser um parâmetro esperando para nascer.
+
+O que sair daí ou entra na branch seguinte — quando for do mesmo assunto — ou
+vira item no backlog. **O que não pode é ficar na cabeça de quem escreveu.**
+
+**Por que agora e não depois.** O backend real e a camada de IA vão dobrar a
+superfície do motor. Cada duplicação que sobreviver até lá custa o dobro para
+desfazer, e a essa altura já terá gente dependendo dela.
+
+---
+
 ## Definition of Done
 
 Uma tarefa só é `Done` com os oito:

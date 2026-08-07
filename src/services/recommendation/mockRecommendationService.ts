@@ -3,6 +3,7 @@ import { weatherService } from '@/services/weather';
 import type { Look } from '@/types/look';
 
 import { composeLook } from './composer';
+import { signatureOf } from './lookId';
 import type { RecommendationRequest, RecommendationService } from './types';
 
 /** Latência fingida — interface que nunca espera esconde defeito de estado. */
@@ -11,8 +12,15 @@ const LATENCY_MS = 700;
 const delay = (ms: number) =>
   new Promise<void>((resolve) => setTimeout(resolve, ms));
 
-/** Quantas variantes tentar antes de desistir de fugir dos looks já vistos. */
-const MAX_VARIANTS = 8;
+/**
+ * Trava de segurança, não regra de produto.
+ *
+ * O motor é periódico — cada peça é escolhida por `variante % tamanho da lista`
+ * —, então a sequência de looks fecha um ciclo sozinha e a busca abaixo para
+ * por conta própria. Este teto existe só para o caso de alguém mudar a escolha
+ * para algo não periódico e transformar o laço em espera infinita.
+ */
+const VARIANT_CEILING = 512;
 
 /**
  * Implementação de demonstração da porta de recomendação.
@@ -35,9 +43,25 @@ export const mockRecommendationService: RecommendationService = {
       weatherService.current(),
     ]);
 
+    const seen = new Set(excludeLookIds.map(signatureOf));
+    const produced = new Set<string>();
     let fallback: Look | undefined;
 
-    for (let variant = 0; variant < MAX_VARIANTS; variant += 1) {
+    /**
+     * Percorre as variantes até o ciclo fechar.
+     *
+     * A comparação é por **assinatura**, não por id: o id carrega a variante, e
+     * variantes distintas caem na mesma combinação assim que uma das listas dá
+     * a volta. Comparando por id, o laço nunca reconhecia a repetição — ia até
+     * o teto e, pior, "gerar outro" anunciava um look novo entregando a mesma
+     * roupa com outro número no id.
+     *
+     * Reencontrar uma assinatura já produzida **neste laço** significa que a
+     * volta completou e que não existe mais alternativa nenhuma. Nunca que
+     * paramos cedo: é o que sustenta a promessa de não repetir enquanto houver
+     * o que mostrar.
+     */
+    for (let variant = 0; variant < VARIANT_CEILING; variant += 1) {
       const look = composeLook({
         wardrobe,
         occasion,
@@ -45,14 +69,21 @@ export const mockRecommendationService: RecommendationService = {
         variant,
         adjustments,
       });
-      if (!look) continue;
 
+      // Sem peça estrutural não há look em nenhuma variante — nada a percorrer.
+      if (!look) break;
+
+      const signature = signatureOf(look.id);
+      if (produced.has(signature)) break;
+
+      produced.add(signature);
       fallback ??= look;
-      if (!excludeLookIds.includes(look.id)) return look;
+
+      if (!seen.has(signature)) return look;
     }
 
-    // Esgotadas as variantes, repete a primeira em vez de falhar: a Home nunca
-    // pode ficar sem um look.
+    // Todas as alternativas já foram vistas. Repetir a primeira é melhor do que
+    // falhar: a Home nunca pode ficar sem um look.
     if (fallback) return fallback;
 
     throw new Error(

@@ -492,3 +492,97 @@ medido para descobrir.
 o custo — é a tentação de deixá-las divergir com o tempo até virarem duas
 marcas. O teste que compara traço, corpo e vão entre os dois graus existe para
 que a divergência seja uma escolha explícita, e não um acúmulo.
+
+---
+
+## DEC-023 — A escolha do look não depende de acidentes
+
+**Data.** 2026-08-07 · **Status.** Ativa
+
+Duas mudanças no motor, com a mesma raiz: o look que sai precisa ser função da
+**regra**, e não de fatos incidentais.
+
+**A variante virou base mista.** Antes, a mesma variante escolhia a mesma
+posição em todas as listas — as peças giravam em bloco. Com uma camisa, duas
+calças, dois calçados e dois acessórios existem oito combinações, e só duas eram
+alcançáveis: o período de um giro em bloco é o mínimo múltiplo comum dos
+tamanhos, não o produto. Hoje a variante é lida como um número em base mista e
+cada vaga consome o seu dígito, então percorrer as variantes percorre o produto.
+
+**O empate de formalidade é desfeito pelo id.** Duas peças igualmente formais
+são igualmente boas para a régua, então quem escolhia era a ordem em que o
+armário chegou. Essa ordem é do serviço, não do motor: hoje é o mock, ordenado
+por categoria; amanhã é o Postgres, que não promete ordem nenhuma sem `ORDER
+BY`. O sintoma seria um look salvo parar de abrir porque o banco devolveu a
+bolsa antes do cinto.
+
+**Motivo.** O primeiro defeito era visível e o usuário sentia: "Gerar outro"
+repetia com seis alternativas guardadas que ele não sabia alcançar. O segundo é
+invisível hoje e só apareceria depois do MOD-028, quando já houvesse looks
+salvos para quebrar — foi encontrado por um teste que compara o look montado a
+partir do armário com o montado a partir do armário invertido.
+
+**Alternativas.** Sortear em vez de enumerar (perde o determinismo, e sem
+determinismo o id não reconstrói); guardar a lista de looks já mostrados no
+serviço (estado de sessão dentro de uma porta que vai virar rede).
+
+**Impacto.** O trabalho passou de duas para oito combinações no armário de
+demonstração. O `ORDER BY` do Postgres deixa de importar para a recomendação.
+
+---
+
+## DEC-024 — Uniforme é filtro por vaga, não ordenação
+
+**Data.** 2026-08-07 · **Status.** Ativa · **Substitui a implementação de** DEC-011
+
+Peça de uniforme sai da lista de candidatos de uma vaga sempre que aquela vaga
+tem alternativa comum. Só quando a categoria inteira é de uniforme é que ela
+entra.
+
+**Motivo.** DEC-011 dizia a coisa certa — "essas peças só entram quando não há
+alternativa" — e implementava outra: uma segunda chave de ordenação que empurrava
+o uniforme para o fim da fila. Fim da fila protege a primeira variante e mais
+nada. Na segunda, "gerar outro" entregava a polo do trabalho com calça de
+alfaiataria; na terceira, a calça do uniforme com camisa comum. **É exatamente o
+acidente que a decisão original existia para impedir**, e ele estava acontecendo
+desde que o botão existe.
+
+**Alternativas.** Marcar o look inteiro como "de uniforme" e compor os dois
+mundos separados (mais expressivo, e resolve o dia em que houver dois uniformes
+— não é hoje); deixar como estava e documentar a mistura como aceitável (é a
+peça que o usuário mais reconhece como errada).
+
+**Impacto.** `rankFor` ficou com uma chave só, e a regra saiu da ordenação para
+um lugar onde ela é legível. No armário de demonstração o uniforme deixou de
+aparecer no trabalho, porque há camisa e calça comuns — que é o comportamento
+que a decisão sempre descreveu.
+
+---
+
+## DEC-025 — O id tem um dono, e a repetição se compara por assinatura
+
+**Data.** 2026-08-07 · **Status.** Ativa · **Estende** DEC-020
+
+O formato do id do look vive em `services/recommendation/lookId.ts` — escrita,
+leitura e assinatura no mesmo módulo. E "já mostrei este look?" passa a comparar
+a **assinatura** (`ocasião-ajustes-peças`), não o id inteiro.
+
+**Motivo.** O formato nasceu com o compositor escrevendo e o serviço de looks
+lendo, cada um com a sua metade da regra — e duas metades de um formato divergem
+no primeiro segmento novo. Foi o que aconteceu em MOD-018: acrescentar o ajuste
+exigiu mexer nos dois lados, e errar em um deles produziria a tela acusando "peça
+não está mais no armário" sobre um look que existe.
+
+**A assinatura resolve um defeito mais sutil.** O id carrega a variante, então
+duas variantes que caem na mesma combinação são dois ids para a mesma roupa.
+Comparando por id, "Gerar outro" anunciava um look novo entregando a roupa de
+ontem com outro número — e o laço que procura alternativas nunca reconhecia que
+tinha dado a volta.
+
+**Alternativas.** Tirar a variante do id (o texto do stylist depende dela);
+normalizar o id para a menor variante equivalente (esconde a variante real e
+complica a reconstrução).
+
+**Impacto.** Um lugar só sabe o formato, e um teste faz a ida e a volta. O
+serviço percorre variantes até a assinatura repetir, o que substitui um teto de
+oito escrito à mão que cabia no armário de demonstração por coincidência.

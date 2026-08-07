@@ -1,8 +1,8 @@
 import { composeLook } from '@/services/recommendation/composer';
+import { parseLookId } from '@/services/recommendation/lookId';
 import { wardrobeService } from '@/services/wardrobe';
 import { weatherService } from '@/services/weather';
-import type { Look, LookAdjustment } from '@/types/look';
-import type { Occasion } from '@/types/wardrobe';
+import type { Look } from '@/types/look';
 
 import type { LookService } from './types';
 
@@ -18,47 +18,24 @@ const delay = (ms: number) =>
  */
 const saved: string[] = [];
 
-/** Marca a ausência de ajuste no id do look. */
-const NO_ADJUSTMENT = '_';
-
 /**
  * Reconstrói o look a partir do próprio id.
  *
- * O id é `l-<ocasião>-<variante>-<ajustes>-<peças>`, ou seja, carrega tudo que
- * o motor precisa para produzir o mesmo look de novo. Isso dispensa banco e faz
- * um link direto para um look continuar funcionando depois de fechar o app —
- * desde que as peças ainda existam no armário.
- *
- * A leitura é por segmento, e não por expressão regular, porque os ajustes têm
- * hífen no próprio nome (`mais-elegante`) e a expressão precisaria adivinhar
- * onde um termina e o próximo começa. Ocasião é sempre o segundo segmento,
- * peças sempre o último, ajustes é tudo que sobra no meio.
+ * O id carrega tudo que o motor precisa para produzir o mesmo look de novo, e
+ * quem sabe o formato é `recommendation/lookId` — aqui só se lê o resultado.
+ * Isso dispensa banco e faz um link direto para um look continuar funcionando
+ * depois de fechar o app, desde que as peças ainda existam no armário.
  */
 async function rebuild(lookId: string): Promise<Look> {
-  const segments = lookId.split('-');
-
-  const [prefix, occasion, variant] = segments;
-  const adjustmentSegment = segments.slice(3, -1).join('-');
-
-  if (prefix !== 'l' || !occasion || !variant || segments.length < 5) {
-    throw new Error('Look não encontrado.');
-  }
+  const parts = parseLookId(lookId);
+  if (!parts) throw new Error('Look não encontrado.');
 
   const [wardrobe, weather] = await Promise.all([
     wardrobeService.list(),
     weatherService.current(),
   ]);
 
-  const look = composeLook({
-    wardrobe,
-    occasion: occasion as Occasion,
-    weather,
-    variant: Number(variant),
-    adjustments:
-      adjustmentSegment === NO_ADJUSTMENT || adjustmentSegment === ''
-        ? []
-        : (adjustmentSegment.split('+') as LookAdjustment[]),
-  });
+  const look = composeLook({ wardrobe, weather, ...parts });
 
   // O motor é determinístico, então recompor com os mesmos parâmetros devolve o
   // mesmo look. Se o id não bate, alguma peça saiu do armário desde então.

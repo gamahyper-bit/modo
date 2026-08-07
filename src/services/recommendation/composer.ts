@@ -2,6 +2,7 @@ import type { Look, LookAdjustment, Weather } from '@/types/look';
 import type { Garment, GarmentCategory, Occasion } from '@/types/wardrobe';
 
 import { momentFor, moodFor, rationaleFor, summaryFor } from './copy';
+import { lookIdFor } from './lookId';
 import { formalityTargetFor, rankFor } from './ranking';
 import { tuningFor } from './tuning';
 
@@ -21,9 +22,6 @@ import { tuningFor } from './tuning';
 const COAT_THRESHOLD = 20;
 /** Acima disso, calça comprida incomoda. */
 const SHORTS_THRESHOLD = 26;
-
-/** Marca a ausência de ajuste no id do look. */
-const NO_ADJUSTMENT = '_';
 
 type ComposeInput = {
   wardrobe: Garment[];
@@ -50,15 +48,22 @@ const allowedFor = (garment: Garment, occasion: Occasion) => {
 };
 
 /**
- * O segmento de ajuste do id.
+ * Uniforme não se mistura: ou a vaga tem alternativa comum, ou é o uniforme.
  *
- * Precisa estar no id porque o detalhe do look reconstrói a partir dele. Sem
- * isso, abrir um look ajustado recomporia o look sem ajuste, o id não bateria e
- * a tela acusaria "peça não está mais no armário" — uma mentira, sobre um look
- * que existia meio segundo antes.
+ * Uniforme se veste como conjunto. A calça do uniforme com uma camisa comum não
+ * é um look, é um acidente — e era exatamente o que acontecia: a peça de
+ * uniforme ia para o fim da fila, o que a protegia só na primeira variante.
+ * Na segunda, "gerar outro" entregava a polo do trabalho com calça de
+ * alfaiataria.
+ *
+ * Filtrar por vaga, e não ordenar, implementa o que DEC-011 já dizia: essas
+ * peças **só** entram quando não há alternativa naquela categoria — que é
+ * exatamente quando o usuário de fato vai de uniforme.
  */
-const adjustmentSegment = (adjustments: LookAdjustment[]) =>
-  adjustments.length > 0 ? adjustments.join('+') : NO_ADJUSTMENT;
+const withoutUniform = (list: Garment[]) => {
+  const regular = list.filter((garment) => !garment.isUniform);
+  return regular.length > 0 ? regular : list;
+};
 
 export function composeLook({
   wardrobe,
@@ -85,7 +90,9 @@ export function composeLook({
     .sort(rankFor(target));
 
   const inCategory = (...categories: GarmentCategory[]) =>
-    eligible.filter((garment) => categories.includes(garment.category));
+    withoutUniform(
+      eligible.filter((garment) => categories.includes(garment.category))
+    );
 
   const offsetOf = (category: GarmentCategory) => tuning.offsets[category] ?? 0;
 
@@ -94,23 +101,54 @@ export function composeLook({
   const tops = inCategory('camisa', 'camiseta');
   const bottomCategory: GarmentCategory =
     felt >= SHORTS_THRESHOLD ? 'bermuda' : 'calca';
+  const bottoms = inCategory(bottomCategory);
+  const shoes = inCategory('calcado');
+  const coats = inCategory('casaco');
+  const extras = inCategory('acessorio');
 
-  const top = pick(tops, variant);
-  const bottom = pick(
-    inCategory(bottomCategory),
-    variant + offsetOf(bottomCategory)
-  );
-  const shoe = pick(inCategory('calcado'), variant + offsetOf('calcado'));
+  /**
+   * A variante, decodificada em um índice por vaga.
+   *
+   * Antes a mesma variante escolhia a mesma posição em todas as listas, e as
+   * peças giravam em bloco: com uma camisa, duas calças e dois calçados, as oito
+   * combinações possíveis viravam duas alcançáveis. "Gerar outro" repetia com o
+   * armário cheio de alternativas que ele não sabia alcançar.
+   *
+   * Aqui a variante é lida como um número em base mista — cada vaga consome o
+   * seu dígito. Percorrer as variantes passa a percorrer o **produto** das
+   * listas, e não o mínimo múltiplo comum delas.
+   *
+   * A ordem do consumo decide o que muda primeiro: a parte de cima gira mais
+   * rápido porque é a que mais muda a leitura do look. E todas as cinco vagas
+   * consomem, mesmo a do casaco num dia quente — assim a mesma variante
+   * significa a mesma coisa independentemente do clima.
+   */
+  let remaining = variant;
+  const indexIn = (list: Garment[]) => {
+    if (list.length <= 1) return 0;
+
+    const index = remaining % list.length;
+    remaining = Math.floor(remaining / list.length);
+    return index;
+  };
+
+  const topIndex = indexIn(tops);
+  const bottomIndex = indexIn(bottoms);
+  const shoeIndex = indexIn(shoes);
+  const coatIndex = indexIn(coats);
+  const extraIndex = indexIn(extras);
+
+  const top = pick(tops, topIndex);
+  const bottom = pick(bottoms, bottomIndex + offsetOf(bottomCategory));
+  const shoe = pick(shoes, shoeIndex + offsetOf('calcado'));
 
   // Sem uma das três peças estruturais não existe look. Melhor não recomendar
   // do que recomendar pela metade.
   if (!top || !bottom || !shoe) return undefined;
 
   const coat =
-    felt < COAT_THRESHOLD
-      ? pick(inCategory('casaco'), variant + offsetOf('casaco'))
-      : undefined;
-  const extra = pick(inCategory('acessorio'), variant + 1);
+    felt < COAT_THRESHOLD ? pick(coats, coatIndex + offsetOf('casaco')) : undefined;
+  const extra = pick(extras, extraIndex);
 
   const garments = [top, bottom, coat, shoe, extra].filter(
     (garment): garment is Garment => garment !== undefined
@@ -119,16 +157,7 @@ export function composeLook({
   const narration = { garments, occasion, weather, felt, adjustments };
 
   return {
-    // O id carrega a composição inteira — ocasião, variante, ajuste e peças. É
-    // o que permite o detalhe reconstruir exatamente o mesmo look sem banco
-    // nenhum, e o que faz um link direto para um look continuar funcionando.
-    id: [
-      'l',
-      occasion,
-      variant,
-      adjustmentSegment(adjustments),
-      garments.map((garment) => garment.id).join('.'),
-    ].join('-'),
+    id: lookIdFor({ occasion, variant, adjustments }, garments),
     moment: momentFor(occasion, adjustments),
     mood: moodFor(occasion, variant),
     summary: summaryFor(narration),
