@@ -10,6 +10,46 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
 
 ## [Não lançado]
 
+### Adicionado — revisão arquitetural (MOD-037)
+
+[`engineering/architecture-review.md`](./engineering/architecture-review.md),
+escrita a partir do código em `main`, não de hipóteses. Toda afirmação aponta
+para um arquivo.
+
+- **O achado principal: app e banco discordam sobre identidade.** No app a peça é
+  `g1` e o look é `l-trabalho-0-_-g1.g6…`, uma receita que se recozinha; no
+  schema os dois são `uuid`, com tabela de ligação. São dois modelos
+  incompatíveis do que é um look, e MOD-028/029 batem nisso de frente.
+- **O mesmo conflito quebra antes da persistência.** O schema congela `moment`,
+  `mood`, `summary` e `rationale`; o app recalcula os quatro ao reconstruir.
+  Enquanto o texto é template, ninguém percebe — com o Gemini em MOD-026, duas
+  chamadas iguais não devolvem a mesma frase.
+- **O motor já é independente da persistência**; quem não é são os serviços em
+  volta. `mockRecommendationService` alcança dois singletons de módulo em vez de
+  recebê-los, e o sintoma está escrito no próprio teste.
+- **Três abstrações sem uso:** `Modal` (exportado, usado por ninguém), `Badge`
+  (só na galeria — e nasceu contrariando o PILAR-05, que proíbe badge e
+  contador) e `EmScaffold` (nem exportado).
+- Cinco itens novos no backlog: **MOD-038** a **MOD-042**, um por PR.
+
+### Adicionado — nenhuma abstração por antecipação
+
+- Princípio novo no processo: **toda abstração justifica a existência por um uso
+  atual, ou por um uso planejado e documentado no backlog.** Classificação em
+  `Essencial`, `Temporária` e `Candidata à remoção` — e `Temporária` precisa
+  apontar o item que a encerra, ou vira candidata à remoção.
+
+### Alterado — v0.2 encerrada
+
+- **MOD-022 e MOD-023 saíram da v0.2.** Acrescentam valor e não desbloqueiam
+  nada; a revisão arquitetural reduz risco antes das integrações.
+- **v0.3 vira "Fundação II"**: uma pausa declarada, seis itens sem valor
+  perceptível seguidos. Rompe o limite da regra do valor de propósito — o
+  produto não anda nesta versão, e é para não andar.
+- A ordem depois da v0.3 ficou registrada no roadmap: **Supabase real → Gemini →
+  clima → imagens → experiência**. Ela inverte o que as versões v0.4 a v0.6
+  descrevem, e renumerá-las é decisão de produto.
+
 ### Adicionado — a definição de pronto virou máquina (MOD-020)
 
 - **CI em todo PR para `main`** e em todo push para `main`: `npm ci`, formatação,
@@ -25,17 +65,6 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
 - ⚠️ **Falta ligar o check obrigatório** em _Settings → Rules → Rulesets →
   `main` → Require status checks to pass_, com `Definition of Done` marcado. Sem
   isso o workflow roda e não impede nada.
-
-### Adicionado — pausa arquitetural marcada (MOD-037)
-
-- Item novo no backlog, **antes de qualquer integração pesada** — Supabase real,
-  Gemini, clima, imagens, sincronização. Cinco perguntas respondidas a partir do
-  código, não de hipóteses: que módulos sabem o que não deveriam, onde os
-  contratos são frágeis, que interfaces vão até a v1.0, o que pode ser congelado,
-  e o que ainda prende o motor à persistência.
-- É a última janela em que mexer num contrato custa um PR. Com duas
-  implementações por porta, cada suposição escondida vira comportamento
-  diferente entre demonstração e produção.
 
 ### Corrigido — o motor escolhia por acidente (MOD-019)
 
@@ -212,6 +241,7 @@ usuário sentia.
 - **DEC-024** — uniforme é filtro por vaga, não ordenação.
 - **DEC-025** — o id tem um dono, e a repetição se compara por assinatura.
 - **DEC-026** — a Definition of Done é o que a CI roda.
+- **DEC-027** — nenhuma abstração por antecipação.
 
 ### Adicionado — marca e jornadas
 

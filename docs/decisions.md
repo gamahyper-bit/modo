@@ -623,3 +623,36 @@ tem.
 **O que custou.** O Node ficou preso na major 22: `scripts/brand-assets.ts` roda
 direto no Node, sem etapa de build, e isso depende do apagamento de tipos que só
 existe a partir do 22.
+
+---
+
+## DEC-027 — Nenhuma abstração por antecipação
+
+**Data.** 2026-08-07 · **Status.** Ativa
+
+Toda abstração justifica a existência por um **uso atual**, ou por um **uso
+planejado e documentado no backlog**. Cada interface, serviço e camada é
+classificável em `Essencial`, `Temporária` ou `Candidata à remoção` — e
+`Temporária` precisa apontar o item que a encerra.
+
+**Motivo.** Generalidade escrita antes do segundo caso de uso quase sempre
+adivinha o eixo errado. O custo não é o código: é que todo mundo passa a
+programar em volta do palpite, e desfazê-lo depois exige mexer em tudo que se
+apoiou nele.
+
+**A revisão arquitetural achou três casos**, todos no design system: `Modal`
+exportado e usado por ninguém, `Badge` visível só na galeria, `EmScaffold` nem
+exportado. `Badge` é o mais instrutivo — foi feito para contador e selo, que o
+PILAR-05 proíbe. Nasceu contrariando um princípio, e a galeria deu a ele a
+aparência de que servia para alguma coisa.
+
+**Alternativas.** Deixar como estava e limpar antes do lançamento (é quando
+ninguém tem tempo); marcar como obsoleto em vez de remover (obsoleto que fica é
+igual a não obsoleto).
+
+**Impacto.** A galeria deixa de ser lugar seguro para componente sem uso: estar
+lá passa a ser evidência de disponibilidade, não desculpa para existir.
+
+**O que custou.** Um pouco de retrabalho quando um caso de uso aparecer para
+algo que foi removido. Aceito: reescrever um componente pequeno é mais barato
+que carregar cinco anos de abstrações que ninguém sabe se estão em uso.

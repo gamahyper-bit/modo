@@ -10,9 +10,9 @@ esta sair" — pergunta que o backlog não responde bem.
 | Versão | Tema         | Milestone | Estado          |
 | ------ | ------------ | --------- | --------------- |
 | v0.1   | Fundação     | —         | ✅ Fechada      |
-| v0.2   | Armário      | `v0.2`    | 🔄 Em andamento |
-| v0.3   | Captura      | `v0.3`    | ◻︎               |
-| v0.4   | IA           | `v0.4`    | ◻︎               |
+| v0.2   | Armário      | `v0.2`    | ✅ Fechada      |
+| v0.3   | Fundação II  | `v0.3`    | 🔄 Em andamento |
+| v0.4   | Captura e IA | `v0.4`    | ◻︎               |
 | v0.5   | Looks        | `v0.5`    | ◻︎               |
 | v0.6   | Backend      | `v0.6`    | ◻︎               |
 | v0.7   | Beta fechado | `v0.7`    | ◻︎               |
@@ -35,80 +35,70 @@ uma recomendação, detalhe do look e autenticação com modo de demonstração.
 
 ---
 
-## v0.2 — Armário 🔄
+## v0.2 — Armário ✅
 
 **Tese.** O produto ter dados de verdade e uma lógica confiável em cima deles.
 
-MOD-010 ✅ · MOD-012 ✅ · MOD-022 · MOD-023
+MOD-010 · MOD-012 · MOD-018 · MOD-019 · MOD-020 · MOD-021
 
-**Sprint em execução, nesta ordem**
+**Fechada com**
 
-| #   | Branch                         | Item    | O que o usuário percebe                  |
-| --- | ------------------------------ | ------- | ---------------------------------------- |
-| 1   | `fix/look-adjustments`         | MOD-018 | "Ajustar" passa a fazer o que promete    |
-| 2   | `feature/brand-assets`         | MOD-021 | o app deixa de ter ícone de template     |
-| 3   | `feature/recommendation-tests` | MOD-019 | a recomendação para de errar em silêncio |
-| 4   | `feature/ci`                   | MOD-020 | _(risco)_ nenhuma entrega quebra `main`  |
+| Item    | O que o usuário percebe                   |
+| ------- | ----------------------------------------- |
+| MOD-018 | "Ajustar" passou a fazer o que promete    |
+| MOD-021 | o app deixou de ter ícone de template     |
+| MOD-019 | a recomendação parou de errar em silêncio |
+| MOD-020 | _(risco)_ nenhuma entrega quebra `main`   |
 
-**Fecha quando**
+**MOD-022 e MOD-023 saíram para depois.** Acrescentam valor e não desbloqueiam
+nada. A revisão arquitetural reduz risco antes das integrações, e essa é a troca
+certa.
 
-- ~~"Ajustar" alterar de fato a recomendação~~ — MOD-018
-- ~~O app tiver ícone próprio~~ — MOD-021
-- ~~O motor tiver cobertura de teste~~ — MOD-019
-- ~~A CI verificar a definição de pronto por máquina~~ — MOD-020
-- Tocar numa peça levar ao detalhe dela
-
-**MOD-021 passou na frente de MOD-019.** MOD-018 trouxe o runner e a cobertura
-dos ajustes junto, então MOD-019 encolheu para o que sobrou e deixou de ser o
-próximo passo natural. Entre um item de produto pronto para entregar e um de
-cobertura reduzida, a regra do valor manda o produto na frente.
-
-**Por que a CI continua por último.** Ela é o único item da sprint sem valor
-perceptível. Vindo depois dos testes, ela também nasce sabendo o que precisa
-verificar — instalar CI antes de os testes existirem seria instalar metade dela
-duas vezes.
+**MOD-021 passou na frente de MOD-019** porque MOD-018 já tinha trazido o runner
+e a cobertura dos ajustes. **A CI foi por último** porque é o único item sem
+valor perceptível — e vindo depois dos testes, nasceu sabendo o que verificar.
 
 ---
 
-## v0.3 — Captura ◻︎
+## v0.3 — Fundação II 🔄
 
-**Tese.** A foto virar peça catalogada sem trabalho do usuário.
+**Tese.** A arquitetura aguentar os serviços reais antes de eles chegarem.
 
-MOD-011 ✅ · MOD-037 · MOD-024 · MOD-036
+MOD-037 · MOD-038 · MOD-039 · MOD-040 · MOD-041 · MOD-042
 
-**Abre com uma pausa.** MOD-037 é uma revisão arquitetural, e vem **antes** de
-qualquer integração pesada — Supabase real, Gemini, clima, imagens,
-sincronização. É a última janela em que mexer num contrato custa um PR: com duas
-implementações por porta, cada suposição escondida vira comportamento diferente
-entre demonstração e produção, e a diferença aparece no aparelho de um testador.
+**É uma pausa declarada.** O produto não anda nesta versão, e é para não andar.
+Seis itens sem valor perceptível seguidos rompem o limite da regra do valor, de
+propósito: o custo de mudar um contrato agora é um PR, e depois das integrações
+cresce com o número de coisas que dependem dele.
 
 **Fecha quando**
 
-- A revisão arquitetural estiver escrita, e o que ela achar, resolvido ou no
-  backlog com prioridade
-- O fundo for removido de verdade
-- Uma peça fotografada em casa aparecer recortada no armário
-- "Está frio" trocar por uma peça mais quente, e não só acrescentar uma
-- Falha de recorte degradar para a foto original, sem bloquear o cadastro
+- ~~A revisão arquitetural estiver escrita, e o que ela achar, no backlog com
+  prioridade~~ — MOD-037
+- O conflito de identidade de peça e de look estiver resolvido
+- A escolha e a fala do look forem coisas separadas
+- O serviço de recomendação receber armário e clima em vez de alcançá-los
+- Nenhuma abstração sem uso continuar exportada
 
 ---
 
-## v0.4 — IA ◻︎
+## A ordem depois da v0.3
 
-**Tese.** A promessa do produto — um stylist, não um gerador.
+Definida junto com a revisão, e ela **inverte** o que as versões abaixo diziam:
 
-MOD-017 ✅ · MOD-025 · MOD-026 · MOD-027
+1. **Supabase real** — MOD-028, MOD-029, MOD-030
+2. **Gemini** — MOD-025, MOD-026
+3. **Clima real** — MOD-027
+4. **Imagens** — MOD-024, MOD-036
+5. **Experiência** — MOD-022, MOD-023, e o resto
 
-**Fecha quando**
+O motivo é o achado principal da revisão: o conflito de identidade só se resolve
+de verdade quando existe um banco do outro lado. Adiar a persistência para depois
+da IA deixaria MOD-038 verificado só no papel.
 
-- Os atributos vierem do Gemini, não de um mock
-- O texto do look for escrito pela IA sobre candidatos válidos
-- O clima real influenciar a recomendação
-- Sem rede, o app continuar entregando look e explicação locais
-
-**Risco principal.** É aqui que o produto pode passar a parecer "ChatGPT de
-moda". A defesa é arquitetural e já está de pé: a IA nunca escolhe sozinha, ela
-ranqueia o que o motor determinístico validou.
+> ⚠️ **As versões v0.4 a v0.6 abaixo ainda descrevem a ordem antiga** — IA antes
+> de backend. Renumerá-las é decisão de produto, não de engenharia, e não fiz por
+> conta própria. A ordem que vale é a desta seção.
 
 ---
 
