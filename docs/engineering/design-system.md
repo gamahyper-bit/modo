@@ -83,7 +83,7 @@ Tamanhos: `sm` 16 · `md` 20 · `lg` 24 · `xl` 28.
 
 ## A marca
 
-A geometria do símbolo FRAME vive em `theme/brand.ts` — grid, path da moldura,
+A geometria do símbolo FRAME vive em `theme/brand.ts` — grid, recuo, vão,
 espessura do traço e posição do M. Ela tem **dois consumidores**:
 
 | Consumidor             | Onde aparece              |
@@ -94,6 +94,34 @@ espessura do traço e posição do M. Ela tem **dois consumidores**:
 ```bash
 npm run brand   # regenera todos os PNG de assets/
 ```
+
+### Dois graus ópticos
+
+O símbolo é uma moldura de traço fino fechada por um M em serifa. Isso funciona
+muito bem grande e falha de um jeito específico pequeno: o traço afina até virar
+cinza, e as hastes finas da serifa somem antes dele. **Reduzir o mesmo desenho
+não resolve — a redução é o problema.** Então há dois desenhos (DEC-022):
+
+|              | Traço | M   | Vão | Onde                           |
+| ------------ | ----- | --- | --- | ------------------------------ |
+| **display**  | 2,5   | 32  | 30  | 40 pontos para cima            |
+| **compacto** | 4     | 35  | 26  | abaixo de 40 — ícone e favicon |
+
+As folgas dentro do vão passam de 2,6 / 1,8 / 2,6 para 3,8 / 2,6 / 2,9. **Abrir
+folga importa tanto quanto engrossar traço**: espaço em branco é o que fecha
+primeiro quando a tinta espalha.
+
+`geometryFor(size)` decide sozinho, e `Logo` usa isso — o cabeçalho desenha a 28
+e cai no compacto. O `splash-icon.png` é o único ativo do sistema operacional
+que sai em display: aparece a 160 pontos, tamanho em que o traço fino é
+qualidade e não fragilidade.
+
+O que **não** muda entre os graus: o grid, o canto em que a moldura abre, e o M
+ser tipografia real.
+
+> **`strokeWidth` no `Logo` está em unidades do viewBox, não em pixels.** O
+> `viewBox` de 64 já é escalado para `size` pelo SVG. Converter à mão escalava
+> duas vezes — e foi o que fez a marca em tela sair a 44% do peso desenhado.
 
 **Por que um script.** "Gerado à mão uma vez" é como o ícone de um app vira uma
 versão antiga da marca: o logo em tela atualiza sozinho, o ícone da tela inicial

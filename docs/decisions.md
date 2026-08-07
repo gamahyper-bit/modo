@@ -446,3 +446,49 @@ que se quer que aconteça.
 e justificadas no código: o iOS recorta em cantos arredondados a partir de uns
 22% da borda, o Android recorta a camada da frente com máscara variável, e o
 favicon vive com 16 pixels. Antes eram três arquivos sem procedência.
+
+---
+
+## DEC-022 — O ícone é um ativo próprio, não o logo reduzido
+
+**Data.** 2026-08-07 · **Status.** Ativa · **Estende** DEC-021
+
+A geometria da marca passa a ter **dois graus ópticos**. `BRAND_DISPLAY` é a
+marca como foi desenhada; `BRAND_COMPACT` engrossa a moldura de 2,5 para 4,
+aumenta o M de 32 para 35 e abre o vão de 30 para 26. `geometryFor(size)`
+escolhe pelo tamanho, com o corte em 40 pontos.
+
+**Motivo.** O símbolo é traço fino fechado por um M em serifa de contraste alto.
+Grande, é a marca inteira; pequeno, o traço vira cinza e as hastes finas somem
+antes dele. A redução não degrada o desenho de forma uniforme — degrada
+justamente as duas coisas que fazem o símbolo ser reconhecível.
+
+**As folgas contam tanto quanto o traço.** Engrossar a moldura sem abrir o vão
+piora: as pontas quadradas avançam para dentro da abertura e encostam no M. As
+folgas do vão saíram de 2,6 / 1,8 / 2,6 para 3,8 / 2,6 / 2,9. Espaço em branco é
+o que fecha primeiro quando a tinta espalha.
+
+**Alternativas.** Só engrossar o traço (o M continuaria quebrando, e a colisão
+com a moldura apareceria); desenhar um ícone diferente, sem moldura (resolveria
+a legibilidade e destruiria o reconhecimento — a moldura **é** a marca);
+aceitar a perda abaixo de 40 (é o launcher, o lugar de maior exposição do
+produto).
+
+**Impacto.** A moldura passou a ser gerada por parâmetros em vez de escrita como
+um literal de path — dois literais seriam duas formas que por acaso se parecem, e
+que divergiriam no primeiro ajuste. Um teste garante que o grau de marca
+continua produzindo exatamente `M30 58 L6 58 L6 6 L58 6 L58 30`: se aquilo mudar,
+alguém mexeu na marca, não no ícone.
+
+**Efeito colateral: um defeito de anos.** Ao medir o traço renderizado no
+cabeçalho para conferir o grau, o valor deu 3 px onde deveriam ser 5. O `Logo`
+convertia `strokeWidth` para pixels, mas `strokeWidth` está em unidades do
+`viewBox` — e o `viewBox` de 64 já é escalado para `size` pelo próprio SVG. O
+traço saía a `size/64` do peso desenhado: 44% no cabeçalho. É a razão de a marca
+em tela sempre ter parecido mais fina que o ícone exportado, e ninguém tinha
+medido para descobrir.
+
+**O que custou.** Duas geometrias para manter em vez de uma. O risco real não é
+o custo — é a tentação de deixá-las divergir com o tempo até virarem duas
+marcas. O teste que compara traço, corpo e vão entre os dois graus existe para
+que a divergência seja uma escolha explícita, e não um acúmulo.

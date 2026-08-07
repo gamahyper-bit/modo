@@ -5,12 +5,11 @@ import { fileURLToPath } from 'node:url';
 import { Resvg } from '@resvg/resvg-js';
 
 import {
+  BRAND_COMPACT,
+  BRAND_DISPLAY,
   BRAND_GRID,
-  FRAME_PATH,
-  FRAME_STROKE,
-  MARK_BASELINE,
-  MARK_SIZE,
-  MARK_X,
+  type BrandGeometry,
+  framePathOf,
 } from '../src/theme/brand.ts';
 import { colors } from '../src/theme/colors.ts';
 
@@ -45,6 +44,13 @@ type Recipe = {
   /** Lado do PNG, em pixels. */
   size: number;
   /**
+   * O grau óptico.
+   *
+   * A regra é o **tamanho em que o sistema mostra**, não o tamanho do arquivo.
+   * O ícone é exportado a 1024 e vive a 40 no launcher — quem manda é o 40.
+   */
+  geometry: BrandGeometry;
+  /**
    * Que fração do lado o grid da marca ocupa.
    *
    * Não é a fração de tinta: o símbolo já tem folga dentro do próprio grid — a
@@ -61,10 +67,11 @@ export const RECIPES: Recipe[] = [
   {
     file: 'icon.png',
     size: 1024,
-    // A 74% a moldura cai a 20% da borda, dentro do recorte arredondado do iOS
-    // — que corta a partir de cerca de 22%. Mais que isto e os cantos do
-    // símbolo entram na curva da máscara.
-    cover: 0.74,
+    geometry: BRAND_COMPACT,
+    // A 78% o canto externo da moldura cai a 15% da borda. O recorte
+    // arredondado do iOS começa a comer a partir de uns 22%, mas só na diagonal
+    // do canto — um ponto a 15% dos dois lados ainda cai dentro da curva.
+    cover: 0.78,
     background: colors.background,
     color: colors.textPrimary,
     why: 'iOS e loja — sem transparência',
@@ -72,6 +79,7 @@ export const RECIPES: Recipe[] = [
   {
     file: 'android-icon-foreground.png',
     size: 512,
+    geometry: BRAND_COMPACT,
     // Bem menor que o do iOS, de propósito: o Android recorta a camada da
     // frente com uma máscara que muda de aparelho para aparelho, e só o miolo
     // é garantido.
@@ -82,6 +90,7 @@ export const RECIPES: Recipe[] = [
   {
     file: 'android-icon-monochrome.png',
     size: 432,
+    geometry: BRAND_COMPACT,
     cover: 0.6,
     // A cor não importa: o Android usa só o alfa e pinta com o tema do usuário.
     // Fica em tinta para o arquivo continuar legível fora do aparelho.
@@ -91,6 +100,10 @@ export const RECIPES: Recipe[] = [
   {
     file: 'splash-icon.png',
     size: 512,
+    // O único ativo em grau de marca: o splash aparece a 160 pontos, tamanho em
+    // que o traço fino é qualidade e não fragilidade. É também o único momento
+    // do sistema operacional em que o usuário está olhando só para a marca.
+    geometry: BRAND_DISPLAY,
     cover: 0.86,
     // Sem fundo: quem pinta o off-white é o `backgroundColor` do
     // expo-splash-screen. Um fundo aqui dentro apareceria como um quadrado de
@@ -101,7 +114,9 @@ export const RECIPES: Recipe[] = [
   {
     file: 'favicon.png',
     size: 128,
-    // Quase sem folga: numa aba de navegador o símbolo vive com 16 pixels.
+    geometry: BRAND_COMPACT,
+    // Quase sem folga: numa aba de navegador o símbolo vive com 16 pixels, e é
+    // o menor tamanho em que a marca precisa sobreviver em qualquer lugar.
     cover: 0.92,
     background: colors.background,
     color: colors.textPrimary,
@@ -109,20 +124,20 @@ export const RECIPES: Recipe[] = [
   },
 ];
 
-const symbol = (color: string) => `
+const symbol = (color: string, brand: BrandGeometry) => `
   <path
-    d="${FRAME_PATH}"
+    d="${framePathOf(brand)}"
     fill="none"
     stroke="${color}"
-    stroke-width="${FRAME_STROKE}"
+    stroke-width="${brand.stroke}"
     stroke-linecap="square"
     stroke-linejoin="miter"
   />
   <text
-    x="${MARK_X}"
-    y="${MARK_BASELINE}"
+    x="${brand.markX}"
+    y="${brand.markBaseline}"
     fill="${color}"
-    font-size="${MARK_SIZE}"
+    font-size="${brand.markSize}"
     font-family="${DISPLAY_FAMILY}"
     text-anchor="middle"
   >M</text>
@@ -134,13 +149,13 @@ const symbol = (color: string) => `
  * A folga não entra no path: entra no `viewBox`. É o que garante que a única
  * diferença entre o ícone e o logo em tela seja a margem ao redor.
  */
-const document = ({ size, cover, background, color }: Recipe) => {
+const document = ({ size, cover, background, color, geometry }: Recipe) => {
   const box = BRAND_GRID / cover;
-  const inset = (box - BRAND_GRID) / 2;
+  const margin = (box - BRAND_GRID) / 2;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${box} ${box}">
   ${background ? `<rect width="${box}" height="${box}" fill="${background}"/>` : ''}
-  <g transform="translate(${inset} ${inset})">${symbol(color)}</g>
+  <g transform="translate(${margin} ${margin})">${symbol(color, geometry)}</g>
 </svg>`;
 };
 

@@ -99,3 +99,9 @@ Nunca: fundo colorido, pose de catálogo, marca d'água, colagem.
 | Documento    | símbolo pequeno, alinhado à mesma margem do texto    |
 
 **O símbolo nunca é distorcido, rotacionado, colorido, sombreado ou preenchido.**
+
+**O ícone tem desenho próprio.** Não é o símbolo reduzido: a moldura é mais
+grossa, o M é maior e o vão é mais largo. É a mesma marca — mesmo grid, mesmo
+canto aberto, mesmo M em serifa —, desenhada para o tamanho em que o sistema
+operacional a mostra. Traço fino é qualidade a 160 pontos e fragilidade a 40.
+Ver DEC-022.

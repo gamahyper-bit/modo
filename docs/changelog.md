@@ -16,6 +16,19 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
   Expo. O símbolo FRAME em tinta sobre off-white; no Android, ícone adaptativo
   com camada da frente transparente e versão monocromática para o tema do
   sistema.
+- **O ícone é um ativo próprio, não o logo reduzido** (DEC-022). A marca tem
+  dois graus ópticos: `display` (traço 2,5 · M 32 · vão 30) para 40 pontos para
+  cima, e `compacto` (traço 4 · M 35 · vão 26) para o launcher, a aba do
+  navegador e o cabeçalho do app. As folgas dentro do vão passam de
+  2,6 / 1,8 / 2,6 para 3,8 / 2,6 / 2,9 — abrir folga importa tanto quanto
+  engrossar traço, porque espaço em branco é o que fecha primeiro quando a tinta
+  espalha. `geometryFor(size)` escolhe sozinho.
+- **A moldura passou a ser gerada por parâmetros**, e não escrita como literal
+  de path: dois literais seriam duas formas que por acaso se parecem, e que
+  divergiriam no primeiro ajuste. Um teste garante que o grau de marca continua
+  produzindo exatamente o path original.
+- **O `splash-icon.png` é o único ativo do sistema em grau de marca** — aparece
+  a 160 pontos, tamanho em que o traço fino é qualidade e não fragilidade.
 - **`npm run brand` gera todos os PNG** a partir de `theme/brand.ts`, a mesma
   geometria que o componente `Logo` desenha em tela (DEC-021). O M é tipografia
   real, então o gerador carrega a fonte de display do app — comprar a licença de
@@ -30,6 +43,15 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
   fundo do ícone adaptativo por `backgroundColor`.
 - Splash de 120 para 160 px de largura: com a marca em traço fino, 120 lia como
   inacabado.
+
+### Corrigido — o traço do logo saía a 44% do peso
+
+- **`Logo` escalava `strokeWidth` duas vezes.** O atributo está em unidades do
+  `viewBox`, e o `viewBox` de 64 já é escalado para `size` pelo próprio SVG;
+  converter à mão multiplicava por `size/64` de novo. No cabeçalho, que desenha
+  a 28, o traço saía a 44% do desenhado. É a razão de a marca em tela sempre ter
+  parecido mais fina que o ícone exportado — apareceu ao **medir** o traço
+  renderizado para conferir o grau óptico, não a olho.
 
 ### Corrigido — "Ajustar" passa a ajustar (MOD-018)
 
@@ -108,6 +130,7 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
 - **DEC-019** — régua de formalidade no lugar da prioridade por ocasião.
 - **DEC-020** — o ajuste entra no id do look.
 - **DEC-021** — ícone gerado a partir da geometria da marca.
+- **DEC-022** — o ícone é um ativo próprio, não o logo reduzido.
 
 ### Adicionado — marca e jornadas
 

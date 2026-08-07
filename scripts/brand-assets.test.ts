@@ -3,6 +3,14 @@ import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import {
+  BRAND_COMPACT,
+  BRAND_DISPLAY,
+  COMPACT_BELOW,
+  framePathOf,
+  geometryFor,
+} from '../src/theme/brand.ts';
+
 import { ASSETS_DIR, RECIPES, renderBrandAssets } from './brand-assets.ts';
 
 /**
@@ -35,6 +43,38 @@ describe('ativos da marca', () => {
     // Se isto falhar depois de mexer em `theme/brand.ts`, o conserto é
     // `npm run brand` — não afrouxar a comparação.
     expect(rendered.get(file)?.equals(gravado)).toBe(true);
+  });
+
+  it('o grau de marca continua sendo o desenho original', () => {
+    // Este path é a marca como foi aprovada. A moldura passou a ser gerada a
+    // partir de parâmetros para os dois graus serem a mesma forma em medidas
+    // diferentes — e a geração não pode ter mexido no original de propósito
+    // nenhum. Se isto falhar, alguém mudou a marca, não o ícone.
+    expect(framePathOf(BRAND_DISPLAY)).toBe('M30 58 L6 58 L6 6 L58 6 L58 30');
+  });
+
+  it('o grau compacto é mais pesado e mais folgado que a marca', () => {
+    // O ícone não é a marca reduzida: é mais traço, mais letra e mais vão. Se
+    // algum destes se inverter, o ajuste óptico virou ruído.
+    expect(BRAND_COMPACT.stroke).toBeGreaterThan(BRAND_DISPLAY.stroke);
+    expect(BRAND_COMPACT.markSize).toBeGreaterThan(BRAND_DISPLAY.markSize);
+    // Vão menor no número significa abertura maior.
+    expect(BRAND_COMPACT.gap).toBeLessThan(BRAND_DISPLAY.gap);
+  });
+
+  it('o tamanho escolhe o grau', () => {
+    expect(geometryFor(COMPACT_BELOW - 1)).toBe(BRAND_COMPACT);
+    expect(geometryFor(COMPACT_BELOW)).toBe(BRAND_DISPLAY);
+    // O cabeçalho do app desenha a 28 e é quem mais ganha com a troca.
+    expect(geometryFor(28)).toBe(BRAND_COMPACT);
+  });
+
+  it('só o splash sai em grau de marca', () => {
+    // Tudo que o sistema operacional mostra pequeno vai em compacto. O splash
+    // aparece a 160 pontos, tamanho em que o traço fino é qualidade.
+    const display = RECIPES.filter((recipe) => recipe.geometry === BRAND_DISPLAY);
+
+    expect(display.map((recipe) => recipe.file)).toEqual(['splash-icon.png']);
   });
 
   it('o ícone do iOS é opaco e os do Android não são', () => {

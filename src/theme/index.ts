@@ -30,9 +30,10 @@ export type { IconSizeToken } from './icons';
 
 export {
   BRAND_GRID,
-  FRAME_PATH,
-  FRAME_STROKE,
-  MARK_BASELINE,
-  MARK_SIZE,
-  MARK_X,
+  BRAND_COMPACT,
+  BRAND_DISPLAY,
+  COMPACT_BELOW,
+  framePathOf,
+  geometryFor,
 } from './brand';
+export type { BrandGeometry } from './brand';

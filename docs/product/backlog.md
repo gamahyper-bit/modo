@@ -240,12 +240,25 @@ marca. Geração por script, para o ícone nunca divergir do logo.
 - [x] Favicon da web
 - [x] Geração reprodutível por script versionado
 
+- [x] O ícone tratado como ativo próprio, com ajuste óptico para tamanho pequeno
+
 **A geometria subiu para `theme/brand.ts`.** "Derivar do `Logo`" na prática
 significava importar um componente React de dentro de um script Node, o que não
 funciona. O que os dois precisam compartilhar não é o componente: são os
 números. `Logo` desenha a partir deles em tela, o script desenha a partir deles
 em PNG, e um teste compara os PNG em disco com o que a geometria produz agora —
 esquecer de rodar `npm run brand` reprova.
+
+**E a geometria virou duas** (DEC-022). O símbolo é traço fino fechado por um M
+em serifa de contraste alto: grande é a marca inteira, pequeno o traço vira
+cinza e as hastes finas somem antes dele. O ícone ganhou grau próprio — moldura
+mais grossa, M maior, vão mais largo — e o `Logo` troca de grau abaixo de 40
+pontos, então o cabeçalho do app ganhou junto.
+
+**Um defeito antigo apareceu na medição.** `Logo` convertia `strokeWidth` para
+pixels, mas o atributo está em unidades do `viewBox`, que o SVG já escala. O
+traço saía a `size/64` do peso desenhado — 44% no cabeçalho. Só apareceu porque
+medi o traço renderizado em vez de olhar.
 
 ---
 
