@@ -50,6 +50,10 @@ Toda feature mesclada atualiza este arquivo no mesmo PR.
   deslocamento de régua.
 - **"Outro tênis" virou "Outro calçado".** O rótulo nomeava o modelo, e o modelo
   passou a ser uma bota assim que a régua de formalidade entrou.
+- **O título do `BottomSheet` encostou no conteúdo.** As margens do título caíram
+  de 16/16 para 12/12: a folha sobe ocupando pouca altura, e um título boiando
+  entre dois vazios fazia o topo parecer que ainda estava carregando. Vale para
+  todas as folhas, não só a de ajuste.
 - **Fala do stylist mais curta.** Uma oração, uma vírgula, ponto — quem já
   decidiu não precisa de subordinadas. "Você pediu mais elegante, então fui
   atrás do que o seu armário tem de mais formal para hoje" virou "Subi o tom com
