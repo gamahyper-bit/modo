@@ -194,6 +194,33 @@ desfazer, e a essa altura já terá gente dependendo dela.
 
 ---
 
+## Nenhuma abstração por antecipação
+
+**Toda abstração justifica a existência por um uso atual, ou por um uso planejado
+e documentado no backlog.** "Talvez seja útil" não é justificativa.
+
+Na prática, cada interface, serviço e camada é classificável como:
+
+| Classe                  | O que significa                                             |
+| ----------------------- | ----------------------------------------------------------- |
+| **Essencial**           | tem uso hoje, e tirar quebra o produto                      |
+| **Temporária**          | tem uso hoje e some — ou muda — numa integração **nomeada** |
+| **Candidata à remoção** | não tem uso, ou só aparece na galeria                       |
+
+Uma abstração `Temporária` precisa apontar o item do backlog que a encerra. Sem
+item, ela é candidata à remoção — foi criada por antecipação e a antecipação não
+virou plano.
+
+**Por quê.** Um sistema pequeno e claro se evolui; um sistema genérico antes da
+hora se contorna. Generalidade escrita antes do segundo caso de uso quase sempre
+adivinha o eixo errado, e o custo não é o código — é que todo mundo passa a
+programar em volta do palpite.
+
+**Onde isso é aplicado:** na [revisão crítica de fim de MOD](#a-revisão-crítica-de-fim-de-mod)
+e em toda revisão arquitetural.
+
+---
+
 ## Definition of Done
 
 Uma tarefa só é `Done` com os oito:

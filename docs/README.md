@@ -43,13 +43,14 @@ docs/
 
 ## Engenharia
 
-| Documento                                            | Responde                           |
-| ---------------------------------------------------- | ---------------------------------- |
-| [`process.md`](./engineering/process.md)             | git flow, DoR, DoD, estimativas    |
-| [`architecture.md`](./engineering/architecture.md)   | camadas, portas, estado, navegação |
-| [`design-system.md`](./engineering/design-system.md) | tokens, componentes, armadilhas    |
-| [`api.md`](./engineering/api.md)                     | portas de serviço e Edge Functions |
-| [`database.md`](./engineering/database.md)           | schema, RLS, Storage               |
+| Documento                                                        | Responde                                         |
+| ---------------------------------------------------------------- | ------------------------------------------------ |
+| [`process.md`](./engineering/process.md)                         | git flow, DoR, DoD, estimativas                  |
+| [`architecture.md`](./engineering/architecture.md)               | camadas, portas, estado, navegação               |
+| [`design-system.md`](./engineering/design-system.md)             | tokens, componentes, armadilhas                  |
+| [`architecture-review.md`](./engineering/architecture-review.md) | onde a arquitetura vai doer, e o que fazer antes |
+| [`api.md`](./engineering/api.md)                                 | portas de serviço e Edge Functions               |
+| [`database.md`](./engineering/database.md)                       | schema, RLS, Storage                             |
 
 ## Regras da documentação
 
